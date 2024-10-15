@@ -1,0 +1,115 @@
+@startuml
+
+!define RECTANGLE class
+
+skinparam class {
+    BackgroundColor LightBlue
+    ArrowColor Navy
+    BorderColor Black
+    FontName Arial
+    FontSize 12
+    FontColor Black
+}
+
+' Hide the separator when no methods are present
+hide empty members
+
+' Hide class type symbols (e.g., + for public, # for protected)
+hide class circle
+
+title Domain Model
+
+
+RECTANGLE User {
+    - username
+    - Email
+}
+
+enum Role {
+    admin
+    doctor
+    nurse
+    technician
+    patient
+}
+
+RECTANGLE Staff {
+    - first name
+    - last name
+    - full name
+    - license number
+    - Availability Slots
+}
+
+RECTANGLE Specialization {
+    - name 
+}
+
+RECTANGLE Patient {
+    - first name
+    - last name
+    - full name
+    - date of birth
+    - gender
+    - medical record number
+    - allergies/medical record
+    - emergency contact
+}
+
+
+RECTANGLE "Contact Info" as CI {
+    - phone number
+    - email 
+}
+
+
+RECTANGLE "Operation Request" as OR {
+    - id
+    - doctor id
+    - deadline
+    - priority
+}
+
+
+RECTANGLE "Operation Type" as OT {
+    - id
+    - name
+    - estimated duration
+}
+
+
+RECTANGLE "Appointment" as AP {
+    - id
+    - date & time
+    - status
+}
+
+RECTANGLE "Surgery Room" as SR {
+    - room number
+    - type
+    - capacity
+    - assigned equipment
+    - current status
+    - maintenance slots
+}
+
+User "1" ---left> "1..*" Role : has 
+
+Staff "1" ---left> "1" User : is
+Patient "0..1" ---up> "0..1" User : can be
+
+Staff "1" --right> Specialization : has 
+OT "1" --downo "1..*" Specialization : needs 
+
+Staff "1" --* "1" CI : has
+Patient "1" --down* "1" CI : has
+
+OR "*" --righto "1" Patient : for 
+OR "*" --lefto "1" OT : has
+
+AP "1" --down> "1"  OR : of
+AP "*" --downo "1..*" Staff : executed by 
+AP "1" --right> "1" SR : executed in 
+AP "*" <-- "1" Patient : had/has
+
+@enduml
