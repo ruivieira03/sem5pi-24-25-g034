@@ -1,31 +1,18 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-<<<<<<<< HEAD:dddnetcore.sln
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDDNetCore", "DDDNetCore.csproj", "{D0CB5471-6360-4B26-B7FF-27228B464CCA}"
-EndProject
-========
->>>>>>>> 1211252-Rui-Vieira:sem5pi-24-25-g034.sln
 Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-<<<<<<<< HEAD:dddnetcore.sln
-		{D0CB5471-6360-4B26-B7FF-27228B464CCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D0CB5471-6360-4B26-B7FF-27228B464CCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D0CB5471-6360-4B26-B7FF-27228B464CCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D0CB5471-6360-4B26-B7FF-27228B464CCA}.Release|Any CPU.Build.0 = Release|Any CPU
-========
->>>>>>>> 1211252-Rui-Vieira:sem5pi-24-25-g034.sln
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {12FEEB22-B5EF-47CC-B898-5EA192EF5BBF}
-	EndGlobalSection
+    GlobalSection(SolutionConfigurationPlatforms) = preSolution
+        Debug|Any CPU = Debug|Any CPU
+        Release|Any CPU = Release|Any CPU
+    EndGlobalSection
+    GlobalSection(ProjectConfigurationPlatforms) = postSolution
+    EndGlobalSection
+    GlobalSection(SolutionProperties) = preSolution
+        HideSolutionNode = FALSE
+    EndGlobalSection
+    GlobalSection(ExtensibilityGlobals) = postSolution
+        SolutionGuid = {1ECFC89A-03AC-44D9-A058-7AAB24230772}
+    EndGlobalSection
 EndGlobal
