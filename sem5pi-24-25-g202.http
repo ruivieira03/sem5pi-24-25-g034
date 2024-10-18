@@ -1,6 +1,0 @@
-@sem5pi_24_25_g202_HostAddress = http://localhost:5048
-
-GET {{sem5pi_24_25_g202_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
