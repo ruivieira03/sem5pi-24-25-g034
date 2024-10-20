@@ -1,8 +1,9 @@
 using System;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using DDDSample1.Domain.Shared;
+using Hospital.Domain.Shared;
 
-namespace DDDSample1.Infrastructure.Shared
+namespace Hospital.Infraestructure.Shared 
+
 {
     public class EntityIdValueConverter<TTypedIdValue> : ValueConverter<TTypedIdValue, String>
         where TTypedIdValue : EntityId

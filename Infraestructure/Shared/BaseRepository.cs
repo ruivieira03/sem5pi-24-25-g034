@@ -1,15 +1,13 @@
-using System;
+/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using DDDSample1.Domain.Shared;
+using Hospital.Domain.Infraestructure.Shared;
 
-namespace DDDSample1.Infrastructure.Shared
+namespace Hospital.Infraestructure.Shared
 {
-    public class BaseRepository<TEntity,TEntityId> : IRepository<TEntity,TEntityId>
-    where TEntity : Entity<TEntityId>
-    where TEntityId : EntityId
+    
     {
         private readonly DbSet<TEntity> _objs;
         
@@ -46,4 +44,4 @@ namespace DDDSample1.Infrastructure.Shared
             this._objs.Remove(obj);
         }
     }
-}
+}*/

@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "DDDSample1": {
+      "Project": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/values",

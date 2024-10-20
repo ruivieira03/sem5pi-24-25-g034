@@ -1,7 +1,7 @@
-using System.Threading.Tasks;
-using DDDSample1.Domain.Shared;
+/*using System.Threading.Tasks;
+using Hospital.Domain.Infraestructure.Shared;
 
-namespace DDDSample1.Infrastructure
+namespace Hospital.Infrastructure
 {
     public class UnitOfWork : IUnitOfWork
     {
@@ -17,4 +17,4 @@ namespace DDDSample1.Infrastructure
             return await this._context.SaveChangesAsync();
         }
     }
-}
+}*/

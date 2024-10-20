@@ -1,21 +1,19 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using DDDSample1.Infrastructure;
-using DDDSample1.Infrastructure.Categories;
-using DDDSample1.Infrastructure.Products;
-using DDDSample1.Infrastructure.Families;
-using DDDSample1.Infrastructure.Shared;
-using DDDSample1.Domain.Shared;
-using DDDSample1.Domain.Categories;
-using DDDSample1.Domain.Products;
-using DDDSample1.Domain.Families;
+using Auth0.AspNetCore.Authentication;
+using Hospital.Infraestructure;
+using Hospital.Infraestructure.Shared;
+using Hospital.Domain.Shared;
+using System.Diagnostics;
+using System;
 
-namespace DDDSample1
+namespace Hospital
 {
     public class Startup
     {
@@ -29,19 +27,50 @@ namespace DDDSample1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DDDSample1DbContext>(opt =>
-                opt.UseMySql(Configuration.GetConnectionString("DefaultConnection"), MySqlServerVersion.AutoDetect(Configuration.GetConnectionString("DefaultConnection"))));
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options => {
+                    options.IdleTimeout = TimeSpan.FromSeconds(10);
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.IsEssential = true;
+                    });
+
+            // https support for authentication
+            services.Configure<CookiePolicyOptions> ( options => {
+                    options.MinimumSameSitePolicy = SameSiteMode.None;
+                    });
+            
+            // inner method gets called twice for some reason, 
+            // ignored for now
+            services.AddAuth0WebAppAuthentication(options => {
+                    string domain = Configuration["Auth0:Domain"];
+                    string clientId = Configuration["Auth0:ClientId"];
+                    
+                    Debug.Assert(domain != null, "Auth0 Domain token is not set in appsettings.json or in user secrets. USE USER SECRETS if not in prod. Check config documentation. [\"Auth0:Domain\"]");
+                    Debug.Assert(clientId != null, "Auth0 ClientId is not set in appsettings.json or in user secrets. USE USER SECRETS if not in prod. Check config documentation. [\"Auth0:ClientId\"]");
+
+                    options.Domain = domain;
+                    options.ClientId = clientId;
+                    options.CallbackPath = new PathString("/api/");
+                    options.Scope = "openid profile email";
+                    
+                    });
+
+
+            services.AddDbContext<HospitalDbContext>(opt =>
+                    opt.UseInMemoryDatabase("HospitalDbContext")
+                    .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
 
             ConfigureMyServices(services);
             
-
             services.AddControllers().AddNewtonsoftJson();
         }
+    
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+           if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -52,9 +81,12 @@ namespace DDDSample1
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseRouting();
-
+    
+            app.UseSession();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -65,7 +97,7 @@ namespace DDDSample1
 
         public void ConfigureMyServices(IServiceCollection services)
         {
-            services.AddTransient<IUnitOfWork,UnitOfWork>();
+            /*services.AddTransient<IUnitOfWork,UnitOfWork>();
 
             services.AddTransient<ICategoryRepository,CategoryRepository>();
             services.AddTransient<CategoryService>();
@@ -74,7 +106,7 @@ namespace DDDSample1
             services.AddTransient<ProductService>();
 
             services.AddTransient<IFamilyRepository,FamilyRepository>();
-            services.AddTransient<FamilyService>();
+            services.AddTransient<FamilyService>();*/
         }
     }
     

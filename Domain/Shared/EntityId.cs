@@ -1,6 +1,7 @@
 using System;
 
-namespace DDDSample1.Domain.Shared
+namespace Hospital.Domain.Shared
+
 {
     /// <summary>
     /// Base class for entities.
