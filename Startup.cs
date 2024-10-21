@@ -58,8 +58,7 @@ namespace Hospital
 
 
             services.AddDbContext<HospitalDbContext>(opt =>
-                    opt.UseInMemoryDatabase("HospitalDbContext")
-                    .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
+                opt.UseMySql(Configuration.GetConnectionString("DefaultConnection"), MySqlServerVersion.AutoDetect(Configuration.GetConnectionString("DefaultConnection"))));
 
             ConfigureMyServices(services);
             
