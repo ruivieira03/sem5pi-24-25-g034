@@ -46,7 +46,7 @@ public class AccountController : Controller
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequest request, string returnUrl = "/home")
         {
-            var user = await _userRepository.GetUserByUsernameAsync(request.Username);
+            var user = await _systemUserRepository.GetUserByUsernameAsync(request.Username);
 
             if (user == null)
             {

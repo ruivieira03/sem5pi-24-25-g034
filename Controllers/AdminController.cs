@@ -37,7 +37,7 @@ public class AdminController : ControllerBase
         await _systemUserRepository.AddUserAsync(newUser);
 
         // Send a confirmation email with the setup link
-        //await _emailService.SendRegistrationEmailAsync(newUser.Email, setupLink);
+        await _emailService.SendRegistrationEmailAsync(newUser.Email, setupLink);
 
         // Return a Created response with the new user's details
         return CreatedAtAction(nameof(RegisterUser), new { id = newUser.Id }, newUser);
