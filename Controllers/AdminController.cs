@@ -1,65 +1,57 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
-using System.Linq;
-using Dapper;
-using MySql.Data.MySqlClient;
-using System.Data;
-using Hospital.Domain.Users; // Make sure to include your domain model namespace
-using Microsoft.Extensions.Configuration;
+using Hospital.Domain.Users;
+using Hospital.Services;
+using Hospital.ViewModels;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserRegistrationController : ControllerBase
+public class AdminController : ControllerBase
 {
-    private readonly string _connectionString;
+    private readonly ISystemUserRepository _systemUserRepository;
+    private readonly IEmailService _emailService;
 
-    public UserRegistrationController(IConfiguration configuration)
+    public AdminController(ISystemUserRepository systemUserRepository, IEmailService emailService)
     {
-        _connectionString = configuration.GetConnectionString("DefaultConnection");
+        _systemUserRepository = systemUserRepository;
+        _emailService = emailService;
     }
 
-    /**
-     * RegisterUser
-     * 
-     * Registers a new backoffice user (doctor, nurse, technician, admin) with specified details.
-     * Only accessible by admins.
-     * 
-     * @param username The username of the user to register.
-     * @param email The email of the user to register.
-     * @param phoneNumber The phone number of the user to register.
-     * @param role The role of the user to register (e.g., admin, doctor, nurse, technician).
-     * @param password The password for the new user.
-     * @returns Success or failure message.
-     */
-    [Authorize(Roles = "admin")]
-[HttpPost("register")]
-public async Task<IActionResult> Register(string email, string role)
-{
-    // Validate input
-    if (!Enum.TryParse<Roles>(role, true, out var parsedRole))
+    // POST api/Admin/register
+    [HttpPost("register")]
+    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserViewModel model)
     {
-        return BadRequest("Invalid role.");
-    }
-
-    // Add user to MySQL database
-    using (IDbConnection db = new MySqlConnection(_connectionString))
-    {
-        var query = "INSERT INTO SystemUser (Email, Role) VALUES (@Email, @Role)";
-        var parameters = new { Email = email, Role = parsedRole }; // Use parsedRole here
-
-        try
+        // Check if the model state is valid
+        if (!ModelState.IsValid)
         {
-            await db.ExecuteAsync(query, parameters);
+            return BadRequest(ModelState); // Return validation errors
         }
-        catch (MySqlException ex)
-        {
-            // Handle duplicate email or other database issues
-            return BadRequest(ex.Message);
-        }
+
+        // Generate a one-time setup link or token
+        string setupLink = GenerateSetupLink(model.Email);
+
+        // Create a new SystemUser with a temporary password
+        var newUser = new SystemUser(model.Username, model.Role, model.Email, model.PhoneNumber, "temporaryPassword", Guid.NewGuid().ToString());
+
+        // Save the user to the database
+        await _systemUserRepository.AddUserAsync(newUser);
+
+        // Send a confirmation email with the setup link
+        //await _emailService.SendRegistrationEmailAsync(newUser.Email, setupLink);
+
+        // Return a Created response with the new user's details
+        return CreatedAtAction(nameof(RegisterUser), new { id = newUser.Id }, newUser);
     }
 
-    return Ok("User registered successfully.");
-}
+    private string GenerateSetupLink(string email)
+    {
+        // Generate a unique token (optional, you can also use a GUID as shown previously)
+        var token = Guid.NewGuid().ToString();
 
+        // Construct the setup link using your application's base URL
+        string baseUrl = "http://yourapp.com"; // Replace with your actual base URL
+        string setupLink = $"{baseUrl}/setup-password?email={email}&token={token}";
+
+        return setupLink;
+    }
 }

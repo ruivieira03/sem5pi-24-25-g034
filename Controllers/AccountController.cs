@@ -7,6 +7,8 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using MySql.Data.MySqlClient;
+using Hospital.Domain.Users;
 
 /**
  * AccountController
@@ -33,27 +35,43 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 [Route("api/[controller]")]
 public class AccountController : Controller
 {
-    /**
-     * Login
-     * 
-     * Initiates the login process by redirecting the user to the Auth0 login page.
-     * 
-     * @param returnUrl The URL where the user should be redirected after a successful login. Defaults to "/".
-     * @returns A challenge result that initiates the authentication process.
-     * 
-     * Ensure the **Allowed Callback URLs** in Auth0 settings include the return URL.
-     */
-    [HttpGet("login")]
-    [AllowAnonymous]
-    public async Task Login(string returnUrl = "/home")
-    {
-        var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
-            // Indicate here where Auth0 should redirect the user after login.
-            .WithRedirectUri(returnUrl)
-            .Build();
+    private readonly ISystemUserRepository _systemUserRepository;
 
-        await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
-    }
+        public AccountController(ISystemUserRepository systemUserRepository)
+        {
+            _systemUserRepository = systemUserRepository;
+        }
+
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request, string returnUrl = "/home")
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(request.Username);
+
+            if (user == null)
+            {
+                return Unauthorized("Invalid username.");
+            }
+
+            // Here it should also verify the password
+            // For now, using without it
+            // if (!VerifyPassword(request.Password, user.Password)) // Implement password verification
+
+            // Create claims for the user
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.Role.ToString()), // Assuming Role is an enum
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+            // Sign in the user
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+
+            return LocalRedirect(returnUrl);
+        }
 
     /**
      * Profile
@@ -98,4 +116,10 @@ public class AccountController : Controller
         await HttpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
+}
+
+public class LoginRequest
+{
+    public string Username { get; set; }
+    public string Password { get; set; }
 }

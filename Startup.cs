@@ -12,6 +12,9 @@ using Hospital.Infraestructure.Shared;
 using Hospital.Domain.Shared;
 using System.Diagnostics;
 using System;
+using Hospital.Domain.Users;
+using Hospital.Infraestructure.Users;
+using Hospital.Services;
 
 namespace Hospital
 {
@@ -96,6 +99,9 @@ namespace Hospital
 
         public void ConfigureMyServices(IServiceCollection services)
         {
+            services.AddTransient<ISystemUserRepository,SystemUserRepository>();
+            services.AddTransient<IEmailService, EmailService>();
+            //services.AddTransient<CategoryService>();
             /*services.AddTransient<IUnitOfWork,UnitOfWork>();
 
             services.AddTransient<ICategoryRepository,CategoryRepository>();

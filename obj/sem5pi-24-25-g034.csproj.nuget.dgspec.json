@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj": {}
+    "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\sem5pi-24-25-g034.csproj": {}
   },
   "projects": {
-    "/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj": {
+    "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\sem5pi-24-25-g034.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\sem5pi-24-25-g034.csproj",
         "projectName": "sem5pi-24-25-g034",
-        "projectPath": "/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj",
-        "packagesPath": "/Users/ruivieira/.nuget/packages/",
-        "outputPath": "/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/obj/",
+        "projectPath": "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\sem5pi-24-25-g034.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/ruivieira/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -55,6 +55,10 @@
               "target": "Package",
               "version": "[2.1.35, )"
             },
+            "IdentityModel": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.OpenIdConnect": {
               "target": "Package",
               "version": "[8.0.10, )"
@@ -86,6 +90,18 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.10, )"
+            },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Binder": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[8.0.1, )"
             },
             "Microsoft.IdentityModel.Protocols.OpenIdConnect": {
               "target": "Package",
@@ -135,7 +151,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
