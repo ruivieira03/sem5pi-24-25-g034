@@ -47,6 +47,18 @@
               "target": "Package",
               "version": "[1.4.1, )"
             },
+            "Auth0.ManagementApi": {
+              "target": "Package",
+              "version": "[7.27.0, )"
+            },
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.35, )"
+            },
+            "IdentityModel": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.OpenIdConnect": {
               "target": "Package",
               "version": "[8.0.10, )"
@@ -79,6 +91,18 @@
               "target": "Package",
               "version": "[8.0.10, )"
             },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Binder": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[8.0.1, )"
+            },
             "Microsoft.IdentityModel.Protocols.OpenIdConnect": {
               "target": "Package",
               "version": "[8.1.2, )"
@@ -90,6 +114,14 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[8.0.6, )"
+            },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[9.1.0, )"
+            },
+            "MySql.Data.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.22, )"
             },
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",

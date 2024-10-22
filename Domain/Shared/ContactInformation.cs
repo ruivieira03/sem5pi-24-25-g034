@@ -1,15 +1,20 @@
 namespace Hospital.Domain.Shared
 {
-    // Represents contact information for a user
     public class ContactInformation
     {
-        public string Email { get; set; }
-        public string Phone { get; set; }
+        public int Id { get; set; } // Primary key
 
-        public ContactInformation(string email, string phone)
+        public string Email { get; set; } // Email address
+        public string PhoneNumber { get; set; } // Phone number
+
+        // Parameterless constructor for EF Core
+        public ContactInformation() { }
+
+        // Constructor with parameters for easy instantiation
+        public ContactInformation(string email, string phoneNumber)
         {
             Email = email;
-            Phone = phone;
+            PhoneNumber = phoneNumber;
         }
     }
 }

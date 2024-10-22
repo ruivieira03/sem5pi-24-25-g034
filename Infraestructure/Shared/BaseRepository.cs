@@ -1,20 +1,24 @@
-/*using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Hospital.Domain.Infraestructure.Shared;
+using Hospital.Domain.Shared;
+
 
 namespace Hospital.Infraestructure.Shared
 {
-    
+    public class BaseRepository<TEntity,TEntityId> : IRepository<TEntity,TEntityId>
+    where TEntity : Entity<TEntityId>
+    where TEntityId : EntityId
     {
-        private readonly DbSet<TEntity> _objs;
+        protected readonly DbSet<TEntity> _objs;
+        protected readonly HospitalDbContext _context; 
         
-        public BaseRepository(DbSet<TEntity> objs)
+        public BaseRepository(HospitalDbContext context)
         {
-            this._objs = objs ?? throw new ArgumentNullException(nameof(objs));
-        
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _objs = context.Set<TEntity>();
         }
 
         public async Task<List<TEntity>> GetAllAsync()
@@ -39,9 +43,14 @@ namespace Hospital.Infraestructure.Shared
             return ret.Entity;
         }
 
+        public async Task SaveChangesAsync()
+        {
+            await this._context.SaveChangesAsync();
+        }
+
         public void Remove(TEntity obj)
         {
             this._objs.Remove(obj);
         }
     }
-}*/
+}
