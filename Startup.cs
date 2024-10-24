@@ -100,20 +100,13 @@ namespace Hospital
         public void ConfigureMyServices(IServiceCollection services)
         {
             services.AddTransient<IUnitOfWork,UnitOfWork>();
+
             services.AddTransient<ISystemUserRepository,SystemUserRepository>();
+            services.AddTransient<SystemUserService>();
+
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IPasswordService, PasswordService>();
-            //services.AddTransient<CategoryService>();
-            /*services.AddTransient<IUnitOfWork,UnitOfWork>();
-
-            services.AddTransient<ICategoryRepository,CategoryRepository>();
-            services.AddTransient<CategoryService>();
-
-            services.AddTransient<IProductRepository,ProductRepository>();
-            services.AddTransient<ProductService>();
-
-            services.AddTransient<IFamilyRepository,FamilyRepository>();
-            services.AddTransient<FamilyService>();*/
+            
         }
     }
     
