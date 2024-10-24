@@ -1,13 +1,13 @@
-/*using System.Threading.Tasks;
-using Hospital.Domain.Infraestructure.Shared;
+using System.Threading.Tasks;
+using Hospital.Domain.Shared;
 
-namespace Hospital.Infrastructure
+namespace Hospital.Infraestructure
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly DDDSample1DbContext _context;
+        private readonly HospitalDbContext _context;
 
-        public UnitOfWork(DDDSample1DbContext context)
+        public UnitOfWork(HospitalDbContext context)
         {
             this._context = context;
         }
@@ -17,4 +17,4 @@ namespace Hospital.Infrastructure
             return await this._context.SaveChangesAsync();
         }
     }
-}*/
+}

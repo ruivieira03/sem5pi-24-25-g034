@@ -99,8 +99,10 @@ namespace Hospital
 
         public void ConfigureMyServices(IServiceCollection services)
         {
+            services.AddTransient<IUnitOfWork,UnitOfWork>();
             services.AddTransient<ISystemUserRepository,SystemUserRepository>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IPasswordService, PasswordService>();
             //services.AddTransient<CategoryService>();
             /*services.AddTransient<IUnitOfWork,UnitOfWork>();
 
