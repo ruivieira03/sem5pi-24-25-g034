@@ -1,7 +1,7 @@
 using System;
 using Hospital.Domain.Shared;
 
-namespace Hospital.Domain.Users
+namespace Hospital.Domain.Users.SystemUser
 {
     // Enum to represent different user roles in the system
     public enum Roles
@@ -22,6 +22,8 @@ namespace Hospital.Domain.Users
         public string PhoneNumber { get; set; }    // Phone number (embedded from ContactInformation)
         public string Password { get; set; }        // Password of the user
         public string IAMId { get; set; }          // Unique ID linked to IAM (Identity and Access Management)
+        public string ResetToken { get; set; } // For storing the reset token
+        public DateTime? TokenExpiry { get; set; } // For storing the token expiry time
 
         // Parameterless constructor for EF Core
         public SystemUser() 

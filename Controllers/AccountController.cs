@@ -8,7 +8,9 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MySql.Data.MySqlClient;
-using Hospital.Domain.Users;
+using Hospital.Domain.Users.SystemUser;
+using Hospital.Services;
+using Hospital.ViewModels;
 
 /**
  * AccountController
@@ -32,46 +34,53 @@ using Hospital.Domain.Users;
  *   user secrets in development. Refer to `README.md` for detailed instructions on how to set up user secrets.
  */
 [ApiController]
+[AllowAnonymous]
 [Route("api/[controller]")]
 public class AccountController : Controller
 {
     private readonly ISystemUserRepository _systemUserRepository;
 
-        public AccountController(ISystemUserRepository systemUserRepository)
+    private readonly IEmailService _emailService;
+    private readonly IPasswordService _passwordService;
+
+    public AccountController(ISystemUserRepository systemUserRepository, IEmailService emailService, IPasswordService passwordService)
+    {
+        _systemUserRepository = systemUserRepository;
+        _emailService = emailService;
+        _passwordService = passwordService;
+    }
+
+
+    [HttpPost("login")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request, string returnUrl = "/home")
+    {
+        var user = await _systemUserRepository.GetUserByUsernameAsync(request.Username);
+
+        if (user == null)
         {
-            _systemUserRepository = systemUserRepository;
+            return Unauthorized("Invalid username.");
         }
 
-        [HttpPost("login")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request, string returnUrl = "/home")
+        // #TODO: Here it should also verify the password
+        // For now, using without it
+        // if (!VerifyPassword(request.Password, user.Password)) // Implement password verification
+
+        // Create claims for the user
+        var claims = new List<Claim>
         {
-            var user = await _systemUserRepository.GetUserByUsernameAsync(request.Username);
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, user.Role.ToString()), // Role is an enum
+        };
 
-            if (user == null)
-            {
-                return Unauthorized("Invalid username.");
-            }
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-            // Here it should also verify the password
-            // For now, using without it
-            // if (!VerifyPassword(request.Password, user.Password)) // Implement password verification
+        // Sign in the user
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
-            // Create claims for the user
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role.ToString()), // Assuming Role is an enum
-            };
-
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-            // Sign in the user
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
-
-            return LocalRedirect(returnUrl);
-        }
+        return LocalRedirect(returnUrl);
+    }
 
     /**
      * Profile
@@ -116,10 +125,51 @@ public class AccountController : Controller
         await HttpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
-}
 
-public class LoginRequest
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
+    [HttpGet("setup-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ValidateToken(string email, string token)
+    {
+        // Logic to validate the token
+        // Checking if the token is valid for the given email
+
+        bool isValid = await _passwordService.ValidateTokenForUser(email, token);
+
+        if (!isValid)
+        {
+            return BadRequest(new { message = "Invalid token." });
+        }
+
+        return Ok(new { message = "Token is valid." });
+    }
+
+    [HttpPost("setup-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> SetNewPassword([FromBody] PasswordResetModel model)
+    {
+        // Logic to set the new password
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var user = await _systemUserRepository.GetUserByEmailAsync(model.Email);
+        if (user == null)
+        {
+            return NotFound(new { message = "User not found." });
+        }
+
+        // Hash and set the new password
+        string hashedPassword = _passwordService.HashPassword(model.Password);
+        user.Password = hashedPassword;
+
+        // Clear the reset token and expiry after password has been reset
+        user.ResetToken = "";
+        user.TokenExpiry = null;
+
+        await _systemUserRepository.UpdateUserAsync(user); // Ensure you have this method implemented
+
+        return Ok(new { message = "Password has been set successfully." });
+    }
+
 }

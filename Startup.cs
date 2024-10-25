@@ -13,6 +13,7 @@ using Hospital.Domain.Shared;
 using System.Diagnostics;
 using System;
 using Hospital.Domain.Users;
+using Hospital.Domain.Users.SystemUser;
 using Hospital.Infraestructure.Users;
 using Hospital.Services;
 
@@ -61,7 +62,7 @@ namespace Hospital
 
 
             services.AddDbContext<HospitalDbContext>(opt =>
-                opt.UseMySql(Configuration.GetConnectionString("DefaultConnection"), MySqlServerVersion.AutoDetect(Configuration.GetConnectionString("DefaultConnection"))));
+                opt.UseMySql(Configuration.GetConnectionString("DefaultConnection"), MySqlServerVersion.AutoDetect(Configuration.GetConnectionString("DefaultConnection"))), ServiceLifetime.Scoped);
 
             ConfigureMyServices(services);
             
@@ -99,19 +100,14 @@ namespace Hospital
 
         public void ConfigureMyServices(IServiceCollection services)
         {
+            services.AddTransient<IUnitOfWork,UnitOfWork>();
+
             services.AddTransient<ISystemUserRepository,SystemUserRepository>();
+            services.AddTransient<SystemUserService>();
+
             services.AddTransient<IEmailService, EmailService>();
-            //services.AddTransient<CategoryService>();
-            /*services.AddTransient<IUnitOfWork,UnitOfWork>();
+            services.AddTransient<IPasswordService, PasswordService>();
 
-            services.AddTransient<ICategoryRepository,CategoryRepository>();
-            services.AddTransient<CategoryService>();
-
-            services.AddTransient<IProductRepository,ProductRepository>();
-            services.AddTransient<ProductService>();
-
-            services.AddTransient<IFamilyRepository,FamilyRepository>();
-            services.AddTransient<FamilyService>();*/
         }
     }
     

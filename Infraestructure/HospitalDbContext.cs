@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Hospital.Domain.Users;
+using Hospital.Domain.Users.SystemUser;
 using Hospital.Infraestructure.Users;
 using Hospital.Domain.Shared;
 
@@ -37,7 +37,9 @@ namespace Hospital.Infraestructure
                 Password = "SEM5pi1234@",
                 IAMId = "1",
                 Email = "ruimdv13@gmail.com",
-                PhoneNumber = "912028969"
+                PhoneNumber = "912028969",
+                ResetToken = "",
+                TokenExpiry = null
             },
             new SystemUser
             {
@@ -47,7 +49,9 @@ namespace Hospital.Infraestructure
                 Password = "SEM5pi1234@",
                 IAMId = "2",
                 Email = "doctor@hospital.com",
-                PhoneNumber = "1234567891"
+                PhoneNumber = "1234567891",
+                ResetToken = "",
+                TokenExpiry = null
             },
             new SystemUser
             {
@@ -57,7 +61,9 @@ namespace Hospital.Infraestructure
                 Password = "SEM5pi1234@",
                 IAMId = "3",
                 Email = "nurse@hospital.com",
-                PhoneNumber = "1234567892"
+                PhoneNumber = "1234567892",
+                ResetToken = "",
+                TokenExpiry = null
             }
         );
 

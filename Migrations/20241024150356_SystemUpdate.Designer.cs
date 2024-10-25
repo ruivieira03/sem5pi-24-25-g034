@@ -4,6 +4,7 @@ using Hospital.Infraestructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace sem5pi_24_25_g202.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    partial class HospitalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241024150356_SystemUpdate")]
+    partial class SystemUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,7 +66,7 @@ namespace sem5pi_24_25_g202.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Hospital.Domain.Users.SystemUser.SystemUser", b =>
+            modelBuilder.Entity("Hospital.Domain.Users.SystemUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("char(36)");
@@ -106,7 +109,7 @@ namespace sem5pi_24_25_g202.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("6bfa9c6f-6156-412d-8b39-feb2e83b9542"),
+                            Id = new Guid("363a9c92-d641-4d1f-8a94-2c09638400a6"),
                             Email = "ruimdv13@gmail.com",
                             IAMId = "1",
                             Password = "SEM5pi1234@",
@@ -117,7 +120,7 @@ namespace sem5pi_24_25_g202.Migrations
                         },
                         new
                         {
-                            Id = new Guid("fb8f1a9c-38ab-498b-830d-67581d8be8a9"),
+                            Id = new Guid("60127f45-3395-4d3d-aecd-59864e57199c"),
                             Email = "doctor@hospital.com",
                             IAMId = "2",
                             Password = "SEM5pi1234@",
@@ -128,7 +131,7 @@ namespace sem5pi_24_25_g202.Migrations
                         },
                         new
                         {
-                            Id = new Guid("ac80239e-cfc6-4cfa-9867-909df44e51a1"),
+                            Id = new Guid("439f9210-0c60-4437-a09f-6d92824920fb"),
                             Email = "nurse@hospital.com",
                             IAMId = "3",
                             Password = "SEM5pi1234@",
