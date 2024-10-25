@@ -13,6 +13,7 @@ using Hospital.Domain.Shared;
 using System.Diagnostics;
 using System;
 using Hospital.Domain.Users;
+using Hospital.Domain.Users.SystemUser;
 using Hospital.Infraestructure.Users;
 using Hospital.Services;
 
@@ -61,7 +62,7 @@ namespace Hospital
 
 
             services.AddDbContext<HospitalDbContext>(opt =>
-                opt.UseMySql(Configuration.GetConnectionString("DefaultConnection"), MySqlServerVersion.AutoDetect(Configuration.GetConnectionString("DefaultConnection"))));
+                opt.UseMySql(Configuration.GetConnectionString("DefaultConnection"), MySqlServerVersion.AutoDetect(Configuration.GetConnectionString("DefaultConnection"))), ServiceLifetime.Scoped);
 
             ConfigureMyServices(services);
             
@@ -106,7 +107,7 @@ namespace Hospital
 
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IPasswordService, PasswordService>();
-            
+
         }
     }
     

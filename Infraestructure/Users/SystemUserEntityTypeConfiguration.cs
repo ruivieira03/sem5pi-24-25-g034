@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Hospital.Domain.Users;
-using Hospital.Domain.Shared; // Ensure you include this for SystemUserId
+using Hospital.Domain.Users.SystemUser;
+using Hospital.Domain.Shared;
 
 namespace Hospital.Infraestructure.Users
 {
@@ -9,33 +9,32 @@ namespace Hospital.Infraestructure.Users
     {
         public void Configure(EntityTypeBuilder<SystemUser> builder)
         {
-            // Define the table name
+            // Map to the "SystemUser" table
             builder.ToTable("SystemUser");
 
-            // Define the primary key
+            // Primary key definition
             builder.HasKey(b => b.Id);
 
-            // Define properties and map to database columns
+            // Configure the Id property with a value converter
+            builder.Property(b => b.Id)
+                   .HasConversion(
+                       id => id.AsGuid(), // Convert SystemUserId to Guid
+                       value => new SystemUserId(value) // Convert Guid to SystemUserId
+                   );
+
+            // Property configurations
             builder.Property(b => b.Username)
                    .IsRequired()
-                   .HasMaxLength(50); // Adjust as needed
+                   .HasMaxLength(50);
 
             builder.Property(b => b.Role)
                    .IsRequired();
 
-            // Configure the Id property using a value converter
-            builder.Property(b => b.Id)
-                   .HasConversion(
-                       id => id.AsGuid(), // Convert SystemUserId to Guid
-                       value => new SystemUserId(value) // Convert Guid back to SystemUserId
-                   );
-
-            // Optionally, configure the Password and IAMId
             builder.Property(b => b.Password)
-                   .IsRequired(); // Adjust if needed
+                   .IsRequired();
 
             builder.Property(b => b.IAMId)
-                   .IsRequired(); // Adjust if needed
+                   .IsRequired();
         }
     }
 }

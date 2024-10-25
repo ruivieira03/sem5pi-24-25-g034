@@ -5,7 +5,7 @@ using Hospital.ViewModels;
 using Hospital.Domain.Shared;
 using Hospital.Services;
 
-namespace Hospital.Domain.Users
+namespace Hospital.Domain.Users.SystemUser
 {
     public class SystemUserService
     {
@@ -111,27 +111,6 @@ namespace Hospital.Domain.Users
             };
         }
 
-        // Add new user
-        public async Task<SystemUserDto> AddAsync(CreatingSystemUserDto dto)
-        {
-            var user = new SystemUser(dto.Username, dto.Role, dto.Email, dto.PhoneNumber, dto.Password, dto.IAMId);
-
-            await this._systemUserRepository.AddUserAsync(user);
-            await this._unitOfWork.CommitAsync();
-
-            return new SystemUserDto
-            {
-                Id = user.Id.AsGuid(),
-                Username = user.Username,
-                Role = user.Role,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                IAMId = user.IAMId,
-                ResetToken = user.ResetToken,
-                TokenExpiry = user.TokenExpiry
-            };
-        }
-
         // Update user
         public async Task<SystemUserDto> UpdateAsync(SystemUserDto dto)
         {
@@ -171,7 +150,7 @@ namespace Hospital.Domain.Users
                 return null;   
 
             // Inactivate user (mark as inactive, or adjust the field you use to signify activity)
-            user.ResetToken = null; // Example of inactivation logic
+            user.ResetToken = ""; // #TODO: inactivate user logic
 
             await this._unitOfWork.CommitAsync();
 

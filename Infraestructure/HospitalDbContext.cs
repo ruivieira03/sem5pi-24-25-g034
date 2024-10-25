@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Hospital.Domain.Users;
+using Hospital.Domain.Users.SystemUser;
 using Hospital.Infraestructure.Users;
 using Hospital.Domain.Shared;
 

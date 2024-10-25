@@ -8,7 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MySql.Data.MySqlClient;
-using Hospital.Domain.Users;
+using Hospital.Domain.Users.SystemUser;
 using Hospital.Services;
 using Hospital.ViewModels;
 

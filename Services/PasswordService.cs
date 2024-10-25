@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using Hospital.Domain.Users;
+using Hospital.Domain.Users.SystemUser;
 
 namespace Hospital.Services
 {

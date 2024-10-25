@@ -1,7 +1,7 @@
 using System;
 using Hospital.Domain.Shared;
 
-namespace Hospital.Domain.Users
+namespace Hospital.Domain.Users.SystemUser
 {
     public class SystemUserDto
     {

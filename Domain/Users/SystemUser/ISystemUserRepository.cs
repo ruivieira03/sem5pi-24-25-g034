@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Hospital.Domain.Users
+namespace Hospital.Domain.Users.SystemUser
 {
     public interface ISystemUserRepository
     {
@@ -9,7 +9,7 @@ namespace Hospital.Domain.Users
         Task<SystemUser> GetUserByEmailAsync(string email); // Get user by Email
         Task AddUserAsync(SystemUser user); // Add a new user
         Task UpdateUserAsync(SystemUser user); // Update an existing user
-        void Remove(SystemUser user); // Remove a user
+        Task Remove(SystemUser user); // Remove a user
         Task<List<SystemUser>> GetAllAsync(); // Get all users
     }
 }

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Hospital.Domain.Users;
+using Hospital.Domain.Users.SystemUser;
 
 namespace Hospital.Infraestructure.Users
 {
@@ -16,8 +16,10 @@ namespace Hospital.Infraestructure.Users
         // Fetch a user by their Id
         public async Task<SystemUser> GetByIdAsync(SystemUserId id)
         {
-            return await _context.SystemUsers.FindAsync(id.AsGuid());
+            // Pass the internal Guid of the SystemUserId to FindAsync
+            return await _context.SystemUsers.FirstOrDefaultAsync(user => user.Id == id);
         }
+
 
         // Fetch a user by their Username
         public async Task<SystemUser> GetUserByUsernameAsync(string username)
@@ -34,19 +36,17 @@ namespace Hospital.Infraestructure.Users
         // Add a new user to the database
         public async Task AddUserAsync(SystemUser user)
         {
-            await _context.SystemUsers.AddAsync(user);
-            await _context.SaveChangesAsync(); // Persist changes to the database
+            _context.SystemUsers.AddAsync(user);
         }
 
         // Update an existing user in the database
         public async Task UpdateUserAsync(SystemUser user)
         {
             _context.SystemUsers.Update(user);
-            await _context.SaveChangesAsync(); // Persist changes to the database
         }
 
         // Remove a user from the database
-        public void Remove(SystemUser user)
+        public async Task Remove(SystemUser user)
         {
             _context.SystemUsers.Remove(user); // Direct removal using Entity Framework
         }
@@ -56,6 +56,5 @@ namespace Hospital.Infraestructure.Users
         {
             return await _context.SystemUsers.ToListAsync();
         }
-
     }
 }

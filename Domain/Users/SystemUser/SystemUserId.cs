@@ -2,7 +2,7 @@ using System;
 using Hospital.Domain.Shared;
 using Newtonsoft.Json;
 
-namespace Hospital.Domain.Users
+namespace Hospital.Domain.Users.SystemUser
 {
     public class SystemUserId : EntityId
     {

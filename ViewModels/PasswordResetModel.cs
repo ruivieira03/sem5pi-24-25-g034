@@ -9,7 +9,7 @@ namespace Hospital.ViewModels
         public string Email { get; set; }
 
         [Required(ErrorMessage = "New password is required.")]
-        [StringLength(100, ErrorMessage = "Password must be at least {2} characters long.", MinimumLength = 6)]
+        // Add proper ErrorMessage depending on the pwd criteria [StringLength(100, ErrorMessage = "Password must be at least {2} characters long.", MinimumLength = 6)]
         public string Password { get; set; }
     }
 }

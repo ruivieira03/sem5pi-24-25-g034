@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Hospital.Domain.Users;
+using Hospital.Domain.Users.SystemUser;
 
 namespace Hospital.ViewModels
 {
