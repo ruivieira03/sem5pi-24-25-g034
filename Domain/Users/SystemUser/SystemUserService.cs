@@ -40,6 +40,13 @@ namespace Hospital.Domain.Users.SystemUser
                 Guid.NewGuid().ToString()
             );
 
+            // Verify if the username is already taken
+
+            if (await _systemUserRepository.GetUserByUsernameAsync(newUser.Username) != null)
+            {
+                throw new Exception("Username already taken.");
+            }
+
             // Generate and store the reset token
             newUser.ResetToken = Guid.NewGuid().ToString();
             newUser.TokenExpiry = DateTime.UtcNow.AddHours(24); // Token valid for 24 hours
