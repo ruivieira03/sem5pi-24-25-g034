@@ -77,6 +77,77 @@ namespace Hospital.Domain.Users.SystemUser
             };
         }
 
+        // Request password reset by generating a token and sending an email
+        public async Task<SystemUserDto> RequestPasswordResetAsync(string email)
+        {
+            var user = await _systemUserRepository.GetUserByEmailAsync(email);
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
+
+            // Generate reset token and set expiry time
+            user.ResetToken = Guid.NewGuid().ToString();
+            user.TokenExpiry = DateTime.UtcNow.AddHours(1); // Token valid for 1 hour
+
+            // Generate reset link
+            string resetLink = GenerateResetLink(user.Email, user.ResetToken);
+            await _emailService.SendPasswordResetEmailAsync(user.Email, resetLink);
+
+            // Commit the transaction
+            await _unitOfWork.CommitAsync();
+
+            return new SystemUserDto
+            {
+                Id = user.Id.AsGuid(),
+                Username = user.Username,
+                Role = user.Role,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                IAMId = user.IAMId,
+                ResetToken = user.ResetToken,
+                TokenExpiry = user.TokenExpiry
+            };
+        }
+
+        // Reset password using the reset token
+
+        public async Task<SystemUserDto> ResetPasswordAsync(string email, string newPassword)
+        {
+            var user = await _systemUserRepository.GetUserByEmailAsync(email);
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
+            
+            // Check if the token is valid
+            bool isValidToken = await _passwordService.ValidateTokenForUser(email, user.ResetToken);
+            if (!isValidToken)
+            {
+                throw new Exception("Invalid or expired reset token.");
+            }
+
+            // Hash and update the new password
+            user.Password = _passwordService.HashPassword(newPassword);
+            user.ResetToken = "";  // Clear reset token after use
+            user.TokenExpiry = null;
+
+            await _unitOfWork.CommitAsync();
+
+            return new SystemUserDto
+            {
+                Id = user.Id.AsGuid(),
+                Username = user.Username,
+                Role = user.Role,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                IAMId = user.IAMId,
+                ResetToken = user.ResetToken,
+                TokenExpiry = user.TokenExpiry
+            };
+        }
+
+
         // Fetch all users
         public async Task<List<SystemUserDto>> GetAllAsync()
         {
@@ -196,9 +267,16 @@ namespace Hospital.Domain.Users.SystemUser
 
         private string GenerateSetupLink(string email, string token)
         {
-            // Construct the setup link using your application's base URL
+            // Construct the setup link using application's base URL
             string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
             return $"{baseUrl}/setup-password?email={email}&token={token}";
+        }
+
+        private string GenerateResetLink(string email, string token)
+        {
+            // Construct the setup link using application's base URL
+            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
+            return $"{baseUrl}/reset-password?email={email}&token={token}";
         }
     
     }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.ViewModels;
 using Hospital.Domain.Shared;
+using Hospital.Services;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -17,10 +18,11 @@ public class SystemUserController : ControllerBase
     }
 
     // POST api/SystemUser/register
-    [Authorize(Roles = "Admin")]
     [HttpPost("register")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserViewModel model)
     {
+
         // Check if the model state is valid
         if (!ModelState.IsValid)
         {
@@ -43,8 +45,8 @@ public class SystemUserController : ControllerBase
     }
 
     // GET: api/SystemUser
-    [Authorize(Roles = "Admin")]
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<IEnumerable<SystemUserDto>>> GetAll()
     {
         var users = await _systemUserService.GetAllAsync();
@@ -52,8 +54,8 @@ public class SystemUserController : ControllerBase
     }
 
     // GET: api/SystemUser/5
-    [Authorize(Roles = "Admin")]
     [HttpGet("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<SystemUserDto>> GetById(Guid id)
     {
         var user = await _systemUserService.GetByIdAsync(new SystemUserId(id));
@@ -68,8 +70,8 @@ public class SystemUserController : ControllerBase
 
 
     // PUT: api/SystemUser/5
-    [Authorize(Roles = "Admin")]
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<SystemUserDto>> Update(Guid id, SystemUserDto dto)
     {
         if (id != dto.Id)
@@ -95,8 +97,8 @@ public class SystemUserController : ControllerBase
     }
 
     // Inactivate: api/SystemUser/5
-    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<SystemUserDto>> SoftDelete(Guid id)
     {
         var user = await _systemUserService.InactivateAsync(new SystemUserId(id));
@@ -110,8 +112,8 @@ public class SystemUserController : ControllerBase
     }
 
     // DELETE: api/SystemUser/5/hard
-    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}/hard")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<SystemUserDto>> HardDelete(Guid id)
     {
         try

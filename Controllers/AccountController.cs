@@ -42,18 +42,20 @@ public class AccountController : Controller
 
     private readonly IEmailService _emailService;
     private readonly IPasswordService _passwordService;
+    private readonly SystemUserService _systemUserService;
 
-    public AccountController(ISystemUserRepository systemUserRepository, IEmailService emailService, IPasswordService passwordService)
+    public AccountController(ISystemUserRepository systemUserRepository, IEmailService emailService, IPasswordService passwordService, SystemUserService systemUserService)
     {
         _systemUserRepository = systemUserRepository;
         _emailService = emailService;
         _passwordService = passwordService;
+        _systemUserService = systemUserService;
     }
 
 
     [HttpPost("login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request, string returnUrl = "/home")
+    public async Task<IActionResult> Login([FromBody] LoginRequestViewModel request, string returnUrl = "/home")
     {
         var user = await _systemUserRepository.GetUserByUsernameAsync(request.Username);
 
@@ -107,12 +109,6 @@ public class AccountController : Controller
     /**
      * Logout
      * 
-     * Logs the user out by signing them out of both Auth0 and the local cookie authentication scheme.
-     * 
-     * @param returnUrl The URL where the user should be redirected after a successful logout. Defaults to "/home".
-     * @returns A task that performs the sign-out operations.
-     * 
-     * Ensure the **Allowed Logout URLs** in Auth0 settings include the return URL.
      */
     [Authorize]
     [HttpGet("logout")]
@@ -125,6 +121,12 @@ public class AccountController : Controller
         await HttpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
+
+    /**
+    * GET: api/account/setup-password
+    * This endpoint is used to validate the token sent to the user's email after registration.
+    * It requires the user's email and the token.
+    */
 
     [HttpGet("setup-password")]
     [AllowAnonymous]
@@ -143,33 +145,79 @@ public class AccountController : Controller
         return Ok(new { message = "Token is valid." });
     }
 
+
+    /** POST: api/account/setup-password
+    * This endpoint is used to set a new password for the user after they have registered.
+    * It requires the user's email and the new password.
+    */
+
     [HttpPost("setup-password")]
     [AllowAnonymous]
-    public async Task<IActionResult> SetNewPassword([FromBody] PasswordResetModel model)
+    public async Task<IActionResult> SetNewPassword([FromBody] PasswordResetViewModel model)
     {
-        // Logic to set the new password
+
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var user = await _systemUserRepository.GetUserByEmailAsync(model.Email);
-        if (user == null)
+        try
         {
-            return NotFound(new { message = "User not found." });
+            await _systemUserService.ResetPasswordAsync(model.Email, model.Password);
+            return Ok(new { Message = "Password has been reset successfully." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
         }
 
-        // Hash and set the new password
-        string hashedPassword = _passwordService.HashPassword(model.Password);
-        user.Password = hashedPassword;
-
-        // Clear the reset token and expiry after password has been reset
-        user.ResetToken = "";
-        user.TokenExpiry = null;
-
-        await _systemUserRepository.UpdateUserAsync(user); // Ensure you have this method implemented
-
-        return Ok(new { message = "Password has been set successfully." });
     }
+
+    /** POST: api/account/request-password-reset
+    * This endpoint is used to set a new password for the user after they have registered.
+    * It requires the user's email and the new password.
+    */
+
+    [HttpPost("request-password-reset")]
+    [AllowAnonymous]
+    public async Task<IActionResult> RequestPasswordReset([FromBody] PasswordResetRequestViewModel model)
+    {
+        try
+        {
+            await _systemUserService.RequestPasswordResetAsync(model.Email);
+            return Ok(new { Message = "Password reset link has been sent to your email." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    /** POST: api/account/reset-password
+    * This endpoint is used to set a new password for the user after they have registered.
+    * It requires the user's email and the new password.
+    */
+
+    [HttpPost("reset-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ResetPassword([FromBody] PasswordResetViewModel model)
+    {
+
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            await _systemUserService.ResetPasswordAsync(model.Email, model.Password);
+            return Ok(new { Message = "Password has been reset successfully." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
 
 }
