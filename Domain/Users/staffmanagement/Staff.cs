@@ -1,23 +1,27 @@
+using System;
+using Hospital.Domain.Shared;
+using Hospital.Domain.Users.SystemUser;
+
 namespace Hospital.Domain.Users.staffmanagement
 {
     // Represents a staff member in the hospital
     public class Staff : Entity<LicenseNumber>, IAggregateRoot
     {
-        public LicenseNumber LicenseNumber { get; set; }          // License number of the staff
-        public string Name { get; set; }                          // Full name of the staff
-        public string Specialization { get; set; }                // Specialization of the staff
-        public List<string> Slots { get; set; }                   // List of available slots for the staff, formatted as "YYYY-MM-DD:HHhMM/HHhMM"
-        public SystemUser SystemUser { get; set; }                // SystemUser linked to the staff
+        public LicenseNumber licenseNumber { get; set; }          // License number of the staff
+        public string name { get; set; }                          // Full name of the staff
+        public string specialization { get; set; }                // Specialization of the staff
+        public List<string> slots { get; set; }                   // List of available slots for the staff, formatted as "YYYY-MM-DD:HHhMM/HHhMM"
+        public Hospital.Domain.Users.SystemUser.SystemUser systemUser { get; set; }                // SystemUser linked to the staff
 
         // Constructor to initialize a Staff object with required properties
-        public Staff(LicenseNumber licenseNumber, string name, string specialization, SystemUser systemUser)
+        public Staff(LicenseNumber licenseNumber, string name, string specialization, Hospital.Domain.Users.SystemUser.SystemUser systemUser)
         {
-            Id = licenseNumber;                                   // Set the unique identifier for the staff
-            LicenseNumber = licenseNumber;                        // Assign the provided license number
-            Name = name;                                          // Assign the provided name
-            Specialization = specialization;                      // Assign the provided specialization
-            Slots = new List<string>();                           // Initialize the list of slots
-            SystemUser = systemUser;                              // Assign the provided SystemUser
+            this.Id = licenseNumber;                                   // Set the unique identifier for the staff
+            this.licenseNumber = licenseNumber;                        // Assign the provided license number
+            this.name = name;                                          // Assign the provided name
+            this.specialization = specialization;                      // Assign the provided specialization
+            this.slots = new List<string>();                           // Initialize the list of slots
+            this.systemUser = systemUser;                              // Assign the provided SystemUser
         }
 
         public Staff()
@@ -28,7 +32,7 @@ namespace Hospital.Domain.Users.staffmanagement
         //Receives to dates and adds them as strings to the slots list
         public void AddSlots(DateTime start, DateTime end)
         {
-            Slots.Add($"{start.ToString("yyyy-MM-dd")}:{start.ToString("HH'h'mm")}/{end.ToString("HH'h'mm")}");
+            slots.Add($"{start.ToString("yyyy-MM-dd")}:{start.ToString("HH'h'mm")}/{end.ToString("HH'h'mm")}");
         }
     }
 }
