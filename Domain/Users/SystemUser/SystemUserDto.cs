@@ -11,9 +11,9 @@ namespace Hospital.Domain.Users.SystemUser
         public string Email { get; set; }          // Email address
         public string PhoneNumber { get; set; }    // Phone number
         public string IAMId { get; set; }          // Identity and Access Management ID
-
-        // Optionally add properties for token info if needed
         public string ResetToken { get; set; }     // Token for password reset
         public DateTime? TokenExpiry { get; set; } // Expiry date for the reset token
+        public bool isVerified { get; set; }       // Email verification status
+        public string VerifyToken { get; set; }   // Token for email verification
     }
 }

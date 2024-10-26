@@ -219,5 +219,43 @@ public class AccountController : Controller
         }
     }
 
+    // GET api/account/confirm-email
+    [HttpGet("confirm-email")]
+    [AllowAnonymous] // Allow access to this endpoint without authentication
+    public async Task<IActionResult> ConfirmEmail()
+    {
+        // Extract email and token from the request's query string
+        string email = Request.Query["email"].ToString();
+        string token = Request.Query["token"].ToString();
+
+        // Ensure that both email and token are provided
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+        {
+            return BadRequest(new { Message = "Email or token is missing." });
+        }
+
+        try
+        {
+            // Call the service method to validate the email and token
+            bool isValid = await _systemUserService.ValidateEmailTokenAsync(email, token);
+
+            if (isValid)
+            {
+                // Proceed with confirming the email
+                await _systemUserService.ConfirmEmailAsync(email, token);
+                return Ok(new { Message = "Email confirmed successfully." });
+            }
+            else
+            {
+                return BadRequest(new { Message = "Invalid token or email confirmation failed." });
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the exception (consider using a logging framework)
+            return BadRequest(new { Message = "An error occurred during confirmation." });
+        }
+    }
+
 
 }

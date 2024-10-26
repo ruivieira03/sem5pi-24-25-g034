@@ -52,5 +52,25 @@ namespace Hospital.Services
                 }
             }
         }
+
+        public async Task SendEmailConfirmationEmailAsync(string email, string setupLink)
+        {
+            
+            using (var message = new MailMessage())
+            {
+                message.To.Add(email);
+                message.Subject = "Confirm Your Email";
+                message.Body = $"Please click the following link to confirm your email: {setupLink}";
+                message.From = new MailAddress(smtpEmail);  
+
+                using (var client = new SmtpClient(smtpHost,smtpPort))
+                {
+                    client.Credentials = new NetworkCredential(smtpEmail, smtpPassword); 
+                    client.EnableSsl = true;  
+
+                    await client.SendMailAsync(message);
+                }
+            }
+        }
     }
 }

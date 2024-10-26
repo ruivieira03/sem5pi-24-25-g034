@@ -24,6 +24,13 @@ namespace Hospital.Domain.Users.SystemUser
 
         public async Task<SystemUserDto> RegisterUserAsync(RegisterUserViewModel model)
         {
+            // Verify if the username is already taken
+
+            if (await _systemUserRepository.GetUserByUsernameAsync(model.Username) != null)
+            {
+                throw new Exception("Username already taken.");
+            }
+
             // Generate a temporary password
             string temporaryPassword = _passwordService.GenerateTemporaryPassword();
 
@@ -39,13 +46,6 @@ namespace Hospital.Domain.Users.SystemUser
                 hashedPassword, 
                 Guid.NewGuid().ToString()
             );
-
-            // Verify if the username is already taken
-
-            if (await _systemUserRepository.GetUserByUsernameAsync(newUser.Username) != null)
-            {
-                throw new Exception("Username already taken.");
-            }
 
             // Generate and store the reset token
             newUser.ResetToken = Guid.NewGuid().ToString();
@@ -73,7 +73,9 @@ namespace Hospital.Domain.Users.SystemUser
                 PhoneNumber = newUser.PhoneNumber,
                 IAMId = newUser.IAMId,
                 ResetToken = newUser.ResetToken,
-                TokenExpiry = newUser.TokenExpiry
+                TokenExpiry = newUser.TokenExpiry,
+                isVerified = newUser.isVerified,
+                VerifyToken = newUser.VerifyToken
             };
         }
 
@@ -106,7 +108,9 @@ namespace Hospital.Domain.Users.SystemUser
                 PhoneNumber = user.PhoneNumber,
                 IAMId = user.IAMId,
                 ResetToken = user.ResetToken,
-                TokenExpiry = user.TokenExpiry
+                TokenExpiry = user.TokenExpiry,
+                isVerified = user.isVerified,
+                VerifyToken = user.VerifyToken
             };
         }
 
@@ -143,7 +147,9 @@ namespace Hospital.Domain.Users.SystemUser
                 PhoneNumber = user.PhoneNumber,
                 IAMId = user.IAMId,
                 ResetToken = user.ResetToken,
-                TokenExpiry = user.TokenExpiry
+                TokenExpiry = user.TokenExpiry,
+                isVerified = user.isVerified,
+                VerifyToken = user.VerifyToken
             };
         }
 
@@ -162,7 +168,9 @@ namespace Hospital.Domain.Users.SystemUser
                 PhoneNumber = user.PhoneNumber,
                 IAMId = user.IAMId,
                 ResetToken = user.ResetToken,
-                TokenExpiry = user.TokenExpiry
+                TokenExpiry = user.TokenExpiry,
+                isVerified = user.isVerified,
+                VerifyToken = user.VerifyToken
             });
 
             return userDtos;
@@ -185,7 +193,9 @@ namespace Hospital.Domain.Users.SystemUser
                 PhoneNumber = user.PhoneNumber,
                 IAMId = user.IAMId,
                 ResetToken = user.ResetToken,
-                TokenExpiry = user.TokenExpiry
+                TokenExpiry = user.TokenExpiry,
+                isVerified = user.isVerified,
+                VerifyToken = user.VerifyToken
             };
         }
 
@@ -215,7 +225,9 @@ namespace Hospital.Domain.Users.SystemUser
                 PhoneNumber = user.PhoneNumber,
                 IAMId = user.IAMId,
                 ResetToken = user.ResetToken,
-                TokenExpiry = user.TokenExpiry
+                TokenExpiry = user.TokenExpiry,
+                isVerified = user.isVerified,
+                VerifyToken = user.VerifyToken
             };
         }
 
@@ -228,7 +240,7 @@ namespace Hospital.Domain.Users.SystemUser
                 return null;   
 
             // Inactivate user (mark as inactive, or adjust the field you use to signify activity)
-            user.ResetToken = ""; // #TODO: inactivate user logic
+            user.ResetToken = null; // #TODO: inactivate user logic
 
             await this._unitOfWork.CommitAsync();
 
@@ -239,7 +251,11 @@ namespace Hospital.Domain.Users.SystemUser
                 Role = user.Role,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                IAMId = user.IAMId
+                IAMId = user.IAMId,
+                ResetToken = user.ResetToken,
+                TokenExpiry = user.TokenExpiry,
+                isVerified = user.isVerified,
+                VerifyToken = user.VerifyToken
             };
         }
 
@@ -261,8 +277,53 @@ namespace Hospital.Domain.Users.SystemUser
                 Role = user.Role,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                IAMId = user.IAMId
+                IAMId = user.IAMId,
+                ResetToken = user.ResetToken,
+                TokenExpiry = user.TokenExpiry,
+                isVerified = user.isVerified,
+                VerifyToken = user.VerifyToken
             };
+        }
+
+        // Validate email token
+
+        public async Task<bool> ValidateEmailTokenAsync(string email, string token)
+        {
+            // Retrieve the user based on the provided email
+            var user = await _systemUserRepository.GetUserByEmailAsync(email);
+        
+            // Check if user exists
+            if (user == null)
+            {
+                return false; // Email does not exist
+            }
+
+            // Validate the token: Check if it matches the stored token and is not expired
+            bool tokenIsValid = user.ResetToken == token && user.TokenExpiry > DateTime.UtcNow;
+
+            return tokenIsValid;
+        }
+
+        public async Task<bool> ConfirmEmailAsync(string email, string token)
+        {
+            var user = await _systemUserRepository.GetUserByEmailAsync(email);
+            if (user == null)
+            {
+                return false; // User not found
+            }
+
+            // Assume user has Token and TokenExpiry properties
+            if (user.VerifyToken != token || user.TokenExpiry < DateTime.UtcNow)
+            {
+                return false; // Invalid token or expired
+            }
+
+            user.isVerified = true; // Set email confirmation
+            user.VerifyToken = null; // Clear the reset token
+            user.TokenExpiry = null; // Clear the expiry date
+
+            await _systemUserRepository.UpdateUserAsync(user); // Persist changes to the database
+            return true; // Email confirmed successfully
         }
 
         private string GenerateSetupLink(string email, string token)

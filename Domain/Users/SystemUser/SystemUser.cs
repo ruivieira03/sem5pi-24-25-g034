@@ -23,6 +23,8 @@ namespace Hospital.Domain.Users.SystemUser
         public string Password { get; set; }        // Password of the user
         public string IAMId { get; set; }          // Unique ID linked to IAM (Identity and Access Management)
         public string ResetToken { get; set; } // For storing the reset token
+        public bool isVerified { get; set; } // For storing the email verification status
+        public string VerifyToken { get; set; } // For storing the verification token
         public DateTime? TokenExpiry { get; set; } // For storing the token expiry time
 
         // Parameterless constructor for EF Core
@@ -42,6 +44,8 @@ namespace Hospital.Domain.Users.SystemUser
             Password = password;
             IAMId = iamId;
 
+            isVerified = true; // Admin-registered users are automatically verified
+
             // Backoffice users are registered by admin and must not be patients
             if (Role == Roles.Patient)
             {
@@ -50,7 +54,7 @@ namespace Hospital.Domain.Users.SystemUser
         }
 
         // Constructor for self-registered patient users
-        public SystemUser(string username, string email, string phoneNumber, string iamId)
+        public SystemUser(string username, string email, string phoneNumber)
         {
             Id = new SystemUserId(Guid.NewGuid());
             Username = username;
@@ -58,7 +62,9 @@ namespace Hospital.Domain.Users.SystemUser
             Email = email;         // Set Email
             PhoneNumber = phoneNumber; // Set PhoneNumber
             Password = "patient" + phoneNumber; // Default password for self-registered users
-            IAMId = iamId;
+            IAMId = Guid.NewGuid().ToString(); // Generate a unique IAM ID for the user
+
+            isVerified = false; // Self-registered users are not verified by default
         }
 
         // Simulate IAM authentication (would actually integrate with an external service)
