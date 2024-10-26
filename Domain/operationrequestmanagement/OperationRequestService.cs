@@ -12,5 +12,11 @@ namespace Hospital.Domain.operationrequestmanagement
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOperationRequestRepository _operationRequestRepository;
+
+        public OperationRequestService(IUnitOfWork unitOfWork, IOperationRequestRepository operationRequestRepository)
+        {
+            this._unitOfWork = unitOfWork;
+            this._operationRequestRepository = operationRequestRepository;
+        }
     }
 }
