@@ -1,4 +1,4 @@
-namespace Hospital.Domain.Users
+namespace Hospital.Domain.Users.staffmanagement
 {
     // Represents a staff member in the hospital
     public class Staff : Entity<LicenseNumber>, IAggregateRoot
