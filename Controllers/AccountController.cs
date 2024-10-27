@@ -8,7 +8,9 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MySql.Data.MySqlClient;
-using Hospital.Domain.Users;
+using Hospital.Domain.Users.SystemUser;
+using Hospital.Services;
+using Hospital.ViewModels;
 
 /**
  * AccountController
@@ -32,46 +34,53 @@ using Hospital.Domain.Users;
  *   user secrets in development. Refer to `README.md` for detailed instructions on how to set up user secrets.
  */
 [ApiController]
+[AllowAnonymous]
 [Route("api/[controller]")]
 public class AccountController : Controller
 {
     private readonly ISystemUserRepository _systemUserRepository;
 
-        public AccountController(ISystemUserRepository systemUserRepository)
+    private readonly IPasswordService _passwordService;
+    private readonly SystemUserService _systemUserService;
+
+    public AccountController(ISystemUserRepository systemUserRepository, IPasswordService passwordService, SystemUserService systemUserService)
+    {
+        _systemUserRepository = systemUserRepository;
+        _passwordService = passwordService;
+        _systemUserService = systemUserService;
+    }
+
+
+    [HttpPost("login")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Login([FromBody] LoginRequestViewModel request, string returnUrl = "/home")
+    {
+        var user = await _systemUserRepository.GetUserByUsernameAsync(request.Username);
+
+        if (user == null)
         {
-            _systemUserRepository = systemUserRepository;
+            return Unauthorized("Invalid username.");
         }
 
-        [HttpPost("login")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request, string returnUrl = "/home")
+        // #TODO: Here it should also verify the password
+        // For now, using without it
+        // if (!VerifyPassword(request.Password, user.Password)) // Implement password verification
+
+        // Create claims for the user
+        var claims = new List<Claim>
         {
-            var user = await _systemUserRepository.GetUserByUsernameAsync(request.Username);
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, user.Role.ToString()), // Role is an enum
+        };
 
-            if (user == null)
-            {
-                return Unauthorized("Invalid username.");
-            }
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-            // Here it should also verify the password
-            // For now, using without it
-            // if (!VerifyPassword(request.Password, user.Password)) // Implement password verification
+        // Sign in the user
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
-            // Create claims for the user
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role.ToString()), // Assuming Role is an enum
-            };
-
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-            // Sign in the user
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
-
-            return LocalRedirect(returnUrl);
-        }
+        return LocalRedirect(returnUrl);
+    }
 
     /**
      * Profile
@@ -98,12 +107,6 @@ public class AccountController : Controller
     /**
      * Logout
      * 
-     * Logs the user out by signing them out of both Auth0 and the local cookie authentication scheme.
-     * 
-     * @param returnUrl The URL where the user should be redirected after a successful logout. Defaults to "/home".
-     * @returns A task that performs the sign-out operations.
-     * 
-     * Ensure the **Allowed Logout URLs** in Auth0 settings include the return URL.
      */
     [Authorize]
     [HttpGet("logout")]
@@ -116,10 +119,141 @@ public class AccountController : Controller
         await HttpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
-}
 
-public class LoginRequest
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
+    /**
+    * GET: api/account/setup-password
+    * This endpoint is used to validate the token sent to the user's email after registration.
+    * It requires the user's email and the token.
+    */
+
+    [HttpGet("setup-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ValidateToken(string email, string token)
+    {
+        // Logic to validate the token
+        // Checking if the token is valid for the given email
+
+        bool isValid = await _passwordService.ValidateTokenForUser(email, token);
+
+        if (!isValid)
+        {
+            return BadRequest(new { message = "Invalid token." });
+        }
+
+        return Ok(new { message = "Token is valid." });
+    }
+
+
+    /** POST: api/account/setup-password
+    * This endpoint is used to set a new password for the user after they have registered.
+    * It requires the user's email and the new password.
+    */
+
+    [HttpPost("setup-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> SetNewPassword([FromBody] PasswordResetViewModel model)
+    {
+
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            await _systemUserService.ResetPasswordAsync(model.Email, model.Password);
+            return Ok(new { Message = "Password has been reset successfully." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+
+    }
+
+    /** POST: api/account/request-password-reset
+    * This endpoint is used to set a new password for the user after they have registered.
+    * It requires the user's email and the new password.
+    */
+
+    [HttpPost("request-password-reset")]
+    [AllowAnonymous]
+    public async Task<IActionResult> RequestPasswordReset([FromBody] PasswordResetRequestViewModel model)
+    {
+        try
+        {
+            await _systemUserService.RequestPasswordResetAsync(model.Email);
+            return Ok(new { Message = "Password reset link has been sent to your email." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    /** POST: api/account/reset-password
+    * This endpoint is used to set a new password for the user after they have registered.
+    * It requires the user's email and the new password.
+    */
+
+    [HttpPost("reset-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ResetPassword([FromBody] PasswordResetViewModel model)
+    {
+
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            await _systemUserService.ResetPasswordAsync(model.Email, model.Password);
+            return Ok(new { Message = "Password has been reset successfully." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    // GET api/account/confirm-email
+    [HttpGet("confirm-email")]
+    [AllowAnonymous] // Allow access to this endpoint without authentication
+    public async Task<IActionResult> ConfirmEmail()
+    {
+        // Extract email and token from the request's query string
+        string email = Request.Query["email"].ToString();
+        string token = Request.Query["token"].ToString();
+
+        // Ensure that both email and token are provided
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+        {
+            return BadRequest(new { Message = "Email or token is missing." });
+        }
+
+        try
+        {
+            // Call the service method to validate the email and token
+            bool isValid = await _systemUserService.ValidateEmailTokenAsync(email, token);
+
+            if (isValid)
+            {
+                // Proceed with confirming the email
+                await _systemUserService.ConfirmEmailAsync(email, token);
+                return Ok(new { Message = "Email confirmed successfully." });
+            }
+            else
+            {
+                return BadRequest(new { Message = "Invalid token or email confirmation failed." });
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the exception (consider using a logging framework)
+            return BadRequest(new { Message = "An error occurred during confirmation." });
+        }
+    }
+
+
 }

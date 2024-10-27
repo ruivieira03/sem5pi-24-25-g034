@@ -4,6 +4,7 @@ using Hospital.Infraestructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace sem5pi_24_25_g202.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    partial class HospitalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241026205722_MakeSystemUserIdNullable2")]
+    partial class MakeSystemUserIdNullable2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,7 +75,15 @@ namespace sem5pi_24_25_g202.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("varchar(15)");
 
+                    b.Property<Guid?>("SystemUserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("SystemUserId1")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SystemUserId1");
 
                     b.HasIndex("Email", "PhoneNumber")
                         .IsUnique();
@@ -82,7 +93,7 @@ namespace sem5pi_24_25_g202.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("91dae9c7-17f0-4bba-8b50-eab6c8753f39"),
+                            Id = new Guid("bd999d1c-4801-4995-bdb7-6856cbfb85a9"),
                             AllergiesOrMedicalConditions = "[\"Penicillin allergy\"]",
                             AppointmentHistory = "[\"Checkup on 2024-01-20\"]",
                             DateOfBirth = new DateTime(1985, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -96,7 +107,7 @@ namespace sem5pi_24_25_g202.Migrations
                         },
                         new
                         {
-                            Id = new Guid("4fcc3191-5a50-491e-9544-281d78217be6"),
+                            Id = new Guid("ff1a420a-2bb6-472e-a447-9b37bd2390ce"),
                             AllergiesOrMedicalConditions = "[\"Nut allergy\"]",
                             AppointmentHistory = "[\"Vaccination on 2023-05-15\"]",
                             DateOfBirth = new DateTime(1999, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -132,6 +143,7 @@ namespace sem5pi_24_25_g202.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("ResetToken")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("Role")
@@ -146,6 +158,7 @@ namespace sem5pi_24_25_g202.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("VerifyToken")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<bool>("isVerified")
@@ -158,7 +171,7 @@ namespace sem5pi_24_25_g202.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5f294de5-78e3-4f62-8655-b7d7e144e8b1"),
+                            Id = new Guid("65001c25-a3d2-44f7-8267-ad0acb1e2b48"),
                             Email = "ruimdv13@gmail.com",
                             IAMId = "1",
                             Password = "SEM5pi1234@",
@@ -171,7 +184,7 @@ namespace sem5pi_24_25_g202.Migrations
                         },
                         new
                         {
-                            Id = new Guid("c7d8a2a5-057d-4e2b-9840-f73178520f61"),
+                            Id = new Guid("2b09789d-c1b7-4687-b1fb-7a5e8f58dd4a"),
                             Email = "doctor@hospital.com",
                             IAMId = "2",
                             Password = "SEM5pi1234@",
@@ -184,7 +197,7 @@ namespace sem5pi_24_25_g202.Migrations
                         },
                         new
                         {
-                            Id = new Guid("fde98791-34c2-4da3-9771-c121f520277e"),
+                            Id = new Guid("bdd040a9-e0b8-4e7b-a206-314d500604bf"),
                             Email = "nurse@hospital.com",
                             IAMId = "3",
                             Password = "SEM5pi1234@",
@@ -195,6 +208,15 @@ namespace sem5pi_24_25_g202.Migrations
                             VerifyToken = "",
                             isVerified = true
                         });
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Patients.Patient", b =>
+                {
+                    b.HasOne("Hospital.Domain.Users.SystemUser.SystemUser", "SystemUser")
+                        .WithMany()
+                        .HasForeignKey("SystemUserId1");
+
+                    b.Navigation("SystemUser");
                 });
 #pragma warning restore 612, 618
         }

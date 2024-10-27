@@ -1,7 +1,8 @@
 using System;
 using Hospital.Domain.Shared;
+using Hospital.Domain.Patients;
 
-namespace Hospital.Domain.Users
+namespace Hospital.Domain.Users.SystemUser
 {
     // Enum to represent different user roles in the system
     public enum Roles
@@ -22,6 +23,12 @@ namespace Hospital.Domain.Users
         public string PhoneNumber { get; set; }    // Phone number (embedded from ContactInformation)
         public string Password { get; set; }        // Password of the user
         public string IAMId { get; set; }          // Unique ID linked to IAM (Identity and Access Management)
+        public bool isVerified { get; set; } // For storing the email verification status
+        public string? ResetToken { get; set; } // For storing the reset token
+
+        public string? VerifyToken { get; set; } // For storing the verification token
+        public DateTime? TokenExpiry { get; set; } // For storing the token expiry time
+
 
         // Parameterless constructor for EF Core
         public SystemUser() 
@@ -40,23 +47,28 @@ namespace Hospital.Domain.Users
             Password = password;
             IAMId = iamId;
 
-            // Backoffice users are registered by admin and must not be patients
+            isVerified = false; // Admin-registered users are automatically verified
+
+            /* Backoffice users are registered by admin and must not be patients
             if (Role == Roles.Patient)
             {
                 throw new InvalidOperationException("Patients must use the self-registration process.");
-            }
+            }*/
         }
 
         // Constructor for self-registered patient users
-        public SystemUser(string username, string email, string phoneNumber, string iamId)
+        public SystemUser(string username, string email, string phoneNumber, string password)
         {
             Id = new SystemUserId(Guid.NewGuid());
             Username = username;
-            Role = Roles.Patient;  // Default to Patient for self-registered users
-            Email = email;         // Set Email
-            PhoneNumber = phoneNumber; // Set PhoneNumber
-            Password = "patient" + phoneNumber; // Default password for self-registered users
-            IAMId = iamId;
+            Role = Roles.Patient;     // Patients are self-registered
+            Email = email;            // Set Email from the constructor
+            PhoneNumber = phoneNumber; // Set PhoneNumber from the constructor
+            Password = password;
+            IAMId = Guid.NewGuid().ToString();
+
+            isVerified = true; // Admin-registered users are automatically verified
+
         }
 
         // Simulate IAM authentication (would actually integrate with an external service)

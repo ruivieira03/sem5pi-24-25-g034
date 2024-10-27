@@ -3,7 +3,7 @@ using Hospital.Domain.Users.SystemUser;
 
 namespace Hospital.ViewModels
 {
-    public class RegisterUserViewModel
+    public class PatientUserViewModel
     {
         [Required(ErrorMessage = "Username is required.")]
         [MaxLength(50, ErrorMessage = "Username cannot exceed 50 characters.")]
@@ -17,9 +17,8 @@ namespace Hospital.ViewModels
         [Phone(ErrorMessage = "Invalid phone number format.")]
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Role is required.")]
-        [EnumDataType(typeof(Roles), ErrorMessage = "Invalid role.")]
-        public Roles Role { get; set; }
-
+        [Required(ErrorMessage = "Password is required.")]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters.")]
+        public string Password { get; set; }
     }
 }

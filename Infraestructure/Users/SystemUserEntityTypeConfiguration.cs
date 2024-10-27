@@ -1,41 +1,86 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Hospital.Domain.Users;
-using Hospital.Domain.Shared; // Ensure you include this for SystemUserId
+using Hospital.Domain.Users.SystemUser;
+using Hospital.Domain.Shared;
 
 namespace Hospital.Infraestructure.Users
 {
-    internal class SystemUserEntityTypeConfiguration : IEntityTypeConfiguration<SystemUser>
-    {
-        public void Configure(EntityTypeBuilder<SystemUser> builder)
-        {
-            // Define the table name
-            builder.ToTable("SystemUser");
+       internal class SystemUserEntityTypeConfiguration : IEntityTypeConfiguration<SystemUser>
+       {
+              public void Configure(EntityTypeBuilder<SystemUser> builder)
+              {
+                     // Map to the "SystemUser" table
+                     builder.ToTable("SystemUser");
 
-            // Define the primary key
-            builder.HasKey(b => b.Id);
+                     // Primary key definition
+                     builder.HasKey(b => b.Id);
 
-            // Define properties and map to database columns
-            builder.Property(b => b.Username)
-                   .IsRequired()
-                   .HasMaxLength(50); // Adjust as needed
+                     // Configure the Id property with a value converter
+                     builder.Property(b => b.Id)
+                            .HasConversion(
+                            id => id.AsGuid(), // Convert SystemUserId to Guid
+                            value => new SystemUserId(value) // Convert Guid to SystemUserId
+                     );
 
-            builder.Property(b => b.Role)
-                   .IsRequired();
+                     // Property configurations
+                     builder.Property(b => b.Username)
+                            .IsRequired()
+                            .HasMaxLength(50);
 
-            // Configure the Id property using a value converter
-            builder.Property(b => b.Id)
-                   .HasConversion(
-                       id => id.AsGuid(), // Convert SystemUserId to Guid
-                       value => new SystemUserId(value) // Convert Guid back to SystemUserId
-                   );
+                     builder.Property(b => b.Role)
+                            .IsRequired();
 
-            // Optionally, configure the Password and IAMId
-            builder.Property(b => b.Password)
-                   .IsRequired(); // Adjust if needed
+                     builder.Property(b => b.Password)
+                            .IsRequired();
 
-            builder.Property(b => b.IAMId)
-                   .IsRequired(); // Adjust if needed
+                     builder.Property(b => b.IAMId)
+                            .IsRequired();
+
+                     // Seed SystemUser data
+                     builder.HasData(
+                            new SystemUser
+                            {
+                            Id = new SystemUserId(Guid.NewGuid()),
+                            Username = "adminUser",
+                            Role = Roles.Admin,
+                            Password = "SEM5pi1234@", // Consider hashing in a real app
+                            IAMId = "1",
+                            Email = "ruimdv13@gmail.com",
+                            PhoneNumber = "912028969",
+                            ResetToken = "",
+                            VerifyToken = "",
+                            TokenExpiry = null,
+                            isVerified = true
+                     },
+                            new SystemUser
+                            {
+                            Id = new SystemUserId(Guid.NewGuid()),
+                            Username = "doctorUser",
+                            Role = Roles.Doctor,
+                            Password = "SEM5pi1234@", // Consider hashing in a real app
+                            IAMId = "2",
+                            Email = "doctor@hospital.com",
+                            PhoneNumber = "1234567891",
+                            ResetToken = "",
+                            VerifyToken = "",
+                            TokenExpiry = null,
+                            isVerified = true
+                     },
+                            new SystemUser
+                            {
+                            Id = new SystemUserId(Guid.NewGuid()),
+                            Username = "nurseUser",
+                            Role = Roles.Nurse,
+                            Password = "SEM5pi1234@", // Consider hashing in a real app
+                            IAMId = "3",
+                            Email = "nurse@hospital.com",
+                            PhoneNumber = "1234567892",
+                            ResetToken = "",
+                            VerifyToken = "",
+                            TokenExpiry = null,
+                            isVerified = true
+                     }
+              );
         }
     }
 }
