@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/admin/Desktop/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj": {}
+    "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\sem5pi-24-25-g034.csproj": {}
   },
   "projects": {
-    "/Users/admin/Desktop/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj": {
+    "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\sem5pi-24-25-g034.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/admin/Desktop/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\sem5pi-24-25-g034.csproj",
         "projectName": "sem5pi-24-25-g034",
-        "projectPath": "/Users/admin/Desktop/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj",
-        "packagesPath": "/Users/admin/.nuget/packages/",
-        "outputPath": "/Users/admin/Desktop/sem5pi-24-25-g034/obj/",
+        "projectPath": "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\sem5pi-24-25-g034.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/admin/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -151,7 +151,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

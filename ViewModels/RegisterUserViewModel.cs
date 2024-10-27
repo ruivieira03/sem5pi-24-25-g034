@@ -18,9 +18,8 @@ namespace Hospital.ViewModels
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Role is required.")]
+        [EnumDataType(typeof(Roles), ErrorMessage = "Invalid role.")]
         public Roles Role { get; set; }
-        public string ResetToken { get; set; } // For storing the reset token
-        public DateTime? TokenExpiry { get; set; } // For storing the token expiry time
 
     }
 }

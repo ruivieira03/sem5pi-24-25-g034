@@ -16,6 +16,8 @@ using Hospital.Domain.Users;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.Infraestructure.Users;
 using Hospital.Services;
+using Hospital.Infraestructure.Patients;
+using Hospital.Domain.Patients;
 
 namespace Hospital
 {
@@ -104,6 +106,10 @@ namespace Hospital
 
             services.AddTransient<ISystemUserRepository,SystemUserRepository>();
             services.AddTransient<SystemUserService>();
+
+            services.AddTransient<IPatientRepository, PatientRepository>();
+            services.AddTransient<PatientRegistrationService>();
+            services.AddTransient<PatientService>();
 
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IPasswordService, PasswordService>();
