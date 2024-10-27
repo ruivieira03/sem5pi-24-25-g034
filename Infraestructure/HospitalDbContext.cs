@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.Infraestructure.Users;
 using Hospital.Domain.Shared;
+using Hospital.Infraestructure.Patients;
+using Hospital.Domain.Patients;
 
 namespace Hospital.Infraestructure
 {
@@ -10,6 +12,7 @@ namespace Hospital.Infraestructure
     public class HospitalDbContext : DbContext
     {
         public DbSet<SystemUser> SystemUsers { get; set; }
+        public DbSet<Patient> Patients { get; set; }
 
         public HospitalDbContext(DbContextOptions options) : base(options)
         {
@@ -20,6 +23,7 @@ namespace Hospital.Infraestructure
            // Apply configurations
             modelBuilder.ApplyConfiguration(new SystemUserEntityTypeConfiguration());
 
+            modelBuilder.ApplyConfiguration(new PatientEntityTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

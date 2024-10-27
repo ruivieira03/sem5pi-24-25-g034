@@ -44,6 +44,33 @@ public class SystemUserController : ControllerBase
         }
     }
 
+    // POST api/SystemUser/register-patient
+    [HttpPost("register-patient")]
+    [AllowAnonymous]
+    public async Task<IActionResult> RegisterPatient([FromBody] PatientUserViewModel model)
+    {
+
+        // Check if the model state is valid
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            // Delegate the user registration logic to the service layer
+            var newUserDto = await _systemUserService.RegisterPatientUserAsync(model);
+
+            // Return a Created response with the new user's details
+            return CreatedAtAction(nameof(RegisterUser), new { id = newUserDto.Id }, newUserDto);
+        }
+        catch (Exception ex)
+        {
+            // Handle any exceptions (e.g., user creation failure) and return an error response
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     // GET: api/SystemUser
     [HttpGet]
     [Authorize(Roles = "Admin")]

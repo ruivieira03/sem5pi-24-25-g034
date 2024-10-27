@@ -48,6 +48,7 @@ namespace Hospital.Infraestructure.Users
                             Email = "ruimdv13@gmail.com",
                             PhoneNumber = "912028969",
                             ResetToken = "",
+                            VerifyToken = "",
                             TokenExpiry = null,
                             isVerified = true
                      },
@@ -61,6 +62,7 @@ namespace Hospital.Infraestructure.Users
                             Email = "doctor@hospital.com",
                             PhoneNumber = "1234567891",
                             ResetToken = "",
+                            VerifyToken = "",
                             TokenExpiry = null,
                             isVerified = true
                      },
@@ -74,6 +76,7 @@ namespace Hospital.Infraestructure.Users
                             Email = "nurse@hospital.com",
                             PhoneNumber = "1234567892",
                             ResetToken = "",
+                            VerifyToken = "",
                             TokenExpiry = null,
                             isVerified = true
                      }

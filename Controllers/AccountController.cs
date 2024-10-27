@@ -40,14 +40,12 @@ public class AccountController : Controller
 {
     private readonly ISystemUserRepository _systemUserRepository;
 
-    private readonly IEmailService _emailService;
     private readonly IPasswordService _passwordService;
     private readonly SystemUserService _systemUserService;
 
-    public AccountController(ISystemUserRepository systemUserRepository, IEmailService emailService, IPasswordService passwordService, SystemUserService systemUserService)
+    public AccountController(ISystemUserRepository systemUserRepository, IPasswordService passwordService, SystemUserService systemUserService)
     {
         _systemUserRepository = systemUserRepository;
-        _emailService = emailService;
         _passwordService = passwordService;
         _systemUserService = systemUserService;
     }

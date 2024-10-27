@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Hospital.ViewModels;
 using Hospital.Domain.Shared;
 using Hospital.Services;
+using Hospital.Domain.Patients;
+using Hospital.Domain.Users.SystemUser;
 
 namespace Hospital.Domain.Users.SystemUser
 {
@@ -13,13 +15,15 @@ namespace Hospital.Domain.Users.SystemUser
         private readonly ISystemUserRepository _systemUserRepository;
         private readonly IPasswordService _passwordService;
         private readonly IEmailService _emailService;
+        private readonly IPatientRepository _patientRepository;
 
-        public SystemUserService(IUnitOfWork unitOfWork, ISystemUserRepository systemUserRepository, IPasswordService passwordService, IEmailService emailService)
+        public SystemUserService(IUnitOfWork unitOfWork, ISystemUserRepository systemUserRepository, IPasswordService passwordService, IEmailService emailService, IPatientRepository patientRepository)
         {
             this._unitOfWork = unitOfWork;
             this._systemUserRepository = systemUserRepository;
             this._passwordService = passwordService;
             this._emailService = emailService;
+            this._patientRepository = patientRepository;
         }
 
         public async Task<SystemUserDto> RegisterUserAsync(RegisterUserViewModel model)
@@ -48,14 +52,14 @@ namespace Hospital.Domain.Users.SystemUser
             );
 
             // Generate and store the reset token
-            newUser.ResetToken = Guid.NewGuid().ToString();
+            newUser.VerifyToken = Guid.NewGuid().ToString();
             newUser.TokenExpiry = DateTime.UtcNow.AddHours(24); // Token valid for 24 hours
 
             // Save the user to the repository
             await _systemUserRepository.AddUserAsync(newUser);
 
             // Generate a one-time setup link
-            string setupLink = GenerateSetupLink(model.Email, newUser.ResetToken);
+            string setupLink = GenerateSetupLink(model.Email, newUser.VerifyToken);
 
             // Send the registration email with the setup link
             await _emailService.SendRegistrationEmailAsync(newUser.Email, setupLink);
@@ -78,6 +82,62 @@ namespace Hospital.Domain.Users.SystemUser
                 VerifyToken = newUser.VerifyToken
             };
         }
+
+        // Register a new patient user
+        // This method is similar to the RegisterUserAsync method, but it also links the patient profile to the new user
+        // #TODO Not working properly yet
+        public async Task<SystemUserDto> RegisterPatientUserAsync(PatientUserViewModel model)
+        {
+            // Verify if the username is already taken
+
+            if (await _systemUserRepository.GetUserByUsernameAsync(model.Username) != null)
+            {
+                throw new Exception("Username already taken.");
+            }
+
+            // Hash the temporary password before saving it
+            string hashedPassword = _passwordService.HashPassword(model.Password);
+
+            // Create a new SystemUser with the hashed password
+            var newUser = new SystemUser(
+                model.Username, 
+                model.Email, 
+                model.PhoneNumber, 
+                hashedPassword
+            );
+
+            // Generate and store the reset token
+            newUser.VerifyToken = Guid.NewGuid().ToString();
+            newUser.TokenExpiry = DateTime.UtcNow.AddHours(24); // Token valid for 24 hours
+
+            // Save the user to the repository
+            await _systemUserRepository.AddUserAsync(newUser);
+
+            // Generate a one-time setup link
+            string setupLink = GenerateEmailVerification(model.Email, newUser.VerifyToken);
+
+            // Send the registration email with the setup link
+            await _emailService.SendRegistrationEmailAsync(newUser.Email, setupLink);
+
+            // Commit the transaction
+            await _unitOfWork.CommitAsync();
+
+            // Return a DTO with the new user’s details
+            return new SystemUserDto
+            {
+                Id = newUser.Id.AsGuid(),
+                Username = newUser.Username,
+                Role = newUser.Role,
+                Email = newUser.Email,
+                PhoneNumber = newUser.PhoneNumber,
+                IAMId = newUser.IAMId,
+                ResetToken = newUser.ResetToken,
+                TokenExpiry = newUser.TokenExpiry,
+                isVerified = newUser.isVerified,
+                VerifyToken = newUser.VerifyToken
+            };
+        }
+
 
         // Request password reset by generating a token and sending an email
         public async Task<SystemUserDto> RequestPasswordResetAsync(string email)
@@ -299,7 +359,7 @@ namespace Hospital.Domain.Users.SystemUser
             }
 
             // Validate the token: Check if it matches the stored token and is not expired
-            bool tokenIsValid = user.ResetToken == token && user.TokenExpiry > DateTime.UtcNow;
+            bool tokenIsValid = user.VerifyToken == token && user.TokenExpiry > DateTime.UtcNow;
 
             return tokenIsValid;
         }
@@ -338,6 +398,22 @@ namespace Hospital.Domain.Users.SystemUser
             // Construct the setup link using application's base URL
             string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
             return $"{baseUrl}/reset-password?email={email}&token={token}";
+        }
+
+        private string GenerateEmailVerification(string email, string token)
+        {
+            // Construct the setup link using application's base URL
+            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
+            return $"{baseUrl}/confirm-email?email={email}&token={token}";
+        }
+
+        public async Task SendConfirmationEmailAsync(string email, string token)
+        {
+            // Construct the confirmation link
+            string confirmationLink = GenerateEmailVerification(email, token);
+
+            // Send the confirmation email
+            await _emailService.SendEmailConfirmationEmailAsync(email, confirmationLink);
         }
     
     }
