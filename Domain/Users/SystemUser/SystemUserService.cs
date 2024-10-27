@@ -320,14 +320,14 @@ namespace Hospital.Domain.Users.SystemUser
         }
 
         // Delete user
-        public async Task<SystemUserDto> DeleteAsync(SystemUserId id)
+        public async Task<SystemUserDto> DeleteAsync(SystemUserId userId)
         {
-            var user = await this._systemUserRepository.GetByIdAsync(id); 
+            var user = await this._systemUserRepository.GetByIdAsync(userId); 
 
             if (user == null)
                 return null;   
 
-            this._systemUserRepository.Remove(user);
+            await this._systemUserRepository.Remove(user);
             await this._unitOfWork.CommitAsync();
 
             return new SystemUserDto
@@ -364,6 +364,24 @@ namespace Hospital.Domain.Users.SystemUser
             return tokenIsValid;
         }
 
+        // Validate delete token
+        public async Task<bool> ValidateDeleteTokenAsync(string email, string token)
+        {
+            // Retrieve the user based on the provided email
+            var user = await _systemUserRepository.GetUserByEmailAsync(email);
+        
+            // Check if user exists
+            if (user == null)
+            {
+                return false; // Email does not exist
+            }
+
+            // Validate the token: Check if it matches the stored token and is not expired
+            bool tokenIsValid = user.DeleteToken == token && user.TokenExpiry > DateTime.UtcNow;
+
+            return tokenIsValid;
+        }
+
         public async Task<bool> ConfirmEmailAsync(string email, string token)
         {
             var user = await _systemUserRepository.GetUserByEmailAsync(email);
@@ -384,6 +402,37 @@ namespace Hospital.Domain.Users.SystemUser
 
             await _systemUserRepository.UpdateUserAsync(user); // Persist changes to the database
             return true; // Email confirmed successfully
+        }
+
+        public async Task RequestAccountDeletionAsync(SystemUserId userId)
+        {
+            // Verify if the user exists
+            var user = await _systemUserRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new InvalidOperationException("User not found.");
+            }
+
+            // Generate a unique token for account deletion confirmation
+            var token = Guid.NewGuid().ToString();
+            user.DeleteToken = token;
+
+            // Set the token expiry time
+            user.TokenExpiry = DateTime.UtcNow.AddHours(24); // Token valid for 24 hours
+
+            // Send the account deletion confirmation email
+            string deleteLink = GenerateDeleteLink(user.Email, token);
+            await _emailService.SendAccountDeletionEmailAsync(user.Email, deleteLink);
+
+            // Commit the changes
+            await _unitOfWork.CommitAsync();
+        }
+
+        private string GenerateDeleteLink(string email, string token)
+        {
+            // Construct the delete link using application's base URL
+            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
+            return $"{baseUrl}/confirm-delete-account?email={email}&token={token}";
         }
 
         private string GenerateSetupLink(string email, string token)

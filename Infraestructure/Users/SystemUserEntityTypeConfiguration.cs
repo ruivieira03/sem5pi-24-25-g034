@@ -36,6 +36,27 @@ namespace Hospital.Infraestructure.Users
                      builder.Property(b => b.IAMId)
                             .IsRequired();
 
+                     builder.Property(b => b.Email)
+                            .IsRequired();
+                     
+                     builder.Property(b => b.PhoneNumber)
+                            .IsRequired();
+
+                     builder.Property(b => b.ResetToken)
+                            .IsRequired(false);
+
+                     builder.Property(b => b.VerifyToken)
+                            .IsRequired(false);
+                     
+                     builder.Property(b => b.TokenExpiry)
+                            .IsRequired(false);
+
+                     builder.Property(b => b.isVerified)
+                            .IsRequired();
+                     
+                     builder.Property(b => b.DeleteToken)
+                            .IsRequired(false);
+
                      // Seed SystemUser data
                      builder.HasData(
                             new SystemUser
@@ -47,9 +68,6 @@ namespace Hospital.Infraestructure.Users
                             IAMId = "1",
                             Email = "ruimdv13@gmail.com",
                             PhoneNumber = "912028969",
-                            ResetToken = "",
-                            VerifyToken = "",
-                            TokenExpiry = null,
                             isVerified = true
                      },
                             new SystemUser
@@ -61,9 +79,6 @@ namespace Hospital.Infraestructure.Users
                             IAMId = "2",
                             Email = "doctor@hospital.com",
                             PhoneNumber = "1234567891",
-                            ResetToken = "",
-                            VerifyToken = "",
-                            TokenExpiry = null,
                             isVerified = true
                      },
                             new SystemUser
@@ -75,9 +90,6 @@ namespace Hospital.Infraestructure.Users
                             IAMId = "3",
                             Email = "nurse@hospital.com",
                             PhoneNumber = "1234567892",
-                            ResetToken = "",
-                            VerifyToken = "",
-                            TokenExpiry = null,
                             isVerified = true
                      }
               );

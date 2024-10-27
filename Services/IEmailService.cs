@@ -7,5 +7,6 @@ namespace Hospital.Services
         Task SendRegistrationEmailAsync(string email, string setupLink);
         Task SendPasswordResetEmailAsync(string email, string setupLink);
         Task SendEmailConfirmationEmailAsync(string email, string setupLink);
+        Task SendAccountDeletionEmailAsync(string email, string setupLink);
     }
 }

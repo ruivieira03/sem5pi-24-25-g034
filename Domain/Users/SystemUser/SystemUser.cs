@@ -27,6 +27,7 @@ namespace Hospital.Domain.Users.SystemUser
         public string? ResetToken { get; set; } // For storing the reset token
 
         public string? VerifyToken { get; set; } // For storing the verification token
+        public string? DeleteToken { get; set; } // For storing the delete token
         public DateTime? TokenExpiry { get; set; } // For storing the token expiry time
 
 

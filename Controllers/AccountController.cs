@@ -71,6 +71,8 @@ public class AccountController : Controller
         {
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Role, user.Role.ToString()), // Role is an enum
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.Value.ToString())
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -100,7 +102,8 @@ public class AccountController : Controller
             Name = User.Identity.Name,
             Email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
             Roles = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value,
-            ProfileImage = User.Claims.FirstOrDefault(c => c.Type == "picture")?.Value  
+            userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
+            
         });
     }
 
@@ -252,6 +255,77 @@ public class AccountController : Controller
         {
             // Log the exception (consider using a logging framework)
             return BadRequest(new { Message = "An error occurred during confirmation." });
+        }
+    }
+
+    // GET api/account/request-delete-account
+    [HttpGet("request-delete-account")]
+    [Authorize(Roles = "Patient")] // Only patients can request account deletion
+    public async Task<IActionResult> RequestDeleteAccount()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized("User ID is missing.");
+        }
+
+        try
+        {
+            await _systemUserService.RequestAccountDeletionAsync(new SystemUserId(userId));
+            return Ok(new { Message = "A confirmation email has been sent to your registered email address." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    // GET api/account/confirm-delete-account
+    [HttpGet("confirm-delete-account")]
+    [AllowAnonymous] // Allow access to this endpoint without authentication
+
+    public async Task<IActionResult> ConfirmDeleteAccount()
+    {
+    // Extract email and token from the request's query string
+    string email = Request.Query["email"].ToString();
+    string token = Request.Query["token"].ToString();
+
+    // Ensure that both email and token are provided
+    if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+    {
+        return BadRequest(new { Message = "Email or token is missing." });
+    }
+
+    try
+    {
+            // Call the service method to validate the email and token
+            bool isValid = await _systemUserService.ValidateDeleteTokenAsync(email, token);
+
+            // Await user retrieval
+            var user = await _systemUserRepository.GetUserByEmailAsync(email);
+
+            // Check if user exists
+            if (user == null)
+            {
+                return NotFound(new { Message = "User not found." });
+            }
+
+            if (isValid)
+            {
+                // Proceed with account deletion
+                await _systemUserService.DeleteAsync(new SystemUserId(user.Id.Value.ToString()));
+                return Ok(new { Message = "Account deleted successfully." });
+            }
+            else
+            {
+                return BadRequest(new { Message = "Invalid token or email confirmation failed." });
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            return BadRequest(new { Message = "An error occurred during confirmation.", Details = ex.Message });
         }
     }
 
