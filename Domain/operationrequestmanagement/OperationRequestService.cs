@@ -48,5 +48,23 @@ namespace Hospital.Domain.operationrequestmanagement
                 Priority = newRequest.Priority
             };
         }
+
+        //fetch all operation requests
+        public async Task<IEnumerable<OperationRequestDto>> GetAllOperationRequestsAsync()
+        {
+            // Get all operation requests from the repository
+            var requests = await _operationRequestRepository.GetAllAsync();
+
+            // Map the requests to DTOs
+            return requests.Select(request => new OperationRequestDto
+            {
+                ID = request.ID,
+                PatientID = request.PatientID,
+                DoctorID = request.DoctorID,
+                OperationTypeID = request.OperationTypeID,
+                DeadlineDate = request.DeadlineDate,
+                Priority = request.Priority
+            });
+        }
     }
 }
