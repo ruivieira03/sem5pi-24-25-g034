@@ -22,10 +22,18 @@ namespace Hospital.Domain.Patients
         public List<string> AllergiesOrMedicalConditions { get; set; } // Optional list of allergies or medical conditions
         public string EmergencyContact { get; set; }                 // Emergency contact information
         public List<string> AppointmentHistory { get; set; }    // List of previous and upcoming appointments
+<<<<<<< Updated upstream
 
         // Parameterless constructor for EF Core
         public Patient()
         {
+=======
+        public SystemUser? SystemUser { get; set; } // Navigation property back to SystemUser
+
+
+        // Parameterless constructor for EF Core
+        public Patient(){
+>>>>>>> Stashed changes
             Id = new PatientId(Guid.NewGuid()); // Initialize Id here if needed
             AppointmentHistory = new List<string>();
             AllergiesOrMedicalConditions = new List<string>();
@@ -34,9 +42,14 @@ namespace Hospital.Domain.Patients
 
         // Constructor to create a new patient with necessary details
         public Patient(string firstName, string lastName, DateTime dateOfBirth, string gender,
+<<<<<<< Updated upstream
                        string medicalRecordNumber, string email, string phoneNumber, string emergencyContact)
         {
             Id = new PatientId(Guid.NewGuid()); // Generate a new unique ID
+=======
+                       string medicalRecordNumber, string email, string phoneNumber, string emergencyContact){
+            Id = new PatientId(Guid.NewGuid()); // Generate a new unique ID == guid
+>>>>>>> Stashed changes
             FirstName = firstName;
             LastName = lastName;
             DateOfBirth = dateOfBirth;
@@ -48,6 +61,7 @@ namespace Hospital.Domain.Patients
 
             AppointmentHistory = new List<string>();
             AllergiesOrMedicalConditions = new List<string>();
+<<<<<<< Updated upstream
             
         }
 
@@ -58,6 +72,17 @@ namespace Hospital.Domain.Patients
             LastName = lastName;
             Email = email; // Email can trigger additional verification if changed
             PhoneNumber = phoneNumber; // Phone can trigger additional verification if changed
+=======
+        
+        }
+
+        // Method to update patient profile details
+        public void UpdateProfile(string firstName, string lastName, string email, string phoneNumber, string emergencyContact){
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;                          // Email can trigger additional verification if changed
+            PhoneNumber = phoneNumber;              // Phone can trigger additional verification if changed
+>>>>>>> Stashed changes
             EmergencyContact = emergencyContact;
         }
         

@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 namespace Hospital.Domain.Patients
 {
+<<<<<<< Updated upstream
     public class PatientId : EntityId
     {
         [JsonConstructor]
@@ -14,6 +15,11 @@ namespace Hospital.Domain.Patients
         public PatientId(String value) : base(value)
         {
         }
+=======
+    public class PatientId : EntityId{
+        [JsonConstructor]
+        public PatientId(Guid value) : base(value){}
+>>>>>>> Stashed changes
 
         override
         protected  Object createFromString(String text){

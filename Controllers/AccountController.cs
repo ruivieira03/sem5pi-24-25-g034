@@ -51,7 +51,7 @@ public class AccountController : Controller
     }
 
 
-    [HttpPost("login")]
+    [HttpPost("login")]   //login
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginRequestViewModel request, string returnUrl = "/home")
     {
@@ -71,6 +71,8 @@ public class AccountController : Controller
         {
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Role, user.Role.ToString()), // Role is an enum
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.Value.ToString())
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -100,7 +102,8 @@ public class AccountController : Controller
             Name = User.Identity.Name,
             Email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
             Roles = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value,
-            ProfileImage = User.Claims.FirstOrDefault(c => c.Type == "picture")?.Value  
+            userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
+            
         });
     }
 
@@ -240,8 +243,18 @@ public class AccountController : Controller
             if (isValid)
             {
                 // Proceed with confirming the email
-                await _systemUserService.ConfirmEmailAsync(email, token);
-                return Ok(new { Message = "Email confirmed successfully." });
+
+                var res = await _systemUserService.ConfirmEmailAsync(email, token);
+
+                if (res)
+                {
+                    return Ok(new { Message = "Email confirmed successfully." });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Failed to confirm the email." });
+                }
+
             }
             else
             {
@@ -254,6 +267,111 @@ public class AccountController : Controller
             return BadRequest(new { Message = "An error occurred during confirmation." });
         }
     }
+
+    // GET api/account/request-delete-account
+    [HttpGet("request-delete-account")]
+    [Authorize(Roles = "Patient")] // Only patients can request account deletion
+    public async Task<IActionResult> RequestDeleteAccount()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized("User ID is missing.");
+        }
+
+        try
+        {
+            await _systemUserService.RequestAccountDeletionAsync(new SystemUserId(userId));
+            return Ok(new { Message = "A confirmation email has been sent to your registered email address." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    // GET api/account/confirm-delete-account
+    [HttpGet("confirm-delete-account")]
+    [AllowAnonymous] // Allow access to this endpoint without authentication
+
+    public async Task<IActionResult> ConfirmDeleteAccount()
+    {
+    // Extract email and token from the request's query string
+    string email = Request.Query["email"].ToString();
+    string token = Request.Query["token"].ToString();
+
+    // Ensure that both email and token are provided
+    if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+    {
+        return BadRequest(new { Message = "Email or token is missing." });
+    }
+
+    try
+    {
+            // Call the service method to validate the email and token
+            bool isValid = await _systemUserService.ValidateDeleteTokenAsync(email, token);
+
+            // Await user retrieval
+            var user = await _systemUserRepository.GetUserByEmailAsync(email);
+
+            // Check if user exists
+            if (user == null)
+            {
+                return NotFound(new { Message = "User not found." });
+            }
+
+            if (isValid)
+            {
+                // Proceed with account deletion
+                await _systemUserService.DeleteAsync(new SystemUserId(user.Id.Value.ToString()));
+                return Ok(new { Message = "Account deleted successfully." });
+            }
+            else
+            {
+                return BadRequest(new { Message = "Invalid token or email confirmation failed." });
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            return BadRequest(new { Message = "An error occurred during confirmation.", Details = ex.Message });
+        }
+    }
+
+
+
+    // DELETE: api/Patient/5/delete-profile
+[HttpDelete("{id}/delete-profile")]    // us 5.1.11
+[Authorize(Roles = "Admin")]
+public async Task<IActionResult> DeleteProfile(Guid id)
+{
+    try
+    {
+        // Verifica se o perfil do paciente existe para exclusão
+        var patient = await _patientService.GetPatientByIdAsync(id);
+        if (patient == null)
+        {
+            return NotFound(new { Message = "Paciente não encontrado" }); // Retorna 404 se o paciente não existir
+        }
+
+        // Confirmação de exclusão - este método apenas prepara para a exclusão
+        // (Se precisar de confirmação interativa, considere como isso seria implementado na UI)
+        
+        // Executa a exclusão
+        var deletedPatient = await _patientService.DeleteProfileAsync(id);
+        
+        return Ok(new { Message = "Perfil do paciente excluído com sucesso", deletedPatient }); // Retorna sucesso e detalhes do paciente excluído
+    }
+    catch (BusinessRuleValidationException ex)
+    {
+        return BadRequest(new { Message = ex.Message }); // Retorna 400 em caso de falha de regras de negócio
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, new { Message = "Ocorreu um erro ao excluir o perfil do paciente.", Error = ex.Message }); // Retorna 500 em caso de erro interno
+    }
+}
 
 
 }
