@@ -19,7 +19,7 @@ namespace Hospital.Domain.operationrequestmanagement
             this._operationRequestRepository = operationRequestRepository;
         }
 
-        public async Task<OperationRequestDto> CreateOperationRequestAsync(CreateOperationRequestViewModel model)
+        public async Task<OperationRequestDto> CreateOperationRequestAsync(OperationRequestViewModel model)
         {
             // Create a new OperationRequest
             var newRequest = new OperationRequest(
@@ -158,18 +158,18 @@ namespace Hospital.Domain.operationrequestmanagement
         }
 
         //Update operation request
-        public async Task<OperationRequestDto> UpdateOperationRequestAsync(UpdateOperationRequestViewModel model)
+        public async Task<OperationRequestDto> UpdateOperationRequestAsync(OperationRequestDto dto)
         {
             // Get the operation request from the repository
-            var request = await _operationRequestRepository.GetByIdAsync(model.ID);
+            var request = await _operationRequestRepository.GetByIdAsync(dto.ID);
 
-            // Update the request
+            // Update the request with the new details
             request.Update(
-                model.PatientID,
-                model.DoctorID,
-                model.OperationTypeID,
-                model.DeadlineDate,
-                model.Priority
+                dto.PatientID,
+                dto.DoctorID,
+                dto.OperationTypeID,
+                dto.DeadlineDate,
+                dto.Priority
             );
 
             // Save the updated request to the repository

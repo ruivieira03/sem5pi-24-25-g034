@@ -589,3 +589,14 @@ C:/Users/User/Desktop/sem5pi-24-25-g034/bin/Debug/net8.0/Microsoft.Extensions.Co
 /Users/admin/Desktop/sem5pi-24-25-g034/obj/Debug/net8.0/sem5pi-24-25-g034.dll
 /Users/admin/Desktop/sem5pi-24-25-g034/obj/Debug/net8.0/refint/sem5pi-24-25-g034.dll
 /Users/admin/Desktop/sem5pi-24-25-g034/obj/Debug/net8.0/sem5pi-24-25-g034.pdb
+/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/obj/Debug/net8.0/sem5pi-24-25-g034.csproj.AssemblyReference.cache
+/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/obj/Debug/net8.0/sem5pi-24-25-g034.GeneratedMSBuildEditorConfig.editorconfig
+/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/obj/Debug/net8.0/sem5pi-24-25-g034.AssemblyInfoInputs.cache
+/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/obj/Debug/net8.0/sem5pi-24-25-g034.AssemblyInfo.cs
+/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/obj/Debug/net8.0/sem5pi-24-25-g034.csproj.CoreCompileInputs.cache
+/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/obj/Debug/net8.0/sem5pi-24-25-g034.MvcApplicationPartsAssemblyInfo.cs
+/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/obj/Debug/net8.0/sem5pi-24-25-g034.MvcApplicationPartsAssemblyInfo.cache
+/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/obj/Debug/net8.0/sem5pi-24-25-g034.sourcelink.json
+/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/obj/Debug/net8.0/sem5pi-24-25-g034.dll
+/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/obj/Debug/net8.0/refint/sem5pi-24-25-g034.dll
+/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/obj/Debug/net8.0/sem5pi-24-25-g034.pdb

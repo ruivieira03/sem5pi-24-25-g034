@@ -1,3 +1,5 @@
+using Hospital.Domain.Users.staffmanagement;
+
 namespace Hospital.Domain.operationrequestmanagement
 {
     public class CreatingOperationRequestDto

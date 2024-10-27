@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
-using Hospital.Domain.operation
+using Hospital.Domain.operationrequestmanagement;
 using Hospital.ViewModels;
 using Hospital.Domain.Shared;
 
@@ -19,7 +19,7 @@ public class OperationRequestController : ControllerBase
     // POST api/OperationRequest/create
     [Authorize(Roles = "Admin, Doctor")]
     [HttpPost("create")]
-    public async Task<IActionResult> CreateOperationRequest([FromBody] CreateOperationRequestViewModel model)
+    public async Task<IActionResult> CreateOperationRequest([FromBody] OperationRequestViewModel model)
     {
         // Check if the model state is valid
         if (!ModelState.IsValid)
@@ -98,21 +98,27 @@ public class OperationRequestController : ControllerBase
     // PUT: api/OperationRequest/5
     [Authorize(Roles = "Admin, Doctor")]
     [HttpPut("{id}")]
-    public async Task<ActionResult<OperationRequestDto>> Update(Guid id, [FromBody] UpdateOperationRequestViewModel model)
+    public async Task<ActionResult<OperationRequestDto>> Update(Guid id, OperationRequestDto dto)
     {
-        if (id != model.ID)
+        if (id != dto.ID)
         {
-            return BadRequest(); // Return 400 if ID in the route doesn't match the model
+            return BadRequest(); // Return 400 if ID in the route doesn't match the DTO
         }
 
-        try
+        try // Try to update the request
         {
-            var updatedRequest = await _operationRequestService.UpdateOperationRequestAsync(model);
+            var updatedRequest = await _operationRequestService.UpdateOperationRequestAsync(dto);
+
+            if (updatedRequest == null)
+            {
+                return NotFound(); // Return 404 if request not found
+            }
+
             return Ok(updatedRequest); // Return OK with the updated request
         }
-        catch (Exception ex)
+        catch (BusinessRuleValidationException ex)
         {
-            return BadRequest(new { message = ex.Message }); // Return 400 if any business rule fails
+            return BadRequest(new { Message = ex.Message }); // Return 400 if any business rule fails
         }
     }
 
