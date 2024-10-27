@@ -46,13 +46,13 @@ namespace Hospital.Infraestructure.operationrequestmanagement
         }
 
         // Adds a new OperationRequest to the database
-        public async Task AddUserAsync(OperationRequest request)
+        public async Task AddOperationRequestAsync(OperationRequest request)
         {
             await _context.OperationRequests.AddAsync(request);
         }
 
         // Updates an existing OperationRequest in the database
-        public async Task UpdateUserAsync(OperationRequest request)
+        public async Task UpdateOperationRequestAsync(OperationRequest request)
         {
             _context.OperationRequests.Update(request);
         }
