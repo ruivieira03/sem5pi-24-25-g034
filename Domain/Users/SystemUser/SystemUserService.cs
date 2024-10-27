@@ -239,10 +239,7 @@ namespace Hospital.Domain.Users.SystemUser
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IAMId = user.IAMId,
-                ResetToken = user.ResetToken,
-                TokenExpiry = user.TokenExpiry,
-                isVerified = user.isVerified,
-                VerifyToken = user.VerifyToken
+                isVerified = user.isVerified
             });
 
             return userDtos;

@@ -1,5 +1,6 @@
 using System;
 using Hospital.Domain.Shared;
+using Hospital.Domain.Patients;
 
 namespace Hospital.Domain.Users.SystemUser
 {
@@ -16,5 +17,7 @@ namespace Hospital.Domain.Users.SystemUser
         public bool isVerified { get; set; }       // Email verification status
         public string? VerifyToken { get; set; }   // Token for email verification
         public string? DeleteToken { get; set; }   // Token for account deletion
+        public string? PatientId { get; set; }     // Unique identifier for the associated patient
+        public Patient? Patient { get; set; }   // Associated patient details
     }
 }
