@@ -21,5 +21,7 @@ namespace Hospital.Domain.Patients
         public SystemUser? SystemUser { get; set; }                // System user associated with the patient
 
 
+        public List<string> AppointmentHistory {get;set;}      // List of apointment
+
     }
 }

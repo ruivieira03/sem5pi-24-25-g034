@@ -1,2 +1,2 @@
 SELECT * FROM SystemUser;
-SELECT * FROM Patients
+SELECT * FROM Patients;

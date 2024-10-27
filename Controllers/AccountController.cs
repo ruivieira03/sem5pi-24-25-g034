@@ -51,7 +51,7 @@ public class AccountController : Controller
     }
 
 
-    [HttpPost("login")]
+    [HttpPost("login")]   //login
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginRequestViewModel request, string returnUrl = "/home")
     {

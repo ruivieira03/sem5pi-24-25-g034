@@ -26,8 +26,7 @@ namespace Hospital.Domain.Patients
 
 
         // Parameterless constructor for EF Core
-        public Patient()
-        {
+        public Patient(){
             Id = new PatientId(Guid.NewGuid()); // Initialize Id here if needed
             AppointmentHistory = new List<string>();
             AllergiesOrMedicalConditions = new List<string>();
@@ -37,8 +36,8 @@ namespace Hospital.Domain.Patients
         // Constructor to create a new patient with necessary details
         public Patient(string firstName, string lastName, DateTime dateOfBirth, string gender,
                        string medicalRecordNumber, string email, string phoneNumber, string emergencyContact)
-        {
-            Id = new PatientId(Guid.NewGuid()); // Generate a new unique ID
+ {
+            Id = new PatientId(Guid.NewGuid()); // Generate a new unique ID == guid
             FirstName = firstName;
             LastName = lastName;
             DateOfBirth = dateOfBirth;
