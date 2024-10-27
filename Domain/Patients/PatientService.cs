@@ -1,14 +1,8 @@
 using System;
-<<<<<<< Updated upstream
-=======
-using System.Collections.Generic;
-using System.Linq;
->>>>>>> Stashed changes
 using System.Threading.Tasks;
 using Hospital.Domain.Shared;
 using Hospital.Infraestructure;
 
-<<<<<<< Updated upstream
 namespace Hospital.Domain.Patients
 {
 
@@ -41,29 +35,6 @@ namespace Hospital.Domain.Patients
             }
 
             // Update patient details
-=======
-namespace Hospital.Domain.Patients{
-    public class PatientService{
-        private readonly IPatientRepository _patientRepository;
-        private readonly IUnitOfWork _unitOfWork;
-
-        public PatientService(IPatientRepository patientRepository, IUnitOfWork unitOfWork){
-
-            _patientRepository = patientRepository;
-            _unitOfWork = unitOfWork;
-        }
-
-
-
-        public async Task<PatientDto> UpdateProfileAsync(UpdateProfileViewModel model, Guid patientId){
-            
-            if (model == null){throw new ArgumentNullException(nameof(model));}
-            var existingPatient = await _patientRepository.GetByIdAsync(new PatientId(patientId));
-            if (existingPatient == null){
-                throw new InvalidOperationException("Patient not found.");
-            }
-
->>>>>>> Stashed changes
             existingPatient.FirstName = model.FirstName;
             existingPatient.LastName = model.LastName;
             existingPatient.DateOfBirth = model.DateOfBirth;
@@ -73,20 +44,11 @@ namespace Hospital.Domain.Patients{
             existingPatient.EmergencyContact = model.EmergencyContact;
             existingPatient.AllergiesOrMedicalConditions = model.AllergiesOrMedicalConditions;
 
-<<<<<<< Updated upstream
-            // Save changes to the repository
-            await _patientRepository.UpdatePatientAsync(existingPatient);
-            await _unitOfWork.CommitAsync();
-
-            return new PatientDto
-            {
-=======
             await _patientRepository.UpdatePatientAsync(existingPatient);
             await _unitOfWork.CommitAsync();
 
             return new PatientDto{
 
->>>>>>> Stashed changes
                 FirstName = existingPatient.FirstName,
                 LastName = existingPatient.LastName,
                 DateOfBirth = existingPatient.DateOfBirth,
@@ -96,29 +58,9 @@ namespace Hospital.Domain.Patients{
                 EmergencyContact = existingPatient.EmergencyContact,
                 AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions
             };
-<<<<<<< Updated upstream
-
         }
 
-        public async Task DeleteAsync(PatientId patientId)
-        {
-            // Check if the patient exists
-            var existingPatient = await _patientRepository.GetByIdAsync(patientId);
-            if (existingPatient == null)
-            {
-                throw new InvalidOperationException("Patient not found.");
-            }
-
-            // Delete the patient record
-            await _patientRepository.Remove(existingPatient);
-            await _unitOfWork.CommitAsync();
-        }
-
-        
-    }
-}
-=======
-        }
+        /*
 
 
         public async Task<PatientDto> DeleteProfileAsync(Guid id){
@@ -142,12 +84,15 @@ namespace Hospital.Domain.Patients{
             };
             */    // log for future implementation 
 
+/*
             await _auditLogRepository.AddAsync(auditLog);
             await _patientRepository.Delete(patient); // Excluir perfil paciente
             await _unitOfWork.CommitAsync();     // commit transaction
             
             return patientDto;
         }
+
+        /*
 
         private bool ConfirmDeletion(){
             // Este método é apenas um placeholder. No sistema real, a confirmação deve vir do front-end.
@@ -170,10 +115,15 @@ namespace Hospital.Domain.Patients{
                 AppointmentHistory = patient.AppointmentHistory
             });
             return patientDto;
+            
         }
+        */
+        
 
     }
 }
 
+    
 
->>>>>>> Stashed changes
+
+

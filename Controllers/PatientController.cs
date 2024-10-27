@@ -93,4 +93,70 @@ namespace Hospital.Controllers
         
 
     }
+
+/*
+    // DELETE: api/Patient/5/delete-profile
+[HttpDelete("{id}/delete-profile")]
+[Authorize(Roles = "Admin")] // apenas Admin pode deletar
+public async Task<IActionResult> DeleteProfile(Guid id)
+{
+    try
+    {
+        // Verifica se o paciente existe
+        var patient = await _patientService.GetPatientByIdAsync(id);
+        if (patient == null)
+        {
+            // Retorna 404 se o paciente não existir
+            return NotFound(new { Message = "Paciente não encontrado" });
+        }
+
+        // Executa a exclusão
+        var deletedPatient = await _patientService.DeleteProfileAsync(id);
+        
+        // Retorna sucesso com a mensagem e o paciente excluído
+        return Ok(new { Message = "Perfil do paciente excluído com sucesso", deletedPatient });
+    }
+    catch (BusinessRuleValidationException ex)
+    {
+        // Retorna 400 em caso de falha de regras de negócio
+        return BadRequest(new { Message = ex.Message });
+    }
+    catch (Exception ex)
+    {
+        // Retorna 500 em caso de erro interno
+        return StatusCode(500, new { Message = "Ocorreu um erro ao excluir o perfil do paciente.", Error = ex.Message });
+    }
 }
+    
+
+/*
+    [HttpGet("list-patients-by-attributes")]
+[Authorize(Roles = "Admin")] // para agora apenas Admin, futuro pode incluir Staff
+public async Task<ActionResult<PaginatedList<PatientDto>>> ListPatients(
+    [FromQuery] string name = null,             // search Criteria here
+    [FromQuery] string email = null,
+    [FromQuery] DateTime? dateOfBirth = null,
+    [FromQuery] string medicalRecordNumber = null,
+    [FromQuery] int pageNumber = 1,   // INICIAL RESULTS
+    [FromQuery] int pageSize = 10)
+{
+   
+    var criteria = new PatientSearchCriteria  // search Criteria
+    {
+        Name = name,
+        Email = email,
+        DateOfBirth = dateOfBirth,
+        MedicalRecordNumber = medicalRecordNumber
+    };
+
+    // Chama o serviço para buscar os pacientes com base nos critérios
+    var patients = await _patientService.ListPatientsByAttributesAsync(criteria, pageNumber, pageSize);
+
+    return Ok(patients); // Retorna status OK com a lista paginada de pacientes
+}
+
+*/
+
+
+}
+

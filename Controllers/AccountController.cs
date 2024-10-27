@@ -339,7 +339,7 @@ public class AccountController : Controller
         }
     }
 
-
+/*
 
     // DELETE: api/Patient/5/delete-profile
 [HttpDelete("{id}/delete-profile")]    // us 5.1.11
@@ -372,6 +372,7 @@ public async Task<IActionResult> DeleteProfile(Guid id)
         return StatusCode(500, new { Message = "Ocorreu um erro ao excluir o perfil do paciente.", Error = ex.Message }); // Retorna 500 em caso de erro interno
     }
 }
+*/
 
 
 }
