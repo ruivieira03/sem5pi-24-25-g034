@@ -85,6 +85,78 @@ namespace Hospital.Domain.operationrequestmanagement
             };
         }
 
+        //fetch operation request by patient name
+        public async Task<IEnumerable<OperationRequestDto>> GetOperationRequestsByPatientAsync(string name)
+        {
+            // Get all operation requests by patient name from the repository
+            var requests = await _operationRequestRepository.GetOperationRequestsByPatientAsync(name);
+
+            // Map the requests to DTOs
+            return requests.Select(request => new OperationRequestDto
+            {
+                ID = request.ID,
+                PatientID = request.PatientID,
+                DoctorID = request.DoctorID,
+                OperationTypeID = request.OperationTypeID,
+                DeadlineDate = request.DeadlineDate,
+                Priority = request.Priority
+            });
+        }
+
+        //fetch operation request by type
+        public async Task<IEnumerable<OperationRequestDto>> GetOperationRequestsByTypeAsync(string operationTypeId)
+        {
+            // Get all operation requests by type from the repository
+            var requests = await _operationRequestRepository.GetOperationRequestsByTypeAsync(operationTypeId);
+
+            // Map the requests to DTOs
+            return requests.Select(request => new OperationRequestDto
+            {
+                ID = request.ID,
+                PatientID = request.PatientID,
+                DoctorID = request.DoctorID,
+                OperationTypeID = request.OperationTypeID,
+                DeadlineDate = request.DeadlineDate,
+                Priority = request.Priority
+            });
+        }
+
+        //fetch operation request by priority
+        public async Task<IEnumerable<OperationRequestDto>> GetOperationRequestsByPriorityAsync(int priority)
+        {
+            // Get all operation requests by priority from the repository
+            var requests = await _operationRequestRepository.GetOperationRequestsByPriorityAsync(priority);
+
+            // Map the requests to DTOs
+            return requests.Select(request => new OperationRequestDto
+            {
+                ID = request.ID,
+                PatientID = request.PatientID,
+                DoctorID = request.DoctorID,
+                OperationTypeID = request.OperationTypeID,
+                DeadlineDate = request.DeadlineDate,
+                Priority = request.Priority
+            });
+        }
+
+        //fetch operation request by status
+        public async Task<IEnumerable<OperationRequestDto>> GetOperationRequestsByStatusAsync(string status)
+        {
+            // Get all operation requests by status from the repository
+            var requests = await _operationRequestRepository.GetOperationRequestsByStatusAsync(status);
+
+            // Map the requests to DTOs
+            return requests.Select(request => new OperationRequestDto
+            {
+                ID = request.ID,
+                PatientID = request.PatientID,
+                DoctorID = request.DoctorID,
+                OperationTypeID = request.OperationTypeID,
+                DeadlineDate = request.DeadlineDate,
+                Priority = request.Priority
+            });
+        }
+
         //Update operation request
         public async Task<OperationRequestDto> UpdateOperationRequestAsync(UpdateOperationRequestViewModel model)
         {
