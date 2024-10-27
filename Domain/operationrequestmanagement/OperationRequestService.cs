@@ -191,16 +191,28 @@ namespace Hospital.Domain.operationrequestmanagement
         }
 
         //Delete operation request
-        public async Task DeleteOperationRequestAsync(OperationRequestId id)
+        public async Task<OperationRequestDto> DeleteOperationRequestAsync(OperationRequestId id)
         {
             // Get the operation request from the repository
             var request = await _operationRequestRepository.GetByIdAsync(id);
 
-            // Remove the request from the repository
-            await _operationRequestRepository.Remove(request);
+            if (request == null)
+            {
+                return null;
+            }
 
-            // Commit the transaction
-            await _unitOfWork.CommitAsync();
+            this._operationRequestRepository.Remove(request);
+            await this._unitOfWork.CommitAsync();
+
+            return new OperationRequestDto
+            {
+                ID = request.ID,
+                PatientID = request.PatientID,
+                DoctorID = request.DoctorID,
+                OperationTypeID = request.OperationTypeID,
+                DeadlineDate = request.DeadlineDate,
+                Priority = request.Priority
+            };
         }
     }
 }

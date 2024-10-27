@@ -98,7 +98,7 @@ public class OperationRequestController : ControllerBase
     // PUT: api/OperationRequest/5
     [Authorize(Roles = "Admin, Doctor")]
     [HttpPut("{id}")]
-    public async Task<ActionResult<OperationRequestDto>> Update(Guid id, OperationRequestDto dto)
+    public async Task<ActionResult<OperationRequestDto>> Update(OperationRequestId id, OperationRequestDto dto)
     {
         if (id != dto.ID)
         {
@@ -127,7 +127,20 @@ public class OperationRequestController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult<OperationRequestDto>> Delete(Guid id)
     {
-        var request = await _operationRequestService.DeleteOperationRequestAsync(new OperationRequestId(id));
-        return Ok(request); // Return OK with the deleted request's details
+        try // Try to delete the request
+        {
+            var deletedRequest = await _operationRequestService.DeleteOperationRequestAsync(new OperationRequestId(id));
+
+            if (deletedRequest == null)
+            {
+                return NotFound(); // Return 404 if request not found
+            }
+
+            return Ok(deletedRequest); // Return OK with the deleted request
+        }
+        catch (BusinessRuleValidationException ex)
+        {
+            return BadRequest(new { Message = ex.Message }); // Return 400 if any business rule fails
+        }
     }
 }

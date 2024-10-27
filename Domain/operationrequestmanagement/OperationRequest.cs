@@ -15,9 +15,9 @@ namespace Hospital.Domain.operationrequestmanagement
 
         public OperationRequest() { } // Empty constructor
 
-        public OperationRequest(Guid id, Guid patientID, LicenseNumber licenseNumber, string operationTypeID, DateTime deadlineDate, int priority)
+        public OperationRequest(OperationRequestId id, Guid patientID, LicenseNumber licenseNumber, string operationTypeID, DateTime deadlineDate, int priority)
         {
-            this.ID = Guid.NewGuid();
+            this.ID = id;
             this.PatientID = patientID;
             this.DoctorID = licenseNumber;
             this.OperationTypeID = operationTypeID;
