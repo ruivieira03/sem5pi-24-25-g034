@@ -85,7 +85,6 @@ namespace Hospital.Domain.Users.SystemUser
 
         // Register a new patient user
         // This method is similar to the RegisterUserAsync method, but it also links the patient profile to the new user
-        // #TODO Not working properly yet
         public async Task<SystemUserDto> RegisterPatientUserAsync(PatientUserViewModel model)
         {
             // Verify if the username is already taken
@@ -95,15 +94,28 @@ namespace Hospital.Domain.Users.SystemUser
                 throw new Exception("Username already taken.");
             }
 
+            if (await _systemUserRepository.GetUserByEmailAsync(model.Email) != null)
+            {
+                throw new Exception("Email already taken.");
+            }
+
             // Hash the temporary password before saving it
             string hashedPassword = _passwordService.HashPassword(model.Password);
+
+            var patientProfile = await _patientRepository.GetPatientByEmailAsync(model.Email);
+
+            if (patientProfile == null) 
+            {
+                throw new Exception("Patient profile for that email doesn't exist.");
+            }
 
             // Create a new SystemUser with the hashed password
             var newUser = new SystemUser(
                 model.Username, 
                 model.Email, 
                 model.PhoneNumber, 
-                hashedPassword
+                hashedPassword,
+                patientProfile
             );
 
             // Generate and store the reset token
@@ -400,7 +412,8 @@ namespace Hospital.Domain.Users.SystemUser
             user.VerifyToken = null; // Clear the reset token
             user.TokenExpiry = null; // Clear the expiry date
 
-            await _systemUserRepository.UpdateUserAsync(user); // Persist changes to the database
+            await _systemUserRepository.UpdateUserAsync(user); // Update the user
+            await _unitOfWork.CommitAsync(); // Commit the transaction
             return true; // Email confirmed successfully
         }
 

@@ -243,8 +243,18 @@ public class AccountController : Controller
             if (isValid)
             {
                 // Proceed with confirming the email
-                await _systemUserService.ConfirmEmailAsync(email, token);
-                return Ok(new { Message = "Email confirmed successfully." });
+
+                var res = await _systemUserService.ConfirmEmailAsync(email, token);
+
+                if (res)
+                {
+                    return Ok(new { Message = "Email confirmed successfully." });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Failed to confirm the email." });
+                }
+
             }
             else
             {

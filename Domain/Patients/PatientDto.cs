@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Hospital.Domain.Users.SystemUser;
 
 namespace Hospital.Domain.Patients
 {
@@ -16,6 +17,9 @@ namespace Hospital.Domain.Patients
         public string PhoneNumber { get; set; }                      // Phone number of the patient
         public List<string> AllergiesOrMedicalConditions { get; set; } // Optional list of allergies or medical conditions
         public string EmergencyContact { get; set; }                 // Emergency contact information
+        public SystemUserId? SystemUserId { get; set; }               // Unique identifier for the system user
+        public SystemUser? SystemUser { get; set; }                // System user associated with the patient
+
 
     }
 }

@@ -22,6 +22,14 @@ namespace Hospital.Infraestructure.Users
                             value => new SystemUserId(value) // Convert Guid to SystemUserId
                      );
 
+                     // Foreign key configuration for one-to-one relationship
+                     builder.HasOne(b => b.Patient)
+                            .WithOne(u => u.SystemUser)
+                            .HasForeignKey<SystemUser>(b => b.PatientId);
+
+                     builder.Property(b => b.PatientId)
+                            .IsRequired(false);   
+
                      // Property configurations
                      builder.Property(b => b.Username)
                             .IsRequired()
