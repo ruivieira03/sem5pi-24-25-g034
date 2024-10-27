@@ -42,12 +42,14 @@ public class AccountController : Controller
 
     private readonly IPasswordService _passwordService;
     private readonly SystemUserService _systemUserService;
+    private readonly LoggingService _loggingService;
 
-    public AccountController(ISystemUserRepository systemUserRepository, IPasswordService passwordService, SystemUserService systemUserService)
+    public AccountController(ISystemUserRepository systemUserRepository, IPasswordService passwordService, SystemUserService systemUserService, LoggingService loggingService)
     {
         _systemUserRepository = systemUserRepository;
         _passwordService = passwordService;
         _systemUserService = systemUserService;
+        _loggingService = loggingService;
     }
 
 
@@ -62,9 +64,11 @@ public class AccountController : Controller
             return Unauthorized("Invalid username.");
         }
 
-        // #TODO: Here it should also verify the password
-        // For now, using without it
-        // if (!VerifyPassword(request.Password, user.Password)) // Implement password verification
+        // Verify the password
+        if (!_passwordService.ValidatePassword(request.Password, user.Password))
+        {
+            return Unauthorized("Invalid password.");
+        }    
 
         // Create claims for the user
         var claims = new List<Claim>
@@ -325,6 +329,10 @@ public class AccountController : Controller
             {
                 // Proceed with account deletion
                 await _systemUserService.DeleteAsync(new SystemUserId(user.Id.Value.ToString()));
+                 
+                // Log the account deletion
+                await _loggingService.LogAccountDeletionAsync(user.Id.Value.ToString(), DateTime.UtcNow);
+
                 return Ok(new { Message = "Account deleted successfully." });
             }
             else
@@ -339,5 +347,53 @@ public class AccountController : Controller
         }
     }
 
+    // PUT: api/account/update-patient-user
+    [HttpPut("update-patient-user")]
+    [Authorize(Roles = "Patient")] // Ensure that only patients can update their profile
+    public async Task<ActionResult<SystemUserDto>> Update(SystemUserDto dto)
+    {
+        // Validate the provided DTO
+        if (dto == null || dto.Id == Guid.Empty)
+        {
+            return BadRequest(new { Message = "Invalid user data." }); // Return 400 if the DTO is null or ID is invalid
+        }
+
+        try
+        {
+            // Retrieve the existing user before the update for logging purposes
+            var existingUser = await _systemUserRepository.GetByIdAsync(new SystemUserId(dto.Id.ToString()));
+
+            if (existingUser == null)
+            {
+                return NotFound(); // Return 404 if user not found
+            }
+
+            if (dto.Email != existingUser.Email)
+            {
+                // If the email has changed, send a confirmation email
+                dto.VerifyToken = Guid.NewGuid().ToString();
+                await _systemUserService.SendConfirmationEmailAsync(dto.Email, dto.VerifyToken);
+            }
+
+            // Call the service method to update the SystemUser
+            var updatedUser = await _systemUserService.UpdateAsync(dto);
+
+            if (updatedUser == null)
+            {
+                return NotFound(); // Return 404 if user not found
+            }
+
+            // Log the changes (you can customize what fields to log)
+            string changedFields = _loggingService.GetChangedFields(existingUser, dto);
+            await _loggingService.LogProfileUpdateAsync(dto.Id.ToString(), changedFields, DateTime.UtcNow);
+
+            return Ok(updatedUser); // Return OK with the updated user
+        }
+        catch (Exception ex)
+        {
+            // Log the exception if necessary
+            return StatusCode(500, new { Message = "An unexpected error occurred.", Details = ex.Message }); // Return 500 for unexpected errors
+        }
+    }
 
 }

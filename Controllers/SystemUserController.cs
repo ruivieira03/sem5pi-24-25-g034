@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.ViewModels;
 using Hospital.Domain.Shared;
-using Hospital.Services;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -18,11 +17,10 @@ public class SystemUserController : ControllerBase
     }
 
     // POST api/SystemUser/register
-    [HttpPost("register")]
     [Authorize(Roles = "Admin")]
+    [HttpPost("register")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserViewModel model)
     {
-
         // Check if the model state is valid
         if (!ModelState.IsValid)
         {
@@ -44,36 +42,9 @@ public class SystemUserController : ControllerBase
         }
     }
 
-    // POST api/SystemUser/register-patient
-    [HttpPost("register-patient")]
-    [AllowAnonymous]
-    public async Task<IActionResult> RegisterPatient([FromBody] PatientUserViewModel model)
-    {
-
-        // Check if the model state is valid
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        try
-        {
-            // Delegate the user registration logic to the service layer
-            var newUserDto = await _systemUserService.RegisterPatientUserAsync(model);
-
-            // Return a Created response with the new user's details
-            return CreatedAtAction(nameof(RegisterUser), new { id = newUserDto.Id }, newUserDto);
-        }
-        catch (Exception ex)
-        {
-            // Handle any exceptions (e.g., user creation failure) and return an error response
-            return BadRequest(new { message = ex.Message });
-        }
-    }
-
     // GET: api/SystemUser
-    [HttpGet]
     [Authorize(Roles = "Admin")]
+    [HttpGet]
     public async Task<ActionResult<IEnumerable<SystemUserDto>>> GetAll()
     {
         var users = await _systemUserService.GetAllAsync();
@@ -81,8 +52,8 @@ public class SystemUserController : ControllerBase
     }
 
     // GET: api/SystemUser/5
-    [HttpGet("{id}")]
     [Authorize(Roles = "Admin")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<SystemUserDto>> GetById(Guid id)
     {
         var user = await _systemUserService.GetByIdAsync(new SystemUserId(id));
@@ -96,12 +67,9 @@ public class SystemUserController : ControllerBase
     }
 
 
-
-
-
     // PUT: api/SystemUser/5
-    [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
+    [HttpPut("{id}")]
     public async Task<ActionResult<SystemUserDto>> Update(Guid id, SystemUserDto dto)
     {
         if (id != dto.Id)
@@ -127,8 +95,8 @@ public class SystemUserController : ControllerBase
     }
 
     // Inactivate: api/SystemUser/5
-    [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
+    [HttpDelete("{id}")]
     public async Task<ActionResult<SystemUserDto>> SoftDelete(Guid id)
     {
         var user = await _systemUserService.InactivateAsync(new SystemUserId(id));
@@ -142,8 +110,8 @@ public class SystemUserController : ControllerBase
     }
 
     // DELETE: api/SystemUser/5/hard
-    [HttpDelete("{id}/hard")]
     [Authorize(Roles = "Admin")]
+    [HttpDelete("{id}/hard")]
     public async Task<ActionResult<SystemUserDto>> HardDelete(Guid id)
     {
         try

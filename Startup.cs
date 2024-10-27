@@ -18,6 +18,7 @@ using Hospital.Infraestructure.Users;
 using Hospital.Services;
 using Hospital.Infraestructure.Patients;
 using Hospital.Domain.Patients;
+using Hospital.Infraestructure.Logs;
 
 namespace Hospital
 {
@@ -113,6 +114,9 @@ namespace Hospital
 
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IPasswordService, PasswordService>();
+
+            services.AddTransient<ILogRepository, LogRepository>();
+            services.AddTransient<LoggingService>();
 
         }
     }

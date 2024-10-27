@@ -2,11 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.Domain.Shared;
+using Hospital.Services;
 
 namespace Hospital.Infraestructure.Users
 {
        internal class SystemUserEntityTypeConfiguration : IEntityTypeConfiguration<SystemUser>
        {
+              private readonly IPasswordService _passwordService;
               public void Configure(EntityTypeBuilder<SystemUser> builder)
               {
                      // Map to the "SystemUser" table
@@ -28,7 +30,7 @@ namespace Hospital.Infraestructure.Users
                             .HasForeignKey<SystemUser>(b => b.PatientId);
 
                      builder.Property(b => b.PatientId)
-                            .IsRequired(false);   
+                            .IsRequired(false);  
 
                      // Property configurations
                      builder.Property(b => b.Username)
@@ -72,7 +74,7 @@ namespace Hospital.Infraestructure.Users
                             Id = new SystemUserId(Guid.NewGuid()),
                             Username = "adminUser",
                             Role = Roles.Admin,
-                            Password = "SEM5pi1234@", // Consider hashing in a real app
+                            Password = _passwordService.HashPassword("SEM5pi1234@"), // Hashing the password
                             IAMId = "1",
                             Email = "ruimdv13@gmail.com",
                             PhoneNumber = "912028969",
@@ -83,7 +85,7 @@ namespace Hospital.Infraestructure.Users
                             Id = new SystemUserId(Guid.NewGuid()),
                             Username = "doctorUser",
                             Role = Roles.Doctor,
-                            Password = "SEM5pi1234@", // Consider hashing in a real app
+                            Password = _passwordService.HashPassword("SEM5pi1234@"), // Hashing the password
                             IAMId = "2",
                             Email = "doctor@hospital.com",
                             PhoneNumber = "1234567891",
@@ -94,7 +96,7 @@ namespace Hospital.Infraestructure.Users
                             Id = new SystemUserId(Guid.NewGuid()),
                             Username = "nurseUser",
                             Role = Roles.Nurse,
-                            Password = "SEM5pi1234@", // Consider hashing in a real app
+                            Password = _passwordService.HashPassword("SEM5pi1234@"), // Hashing the password
                             IAMId = "3",
                             Email = "nurse@hospital.com",
                             PhoneNumber = "1234567892",
