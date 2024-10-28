@@ -4,6 +4,7 @@ using Hospital.Infraestructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace sem5pi_24_25_g202.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    partial class HospitalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241027154430_DBUpdate1")]
+    partial class DBUpdate1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,7 +85,7 @@ namespace sem5pi_24_25_g202.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bcb27a69-7728-4c82-b263-c4923301e705"),
+                            Id = new Guid("47b658f7-4538-431a-9f6b-53e9ef4b656e"),
                             AllergiesOrMedicalConditions = "[\"Penicillin allergy\"]",
                             AppointmentHistory = "[\"Checkup on 2024-01-20\"]",
                             DateOfBirth = new DateTime(1985, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -96,7 +99,7 @@ namespace sem5pi_24_25_g202.Migrations
                         },
                         new
                         {
-                            Id = new Guid("642cc6d8-9347-41bf-8e37-cb670338e751"),
+                            Id = new Guid("b9326f9f-38a8-4691-960e-5d51cc10a966"),
                             AllergiesOrMedicalConditions = "[\"Nut allergy\"]",
                             AppointmentHistory = "[\"Vaccination on 2023-05-15\"]",
                             DateOfBirth = new DateTime(1999, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -130,9 +133,6 @@ namespace sem5pi_24_25_g202.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("char(36)");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -159,15 +159,12 @@ namespace sem5pi_24_25_g202.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientId")
-                        .IsUnique();
-
                     b.ToTable("SystemUser", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("6478ac18-770f-4ce9-b0cc-71b6645dab2c"),
+                            Id = new Guid("4ad3c670-b682-44df-a109-9d70e18b2303"),
                             Email = "ruimdv13@gmail.com",
                             IAMId = "1",
                             Password = "SEM5pi1234@",
@@ -178,7 +175,7 @@ namespace sem5pi_24_25_g202.Migrations
                         },
                         new
                         {
-                            Id = new Guid("3b5df397-d6e5-4ab9-b377-5cc86a4062f4"),
+                            Id = new Guid("d8cd5772-8eed-44d9-adea-35c00afc0ac5"),
                             Email = "doctor@hospital.com",
                             IAMId = "2",
                             Password = "SEM5pi1234@",
@@ -189,7 +186,7 @@ namespace sem5pi_24_25_g202.Migrations
                         },
                         new
                         {
-                            Id = new Guid("47e64300-8979-4bdb-a89c-84791030d559"),
+                            Id = new Guid("5be53628-13ec-4dfc-9278-45c1c76dd464"),
                             Email = "nurse@hospital.com",
                             IAMId = "3",
                             Password = "SEM5pi1234@",
@@ -198,20 +195,6 @@ namespace sem5pi_24_25_g202.Migrations
                             Username = "nurseUser",
                             isVerified = true
                         });
-                });
-
-            modelBuilder.Entity("Hospital.Domain.Users.SystemUser.SystemUser", b =>
-                {
-                    b.HasOne("Hospital.Domain.Patients.Patient", "Patient")
-                        .WithOne("SystemUser")
-                        .HasForeignKey("Hospital.Domain.Users.SystemUser.SystemUser", "PatientId");
-
-                    b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("Hospital.Domain.Patients.Patient", b =>
-                {
-                    b.Navigation("SystemUser");
                 });
 #pragma warning restore 612, 618
         }

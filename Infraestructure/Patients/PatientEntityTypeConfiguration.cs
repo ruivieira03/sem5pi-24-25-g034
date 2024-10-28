@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Hospital.Domain.Patients;
+using Hospital.Domain.Users.SystemUser;
 
 namespace Hospital.Infraestructure.Patients
 {
@@ -20,14 +21,6 @@ namespace Hospital.Infraestructure.Patients
                             id => id.AsGuid(), // Convert SystemUserId to Guid
                             value => new PatientId(value) // Convert Guid to SystemUserId
             );
-
-            /*builder.Property(p => p.SystemUserId)
-                .IsRequired(false);
-
-            // Foreign key configuration for one-to-one relationship
-            builder.HasOne(p => p.SystemUser)
-                   .WithOne(u => u.Patient)
-                   .HasForeignKey<Patient>(p => p.SystemUserId);*/
 
             // Properties configuration
             builder.Property(p => p.FirstName)

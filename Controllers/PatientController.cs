@@ -52,6 +52,20 @@ namespace Hospital.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+             // Get api/patient/list-patients
+ 
+        [HttpGet("list-patients")] // get list-patients
+        [Authorize(Roles = "Admin")] // for now admin , future add staff  
+      
+  public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll(){
+        var patient = await _patientService.GetAllAsync();
+        return Ok(patient); // Return OK status with the list of users
+       
+    }
+      
+
+
+
 
         /* Missing Additional endpoints for patient actions can be added here, e.g., GetById, Update, etc.
         * Patients cannot list their appointments without completing the registration process:

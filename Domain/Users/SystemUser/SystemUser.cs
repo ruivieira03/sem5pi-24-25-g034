@@ -27,7 +27,10 @@ namespace Hospital.Domain.Users.SystemUser
         public string? ResetToken { get; set; } // For storing the reset token
 
         public string? VerifyToken { get; set; } // For storing the verification token
+        public string? DeleteToken { get; set; } // For storing the delete token
         public DateTime? TokenExpiry { get; set; } // For storing the token expiry time
+        public Patient? Patient { get; set; } // Navigation property for patient
+        public PatientId? PatientId { get; set; } // Foreign key for patient
 
 
         // Parameterless constructor for EF Core
@@ -49,15 +52,15 @@ namespace Hospital.Domain.Users.SystemUser
 
             isVerified = false; // Admin-registered users are automatically verified
 
-            /* Backoffice users are registered by admin and must not be patients
+            // Backoffice users are registered by admin and must not be patients
             if (Role == Roles.Patient)
             {
                 throw new InvalidOperationException("Patients must use the self-registration process.");
-            }*/
+            }
         }
 
         // Constructor for self-registered patient users
-        public SystemUser(string username, string email, string phoneNumber, string password)
+        public SystemUser(string username, string email, string phoneNumber, string password, Patient patient)
         {
             Id = new SystemUserId(Guid.NewGuid());
             Username = username;
@@ -67,7 +70,10 @@ namespace Hospital.Domain.Users.SystemUser
             Password = password;
             IAMId = Guid.NewGuid().ToString();
 
-            isVerified = true; // Admin-registered users are automatically verified
+            isVerified = false; // Patients must verify their email before use
+
+            // Associate the patient with the user
+            Patient = patient;
 
         }
 

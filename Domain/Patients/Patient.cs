@@ -22,10 +22,11 @@ namespace Hospital.Domain.Patients
         public List<string> AllergiesOrMedicalConditions { get; set; } // Optional list of allergies or medical conditions
         public string EmergencyContact { get; set; }                 // Emergency contact information
         public List<string> AppointmentHistory { get; set; }    // List of previous and upcoming appointments
+        public SystemUser? SystemUser { get; set; } // Navigation property back to SystemUser
+
 
         // Parameterless constructor for EF Core
-        public Patient()
-        {
+        public Patient(){
             Id = new PatientId(Guid.NewGuid()); // Initialize Id here if needed
             AppointmentHistory = new List<string>();
             AllergiesOrMedicalConditions = new List<string>();
@@ -35,8 +36,8 @@ namespace Hospital.Domain.Patients
         // Constructor to create a new patient with necessary details
         public Patient(string firstName, string lastName, DateTime dateOfBirth, string gender,
                        string medicalRecordNumber, string email, string phoneNumber, string emergencyContact)
-        {
-            Id = new PatientId(Guid.NewGuid()); // Generate a new unique ID
+ {
+            Id = new PatientId(Guid.NewGuid()); // Generate a new unique ID == guid
             FirstName = firstName;
             LastName = lastName;
             DateOfBirth = dateOfBirth;
@@ -48,7 +49,7 @@ namespace Hospital.Domain.Patients
 
             AppointmentHistory = new List<string>();
             AllergiesOrMedicalConditions = new List<string>();
-            
+        
         }
 
         // Method to update patient profile details

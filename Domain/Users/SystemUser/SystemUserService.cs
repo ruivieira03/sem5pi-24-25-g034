@@ -85,7 +85,6 @@ namespace Hospital.Domain.Users.SystemUser
 
         // Register a new patient user
         // This method is similar to the RegisterUserAsync method, but it also links the patient profile to the new user
-        // #TODO Not working properly yet
         public async Task<SystemUserDto> RegisterPatientUserAsync(PatientUserViewModel model)
         {
             // Verify if the username is already taken
@@ -95,15 +94,28 @@ namespace Hospital.Domain.Users.SystemUser
                 throw new Exception("Username already taken.");
             }
 
+            if (await _systemUserRepository.GetUserByEmailAsync(model.Email) != null)
+            {
+                throw new Exception("Email already taken.");
+            }
+
             // Hash the temporary password before saving it
             string hashedPassword = _passwordService.HashPassword(model.Password);
+
+            var patientProfile = await _patientRepository.GetPatientByEmailAsync(model.Email);
+
+            if (patientProfile == null) 
+            {
+                throw new Exception("Patient profile for that email doesn't exist.");
+            }
 
             // Create a new SystemUser with the hashed password
             var newUser = new SystemUser(
                 model.Username, 
                 model.Email, 
                 model.PhoneNumber, 
-                hashedPassword
+                hashedPassword,
+                patientProfile
             );
 
             // Generate and store the reset token
@@ -227,10 +239,7 @@ namespace Hospital.Domain.Users.SystemUser
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IAMId = user.IAMId,
-                ResetToken = user.ResetToken,
-                TokenExpiry = user.TokenExpiry,
-                isVerified = user.isVerified,
-                VerifyToken = user.VerifyToken
+                isVerified = user.isVerified
             });
 
             return userDtos;
@@ -320,14 +329,14 @@ namespace Hospital.Domain.Users.SystemUser
         }
 
         // Delete user
-        public async Task<SystemUserDto> DeleteAsync(SystemUserId id)
+        public async Task<SystemUserDto> DeleteAsync(SystemUserId userId)
         {
-            var user = await this._systemUserRepository.GetByIdAsync(id); 
+            var user = await this._systemUserRepository.GetByIdAsync(userId); 
 
             if (user == null)
                 return null;   
 
-            this._systemUserRepository.Remove(user);
+            await this._systemUserRepository.Remove(user);
             await this._unitOfWork.CommitAsync();
 
             return new SystemUserDto
@@ -364,6 +373,24 @@ namespace Hospital.Domain.Users.SystemUser
             return tokenIsValid;
         }
 
+        // Validate delete token
+        public async Task<bool> ValidateDeleteTokenAsync(string email, string token)
+        {
+            // Retrieve the user based on the provided email
+            var user = await _systemUserRepository.GetUserByEmailAsync(email);
+        
+            // Check if user exists
+            if (user == null)
+            {
+                return false; // Email does not exist
+            }
+
+            // Validate the token: Check if it matches the stored token and is not expired
+            bool tokenIsValid = user.DeleteToken == token && user.TokenExpiry > DateTime.UtcNow;
+
+            return tokenIsValid;
+        }
+
         public async Task<bool> ConfirmEmailAsync(string email, string token)
         {
             var user = await _systemUserRepository.GetUserByEmailAsync(email);
@@ -382,8 +409,40 @@ namespace Hospital.Domain.Users.SystemUser
             user.VerifyToken = null; // Clear the reset token
             user.TokenExpiry = null; // Clear the expiry date
 
-            await _systemUserRepository.UpdateUserAsync(user); // Persist changes to the database
+            await _systemUserRepository.UpdateUserAsync(user); // Update the user
+            await _unitOfWork.CommitAsync(); // Commit the transaction
             return true; // Email confirmed successfully
+        }
+
+        public async Task RequestAccountDeletionAsync(SystemUserId userId)
+        {
+            // Verify if the user exists
+            var user = await _systemUserRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new InvalidOperationException("User not found.");
+            }
+
+            // Generate a unique token for account deletion confirmation
+            var token = Guid.NewGuid().ToString();
+            user.DeleteToken = token;
+
+            // Set the token expiry time
+            user.TokenExpiry = DateTime.UtcNow.AddHours(24); // Token valid for 24 hours
+
+            // Send the account deletion confirmation email
+            string deleteLink = GenerateDeleteLink(user.Email, token);
+            await _emailService.SendAccountDeletionEmailAsync(user.Email, deleteLink);
+
+            // Commit the changes
+            await _unitOfWork.CommitAsync();
+        }
+
+        private string GenerateDeleteLink(string email, string token)
+        {
+            // Construct the delete link using application's base URL
+            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
+            return $"{baseUrl}/confirm-delete-account?email={email}&token={token}";
         }
 
         private string GenerateSetupLink(string email, string token)
