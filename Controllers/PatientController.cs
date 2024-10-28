@@ -44,7 +44,11 @@ namespace Hospital.Controllers
                 var newPatientDto = await _patientRegistrationService.RegisterPatientProfileAsync(model);
 
                 // Return a Created response with the new user's details
-                return CreatedAtAction(nameof(RegisterPatientProfile), new { id = newPatientDto.Id }, newPatientDto);
+                return CreatedAtAction(nameof(RegisterPatientProfile), new { id = newPatientDto.Id }, new 
+                {
+                    message = "Patient profile created successfully", // For some reason Not returing Message On Postman
+                    patient = newPatientDto
+                });
             }
             catch (Exception ex)
             {
