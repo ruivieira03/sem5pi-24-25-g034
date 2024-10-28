@@ -462,5 +462,40 @@ public async Task<IActionResult> DeleteProfile(Guid id)
         }
     }
 
+    /*
+
+    // DELETE: api/Patient/5/delete-profile
+[HttpDelete("{id}/delete-profile")]    // us 5.1.11
+[Authorize(Roles = "Admin")]
+public async Task<IActionResult> DeleteProfile(Guid id)
+{
+    try
+    {
+        // Verifica se o perfil do paciente existe para exclusão
+        var patient = await _patientService.GetPatientByIdAsync(id);
+        if (patient == null)
+        {
+            return NotFound(new { Message = "Paciente não encontrado" }); // Retorna 404 se o paciente não existir
+        }
+
+        // Confirmação de exclusão - este método apenas prepara para a exclusão
+        // (Se precisar de confirmação interativa, considere como isso seria implementado na UI)
+        
+        // Executa a exclusão
+        var deletedPatient = await _patientService.DeleteProfileAsync(id);
+        
+        return Ok(new { Message = "Perfil do paciente excluído com sucesso", deletedPatient }); // Retorna sucesso e detalhes do paciente excluído
+    }
+    catch (BusinessRuleValidationException ex)
+    {
+        return BadRequest(new { Message = ex.Message }); // Retorna 400 em caso de falha de regras de negócio
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, new { Message = "Ocorreu um erro ao excluir o perfil do paciente.", Error = ex.Message }); // Retorna 500 em caso de erro interno
+    }
+}
+*/
+
 
 }
