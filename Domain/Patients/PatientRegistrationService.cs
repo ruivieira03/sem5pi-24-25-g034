@@ -28,7 +28,6 @@ namespace Hospital.Domain.Patients
             if (await _patientRepository.GetPatientByPhoneNumberAsync(model.PhoneNumber) != null)
                 throw new Exception("Phone Number already in use.");    // Bussines Rule , Verfiy Unique PhoneNumber
 
-
             // Create a new Patient from the registration model
 
             var newPatient = new Patient(
@@ -36,10 +35,10 @@ namespace Hospital.Domain.Patients
                 lastName: model.LastName,           
                 dateOfBirth: model.DateOfBirth,     
                 gender: model.Gender,                
-                medicalRecordNumber: model.MedicalRecordNumber, 
+                medicalRecordNumber: GenerateMedicalRecordNumber(), 
                 email: model.Email,                  
                 phoneNumber: model.PhoneNumber,      
-                emergencyContact: model.EmergencyContact 
+                emergencyContact: model.EmergencyContact
             );
 
             // Save the patient to the repository
@@ -62,6 +61,14 @@ namespace Hospital.Domain.Patients
                 EmergencyContact = newPatient.EmergencyContact
             };
         }
+
+        // #TODO Change method to be sequencial
+        public string GenerateMedicalRecordNumber() 
+        {
+            var random = new Random();
+            return random.Next(100000, 999999).ToString(); // Generates a 6-digit random number
+        }
+
 
     }
 

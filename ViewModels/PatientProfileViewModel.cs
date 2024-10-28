@@ -23,14 +23,11 @@ namespace Hospital.ViewModels
         [Required(ErrorMessage = "Gender is required.")]
         public string Gender { get; set; } // Added Gender
 
-        [Required(ErrorMessage = "Medical record number is required.")]
-        public string MedicalRecordNumber { get; set; } // Added MedicalRecordNumber
-
-        [Required(ErrorMessage = "Email is required.")]
+        [Required(ErrorMessage = "Email is required.")]             //Todo Verfiy Email tructure (9 Numberes only) format.
         [EmailAddress(ErrorMessage = "Invalid email format.")]
         public string Email { get; set; } // Existing property
 
-        [Required(ErrorMessage = "Phone number is required.")]
+        [Required(ErrorMessage = "Phone number is required.")]    //Todo Verfiy Phonenuymber structure (9 Numberes only)
         [Phone(ErrorMessage = "Invalid phone number format.")]
         public string PhoneNumber { get; set; } // Existing property
 
@@ -38,6 +35,6 @@ namespace Hospital.ViewModels
         public string EmergencyContact { get; set; } // Added EmergencyContact
 
         public List<string> AllergiesOrMedicalConditions { get; set; } = new List<string>(); // Added allergies/conditions
-        public List<string> AppointmentHistory { get; set; } = new List<string>(); // Added appointment history
+        public List<string>? AppointmentHistory { get; set; } = new List<string>(); // Added appointment history
     }
 }

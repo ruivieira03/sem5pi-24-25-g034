@@ -48,22 +48,21 @@ namespace Hospital.Controllers
             }
             catch (Exception ex)
             {
-                // Handle any exceptions (e.g., user creation failure) and return an error response
-                return BadRequest(new { message = ex.Message });
+                return BadRequest(new { message = ex.Message, innerException = ex.InnerException?.Message });
             }
+
         }
-             // Get api/patient/list-patients
- 
+             
+        // Get api/patient/list-patients
         [HttpGet("list-patients")] // get list-patients
         [Authorize(Roles = "Admin")] // for now admin , future add staff  
       
-  public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll(){
-        var patient = await _patientService.GetAllAsync();
-        return Ok(patient); // Return OK status with the list of users
-       
-    }
-      
+        public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll()
 
+        {
+            var patient = await _patientService.GetAllAsync();
+            return Ok(patient); // Return OK status with the list of users
+        }
 
 
 
@@ -100,8 +99,7 @@ namespace Hospital.Controllers
             }
             catch (Exception ex)
             {
-                // Handle any exceptions (e.g., update failure) and return an error response
-                return BadRequest(new { message = ex.Message });
+                return BadRequest(new { message = ex.Message, innerException = ex.InnerException?.Message });
             }
         }
         

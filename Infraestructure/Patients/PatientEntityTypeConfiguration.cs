@@ -53,6 +53,10 @@ namespace Hospital.Infraestructure.Patients
                 .HasMaxLength(500)
                 .IsRequired(false); // Optional
 
+            builder.Property(p => p.AppointmentHistory)
+                .HasMaxLength(500)
+                .IsRequired(false); // Optional
+
             builder.Property(p => p.EmergencyContact)
                 .HasMaxLength(100)
                 .IsRequired();
@@ -70,7 +74,6 @@ namespace Hospital.Infraestructure.Patients
                     LastName = "Giao",
                     DateOfBirth = new DateTime(1985, 5, 21),
                     Gender = "Male",
-                    MedicalRecordNumber = "MRN123456",
                     Email = "1220741@isep.ipp.pt",
                     PhoneNumber = "1234567890",
                     EmergencyContact = "0987654321",
@@ -84,7 +87,6 @@ namespace Hospital.Infraestructure.Patients
                     LastName = "Vieira",
                     DateOfBirth = new DateTime(1999, 10, 10),
                     Gender = "Male",
-                    MedicalRecordNumber = "MRN987654",
                     Email = "ruimdvieir@gmail.com",
                     PhoneNumber = "1234567891",
                     EmergencyContact = "0987654322",

@@ -9,6 +9,7 @@ public class UpdateProfileViewModel
     public string PhoneNumber { get; set; }                   // Phone number of the patient
     public string EmergencyContact { get; set; }              // Emergency contact information
     public List<string> AllergiesOrMedicalConditions { get; set; } // Optional allergies or medical conditions
+    public List<string> AppointmentHistory { get; set; }
 
     public UpdateProfileViewModel()
     {

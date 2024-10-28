@@ -41,6 +41,7 @@ namespace Hospital.Domain.Patients
             existingPatient.PhoneNumber = model.PhoneNumber;
             existingPatient.EmergencyContact = model.EmergencyContact;
             existingPatient.AllergiesOrMedicalConditions = model.AllergiesOrMedicalConditions;
+            existingPatient.AppointmentHistory = model.AppointmentHistory;
 
             await _patientRepository.UpdatePatientAsync(existingPatient);
             await _unitOfWork.CommitAsync();
@@ -54,9 +55,22 @@ namespace Hospital.Domain.Patients
                 Email = existingPatient.Email,
                 PhoneNumber = existingPatient.PhoneNumber,
                 EmergencyContact = existingPatient.EmergencyContact,
-                AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions
+                AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
+                AppointmentHistory = existingPatient.AppointmentHistory
             };
         }
+
+        public async Task DeleteAsync(PatientId patientId)
+        {
+            var existingPatient = await _patientRepository.GetByIdAsync(patientId);
+            if (existingPatient == null)
+            {
+                throw new InvalidOperationException("Patient not found.");
+            }
+
+            await _patientRepository.Remove(existingPatient);
+            await _unitOfWork.CommitAsync();
+    
         }
 
 
@@ -77,6 +91,8 @@ namespace Hospital.Domain.Patients
             });
             return patientDto;
     }
+
+    
 
 
         /*
@@ -139,20 +155,9 @@ namespace Hospital.Domain.Patients
         */
         
 
-        public async Task DeleteAsync(PatientId patientId)
-        {
-            var existingPatient = await _patientRepository.GetByIdAsync(patientId);
-            if (existingPatient == null)
-            {
-                throw new InvalidOperationException("Patient not found.");
-            }
-
-            await _patientRepository.Remove(existingPatient);
-            await _unitOfWork.CommitAsync();
-    
-        }
     }
 }
+    
 
     
 

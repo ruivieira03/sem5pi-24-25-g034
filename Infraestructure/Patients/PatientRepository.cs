@@ -24,10 +24,10 @@ namespace Hospital.Infraestructure.Patients
         }
 
 
-        public async Task<Patient> GetMedicalRecordNumberAsync(int medicalRecordNumber)
+        public async Task<Patient> GetMedicalRecordNumberAsync(string medicalRecordNumber)
         {
             return await _context.Patients
-                .FirstOrDefaultAsync(p => p.MedicalRecordNumber == medicalRecordNumber.ToString());
+                .FirstOrDefaultAsync(p => p.MedicalRecordNumber == medicalRecordNumber);
         }
 
         public async Task<Patient> GetPatientByEmailAsync(string email)

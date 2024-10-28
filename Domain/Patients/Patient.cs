@@ -21,7 +21,7 @@ namespace Hospital.Domain.Patients
         public string PhoneNumber { get; set; }                      // Phone number of the patient
         public List<string> AllergiesOrMedicalConditions { get; set; } // Optional list of allergies or medical conditions
         public string EmergencyContact { get; set; }                 // Emergency contact information
-        public List<string> AppointmentHistory { get; set; }    // List of previous and upcoming appointments
+        public List<string>? AppointmentHistory { get; set; }    // List of previous and upcoming appointments
         public SystemUser? SystemUser { get; set; } // Navigation property back to SystemUser
 
 
@@ -36,13 +36,13 @@ namespace Hospital.Domain.Patients
         // Constructor to create a new patient with necessary details
         public Patient(string firstName, string lastName, DateTime dateOfBirth, string gender,
                        string medicalRecordNumber, string email, string phoneNumber, string emergencyContact)
- {
-            Id = new PatientId(Guid.NewGuid()); // Generate a new unique ID == guid
+        {
+            Id = new PatientId(Guid.NewGuid()); // Generate a new unique ID == guid // Duvida prof Eapli//Arqsi Aqui ou no serviço.
             FirstName = firstName;
             LastName = lastName;
             DateOfBirth = dateOfBirth;
             Gender = gender;
-            MedicalRecordNumber = medicalRecordNumber; // Unique identifier
+            MedicalRecordNumber = medicalRecordNumber;
             Email = email; // Email must be unique
             PhoneNumber = phoneNumber; // Phone must be unique
             EmergencyContact = emergencyContact;
