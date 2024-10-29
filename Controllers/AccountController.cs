@@ -267,7 +267,9 @@ public class AccountController : Controller
             // Log the exception (consider using a logging framework)
             return BadRequest(new { Message = "An error occurred during confirmation." });
         }
+        
     }
+
 
     // GET api/account/request-delete-account
     [HttpGet("request-delete-account")]

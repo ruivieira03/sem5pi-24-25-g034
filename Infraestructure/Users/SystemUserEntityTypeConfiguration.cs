@@ -5,33 +5,29 @@ using Hospital.Domain.Shared;
 
 namespace Hospital.Infraestructure.Users
 {
-       internal class SystemUserEntityTypeConfiguration : IEntityTypeConfiguration<SystemUser>
-       {
-              public void Configure(EntityTypeBuilder<SystemUser> builder)
-              {
-                     // Map to the "SystemUser" table
-                     builder.ToTable("SystemUser");
+       internal class SystemUserEntityTypeConfiguration : IEntityTypeConfiguration<SystemUser>{
+              public void Configure(EntityTypeBuilder<SystemUser> builder){
+                     builder.ToTable("SystemUser");  // Create Table definition
 
-                     // Primary key definition
-                     builder.HasKey(b => b.Id);
+            
+                     builder.HasKey(b => b.Id);  // Primary key definition
 
-                     // Configure the Id property with a value converter
-                     builder.Property(b => b.Id)
+                    
+                     builder.Property(b => b.Id)  // Configure the Id property with a value converter
                             .HasConversion(
-                            id => id.AsGuid(), // Convert SystemUserId to Guid
+                            id => id.AsGuid(),                 // Convert SystemUserId to Guid
                             value => new SystemUserId(value) // Convert Guid to SystemUserId
                      );
 
-                     // Foreign key configuration for one-to-one relationship
-                     builder.HasOne(b => b.Patient)
+                   
+                     builder.HasOne(b => b.Patient)    // Foreign key configuration for one-to-one relationship
                             .WithOne(u => u.SystemUser)
                             .HasForeignKey<SystemUser>(b => b.PatientId);
 
                      builder.Property(b => b.PatientId)
                             .IsRequired(false);   
 
-                     // Property configurations
-                     builder.Property(b => b.Username)
+                     builder.Property(b => b.Username)   // atributes definition
                             .IsRequired()
                             .HasMaxLength(50);
 
@@ -67,8 +63,7 @@ namespace Hospital.Infraestructure.Users
 
                      // Seed SystemUser data
                      builder.HasData(
-                            new SystemUser
-                            {
+                            new SystemUser{
                             Id = new SystemUserId(Guid.NewGuid()),
                             Username = "adminUser",
                             Role = Roles.Admin,
@@ -78,8 +73,7 @@ namespace Hospital.Infraestructure.Users
                             PhoneNumber = "912028969",
                             isVerified = true
                      },
-                            new SystemUser
-                            {
+                            new SystemUser{
                             Id = new SystemUserId(Guid.NewGuid()),
                             Username = "doctorUser",
                             Role = Roles.Doctor,
