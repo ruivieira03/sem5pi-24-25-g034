@@ -61,27 +61,24 @@ namespace Hospital.Domain.Patients{
             };
         }
 
-          /*
-
-        // #TODO Change method to be sequencial
+          
+ 
+        //#TODO Change method to be sequencial
         public string GenerateMedicalRecordNumber(){
 
-        MediCalRecordNumber mediCalRecordNumber = null;
-        if( _patientReposiory.GetAllAsync()== 0)
-          var numberPatients =0;
-
-           var numberPatients = _patientReposiory.GetAllAsync()+1;
+            var numberPatients = _patientRepository.GetAllAsync().Result.Count;
 
             string formattedDate = DateTime.Now.ToString("yyyyMM");
             string combinedString = $"{formattedDate}{numberPatients:D6}";  // Combine the date and zero-padded number
-            string patientID = combinedString;
-               
-               return patientId;
+            string patientId = combinedString;
+           
+            return patientId;
             
     }
-    */
+    
+    
 
-
+/*
      
         // #TODO Change method to be sequencial
         public string GenerateMedicalRecordNumber() {
@@ -89,5 +86,9 @@ namespace Hospital.Domain.Patients{
             return random.Next(100000, 999999).ToString(); // Generates a 6-digit random number
         }
 
+    
+
+    }
+    */
     }
 }

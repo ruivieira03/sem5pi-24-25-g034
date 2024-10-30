@@ -19,20 +19,16 @@ using Hospital.Services;
 using Hospital.Infraestructure.Patients;
 using Hospital.Domain.Patients;
 
-namespace Hospital
-{
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
+namespace Hospital{
+    public class Startup{
+        public Startup(IConfiguration configuration){
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get;}
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
+        public void ConfigureServices(IServiceCollection services){
             services.AddDistributedMemoryCache();
 
             services.AddSession(options => {
@@ -73,14 +69,12 @@ namespace Hospital
     
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-           if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env){
+
+           if (env.IsDevelopment()){
+                app.UseDeveloperExceptionPage();    // Estoura com Exception
             }
-            else
-            {
+            else{
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -94,25 +88,23 @@ namespace Hospital
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
+            app.UseEndpoints(endpoints =>{     // wtf are endpoints ? xD
                 endpoints.MapControllers();
             });
         }
 
-        public void ConfigureMyServices(IServiceCollection services)
-        {
-            services.AddTransient<IUnitOfWork,UnitOfWork>();
+        public void ConfigureMyServices(IServiceCollection services){
 
-            services.AddTransient<ISystemUserRepository,SystemUserRepository>();
-            services.AddTransient<SystemUserService>();
+            services.AddTransient<IUnitOfWork,UnitOfWork>();                        // Database
+            services.AddTransient<ISystemUserRepository,SystemUserRepository>();    // SystemUsers 
+            services.AddTransient<SystemUserService>();                             // SystemUser Service
 
-            services.AddTransient<IPatientRepository, PatientRepository>();
-            services.AddTransient<PatientRegistrationService>();
-            services.AddTransient<PatientService>();
+            services.AddTransient<IPatientRepository, PatientRepository>();         // Patient
+            services.AddTransient<PatientRegistrationService>();                    // Register-Client Service
+            services.AddTransient<PatientService>();                                // Other us services Patient.               
 
-            services.AddTransient<IEmailService, EmailService>();
-            services.AddTransient<IPasswordService, PasswordService>();
+            services.AddTransient<IEmailService, EmailService>();               // Email 
+            services.AddTransient<IPasswordService, PasswordService>();         // Password
 
         }
     }

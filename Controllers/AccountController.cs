@@ -33,18 +33,17 @@ using Hospital.ViewModels;
  * - Ensure that sensitive configuration settings, such as Auth0 domain and client ID, are stored securely using 
  *   user secrets in development. Refer to `README.md` for detailed instructions on how to set up user secrets.
  */
+ 
 [ApiController]
 [AllowAnonymous]
 [Route("api/[controller]")]
-public class AccountController : Controller
-{
+public class AccountController : Controller{
     private readonly ISystemUserRepository _systemUserRepository;
 
     private readonly IPasswordService _passwordService;
     private readonly SystemUserService _systemUserService;
 
-    public AccountController(ISystemUserRepository systemUserRepository, IPasswordService passwordService, SystemUserService systemUserService)
-    {
+    public AccountController(ISystemUserRepository systemUserRepository, IPasswordService passwordService, SystemUserService systemUserService){
         _systemUserRepository = systemUserRepository;
         _passwordService = passwordService;
         _systemUserService = systemUserService;
@@ -84,21 +83,11 @@ public class AccountController : Controller
         return LocalRedirect(returnUrl);
     }
 
-    /**
-     * Profile
-     * 
-     * Returns the authenticated user's profile information, including their name, email, roles, and profile image.
-     * 
-     * @returns An object containing user details such as Name, Email, Roles, and ProfileImage.
-     * 
-     * This endpoint is protected by the `[Authorize]` attribute, ensuring that only authenticated users can access it.
-     */
+   
     [Authorize]
     [HttpGet("profile")]
-    public IActionResult Profile()
-    {
-        return Ok(new
-        {
+    public IActionResult Profile(){
+        return Ok(new {                    
             Name = User.Identity.Name,
             Email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
             Roles = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value,
@@ -107,14 +96,11 @@ public class AccountController : Controller
         });
     }
 
-    /**
-     * Logout
-     * 
-     */
+    
+
     [Authorize]
     [HttpGet("logout")]
-    public async Task Logout(string returnUrl = "/home")
-    {
+    public async Task Logout(string returnUrl = "/home"){
         var authenticationProperties = new LogoutAuthenticationPropertiesBuilder()
             .WithRedirectUri(returnUrl)
             .Build();
@@ -131,15 +117,13 @@ public class AccountController : Controller
 
     [HttpGet("setup-password")]
     [AllowAnonymous]
-    public async Task<IActionResult> ValidateToken(string email, string token)
-    {
+    public async Task<IActionResult> ValidateToken(string email, string token){
         // Logic to validate the token
         // Checking if the token is valid for the given email
 
         bool isValid = await _passwordService.ValidateTokenForUser(email, token);
 
-        if (!isValid)
-        {
+        if (!isValid){
             return BadRequest(new { message = "Invalid token." });
         }
 
@@ -163,8 +147,8 @@ public class AccountController : Controller
         try{
             await _systemUserService.ResetPasswordAsync(model.Email, model.Password);
             return Ok(new { Message = "Password has been reset successfully." });
-        }
-        catch (Exception ex){
+
+        }catch (Exception ex){
             return BadRequest(new { Message = ex.Message });
         }
 
@@ -204,8 +188,8 @@ public class AccountController : Controller
         try{
             await _systemUserService.ResetPasswordAsync(model.Email, model.Password);
             return Ok(new { Message = "Password has been reset successfully." });
-        }
-        catch (Exception ex){
+
+        }catch (Exception ex){
             return BadRequest(new { Message = ex.Message });
         }
     }
@@ -246,7 +230,7 @@ public class AccountController : Controller
     }
 
 
-    // GET api/account/request-delete-account
+    // GET api/account/request-delete-account  // whatou , what us is this
     [HttpGet("request-delete-account")]
     [Authorize(Roles = "Patient")] // Only patients can request account deletion
     public async Task<IActionResult> RequestDeleteAccount(){
@@ -298,75 +282,56 @@ public class AccountController : Controller
         }
     }
 
+
 /*
-
-    // DELETE: api/Patient/5/delete-profile
-[HttpDelete("{id}/delete-profile")]    // us 5.1.11
+ //DELETE: api/Patient/5/delete-profile
+[HttpDelete("{id}/delete-profile")]    // us Rui ,5.1.11
 [Authorize(Roles = "Admin")]
-public async Task<IActionResult> DeleteProfile(Guid id)
-{
-    try
-    {
-        // Verifica se o perfil do paciente existe para exclusão
+public async Task<IActionResult> DeleteProfileSoft(Guid id){
+    try{
         var patient = await _patientService.GetPatientByIdAsync(id);
-        if (patient == null)
-        {
+
+        if (patient == null){
             return NotFound(new { Message = "Paciente não encontrado" }); // Retorna 404 se o paciente não existir
         }
 
-        // Confirmação de exclusão - este método apenas prepara para a exclusão
-        // (Se precisar de confirmação interativa, considere como isso seria implementado na UI)
-        
-        // Executa a exclusão
         var deletedPatient = await _patientService.DeleteProfileAsync(id);
         
         return Ok(new { Message = "Perfil do paciente excluído com sucesso", deletedPatient }); // Retorna sucesso e detalhes do paciente excluído
-    }
-    catch (BusinessRuleValidationException ex)
-    {
+    }catch (BusinessRuleValidationException ex){
         return BadRequest(new { Message = ex.Message }); // Retorna 400 em caso de falha de regras de negócio
-    }
-    catch (Exception ex)
-    {
+    }catch (Exception ex){
         return StatusCode(500, new { Message = "Ocorreu um erro ao excluir o perfil do paciente.", Error = ex.Message }); // Retorna 500 em caso de erro interno
+    }
+}
+
+
+    
+
+// DELETE: api/Patient/5/delete-profile
+[HttpDelete("{id}/delete-profile")]    // us 5.1.11
+[Authorize(Roles = "Admin")]
+public async Task<IActionResult> DeleteProfileHard(Guid id){
+
+    try{
+        // Verifica se o perfil do paciente existe para exclusão
+        var patient = await _patientService.GetPatientByIdAsync(id);
+
+        if (patient == null){
+            return NotFound(new { Message = "Patient Not Found" }); // Retorna 404 se o paciente não existir
+        }
+        var deletedPatient = await _patientService.DeleteProfileAsync(id);
+        
+        return Ok(new { Message = "Patient Deleted Succesevly", deletedPatient }); // Retorna sucesso e detalhes do paciente excluído
+    }catch (BusinessRuleValidationException ex){
+        return BadRequest(new { Message = ex.Message });  // Retorna 400 em caso de falha de regras de negócio
+                                      
+    }catch (Exception ex){
+        return StatusCode(500, new { Message = "Error Deliting Patient.", Error = ex.Message }); // Retorna status 500 definido com a mensagem ai
     }
 }
 */
 
-    /*
-
-    // DELETE: api/Patient/5/delete-profile
-[HttpDelete("{id}/delete-profile")]    // us 5.1.11
-[Authorize(Roles = "Admin")]
-public async Task<IActionResult> DeleteProfile(Guid id)
-{
-    try
-    {
-        // Verifica se o perfil do paciente existe para exclusão
-        var patient = await _patientService.GetPatientByIdAsync(id);
-        if (patient == null)
-        {
-            return NotFound(new { Message = "Paciente não encontrado" }); // Retorna 404 se o paciente não existir
-        }
-
-        // Confirmação de exclusão - este método apenas prepara para a exclusão
-        // (Se precisar de confirmação interativa, considere como isso seria implementado na UI)
-        
-        // Executa a exclusão
-        var deletedPatient = await _patientService.DeleteProfileAsync(id);
-        
-        return Ok(new { Message = "Perfil do paciente excluído com sucesso", deletedPatient }); // Retorna sucesso e detalhes do paciente excluído
-    }
-    catch (BusinessRuleValidationException ex)
-    {
-        return BadRequest(new { Message = ex.Message }); // Retorna 400 em caso de falha de regras de negócio
-    }
-    catch (Exception ex)
-    {
-        return StatusCode(500, new { Message = "Ocorreu um erro ao excluir o perfil do paciente.", Error = ex.Message }); // Retorna 500 em caso de erro interno
-    }
-}
-*/
 
 
 }

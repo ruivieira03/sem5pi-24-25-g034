@@ -4,15 +4,13 @@ using Hospital.Domain.Shared;
 using System.ComponentModel.DataAnnotations.Schema;
 using Hospital.Domain.Users.SystemUser;
 
-namespace Hospital.Domain.Patients
-{
-    public class Patient : Entity<PatientId>
-    {
+namespace Hospital.Domain.Patients{
+    public class Patient : Entity<PatientId>{
         // Public properties for EF Core to bind to
         public string FirstName { get; set; }                        // First name of the patient
         public string LastName { get; set; }                         // Last name of the patient
        
-        [NotMapped]
+        [NotMapped]  // hmm , for later, what does this mean ?
         public string FullName => $"{FirstName} {LastName}";        // Full name, derived from first and last name
         public DateTime DateOfBirth { get; set; }                   // Date of birth of the patient
         public string Gender { get; set; }                           // Gender of the patient
@@ -35,8 +33,7 @@ namespace Hospital.Domain.Patients
 
         // Constructor to create a new patient with necessary details
         public Patient(string firstName, string lastName, DateTime dateOfBirth, string gender,
-                       string medicalRecordNumber, string email, string phoneNumber, string emergencyContact, List<string> appointmentHistory, List<string> allergiesOrMedicalConditions)
-        {
+                       string medicalRecordNumber, string email, string phoneNumber, string emergencyContact, List<string> appointmentHistory, List<string> allergiesOrMedicalConditions){
             Id = new PatientId(Guid.NewGuid()); // Generate a new unique ID == guid // Duvida prof Eapli//Arqsi Aqui ou no serviço.
             FirstName = firstName;
             LastName = lastName;
@@ -53,12 +50,12 @@ namespace Hospital.Domain.Patients
         }
 
         // Method to update patient profile details
-        public void UpdateProfile(string firstName, string lastName, string email, string phoneNumber, string emergencyContact)
-        {
+        public void UpdateProfile(string firstName, string lastName, string email, string phoneNumber, string emergencyContact){
+            
             FirstName = firstName;
             LastName = lastName;
-            Email = email; // Email can trigger additional verification if changed
-            PhoneNumber = phoneNumber; // Phone can trigger additional verification if changed
+            Email = email;                              // Email can trigger additional verification if changed
+            PhoneNumber = phoneNumber;                  // Phone can trigger additional verification if changed
             EmergencyContact = emergencyContact;
         }
         

@@ -5,31 +5,27 @@ using System.Threading.Tasks;
 using Hospital.Domain.Shared;
 using Hospital.Infraestructure;
 
-namespace Hospital.Domain.Patients
-{
-    public class PatientService
-    {
+namespace Hospital.Domain.Patients{
+    public class PatientService{
         private readonly IPatientRepository _patientRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public PatientService(IPatientRepository patientRepository, IUnitOfWork unitOfWork)
-        {
+        public PatientService(IPatientRepository patientRepository, IUnitOfWork unitOfWork){
             _patientRepository = patientRepository;
             _unitOfWork = unitOfWork;
         }
 
 
 
-        public async Task<PatientDto> UpdateProfileAsync(UpdateProfileViewModel model, Guid patientId)
-        {
-            if (model == null)
-            {
+        public async Task<PatientDto> UpdateProfileAsync(UpdateProfileViewModel model, Guid patientId){
+            
+            if (model == null){
                 throw new ArgumentNullException(nameof(model));
             }
 
             var existingPatient = await _patientRepository.GetByIdAsync(new PatientId(patientId));
-            if (existingPatient == null)
-            {
+
+            if (existingPatient == null){
                 throw new InvalidOperationException("Patient not found.");
             }
 
@@ -60,11 +56,10 @@ namespace Hospital.Domain.Patients
             };
         }
 
-        public async Task DeleteAsync(PatientId patientId)
-        {
+        public async Task DeleteAsync(PatientId patientId){
             var existingPatient = await _patientRepository.GetByIdAsync(patientId);
-            if (existingPatient == null)
-            {
+            
+            if (existingPatient == null){
                 throw new InvalidOperationException("Patient not found.");
             }
 
@@ -74,20 +69,19 @@ namespace Hospital.Domain.Patients
         }
 
 
-       public async Task<List<PatientDto>> GetAllAsync()
-{
+       public async Task<List<PatientDto>> GetAllAsync(){
     var patients = await _patientRepository.GetAllAsync();
             List<PatientDto> patientDto= patients.ConvertAll(patient => new PatientDto { 
-             Id = patient.Id.AsGuid(),
-            FirstName = patient.FirstName,
-             LastName = patient.LastName,
-             DateOfBirth = patient.DateOfBirth,
-             Gender = patient.Gender,
-              Email = patient.Email,
-              PhoneNumber = patient.PhoneNumber,
-            EmergencyContact = patient.EmergencyContact,
-            AllergiesOrMedicalConditions = patient.AllergiesOrMedicalConditions,            
-             AppointmentHistory = patient.AppointmentHistory
+                Id = patient.Id.AsGuid(),
+                FirstName = patient.FirstName,
+                LastName = patient.LastName,
+                DateOfBirth = patient.DateOfBirth,
+                Gender = patient.Gender,
+                Email = patient.Email,
+                PhoneNumber = patient.PhoneNumber,
+                EmergencyContact = patient.EmergencyContact,
+                AllergiesOrMedicalConditions = patient.AllergiesOrMedicalConditions,            
+                AppointmentHistory = patient.AppointmentHistory
             });
             return patientDto;
     }

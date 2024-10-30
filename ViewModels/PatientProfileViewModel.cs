@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Hospital.Domain.Patients;
 
-namespace Hospital.ViewModels
-{
-    public class PatientProfileViewModel
-    {
+namespace Hospital.ViewModels{
+    public class PatientProfileViewModel{
         [Required(ErrorMessage = "First name is required.")]
         [MaxLength(50, ErrorMessage = "First name cannot exceed 50 characters.")]
         public string FirstName { get; set; } // Added FirstName
