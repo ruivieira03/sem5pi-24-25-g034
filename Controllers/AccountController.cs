@@ -11,6 +11,7 @@ using MySql.Data.MySqlClient;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.Services;
 using Hospital.ViewModels;
+using Hospital.Domain.Patients;
 
 /**
  * AccountController
@@ -42,12 +43,14 @@ public class AccountController : Controller
 
     private readonly IPasswordService _passwordService;
     private readonly SystemUserService _systemUserService;
+    private readonly PatientService _patientService;
 
-    public AccountController(ISystemUserRepository systemUserRepository, IPasswordService passwordService, SystemUserService systemUserService)
+    public AccountController(ISystemUserRepository systemUserRepository, IPasswordService passwordService, SystemUserService systemUserService, PatientService patientService)
     {
         _systemUserRepository = systemUserRepository;
         _passwordService = passwordService;
         _systemUserService = systemUserService;
+        _patientService = patientService;
     }
 
 
@@ -325,6 +328,7 @@ public class AccountController : Controller
             {
                 // Proceed with account deletion
                 await _systemUserService.DeleteAsync(new SystemUserId(user.Id.Value.ToString()));
+                 
                 return Ok(new { Message = "Account deleted successfully." });
             }
             else
@@ -338,6 +342,35 @@ public class AccountController : Controller
             return BadRequest(new { Message = "An error occurred during confirmation.", Details = ex.Message });
         }
     }
+
+        // Update the patient's profile details
+        // PUT: api/account/update-profile
+        [HttpPut("{update-profile}")]
+        [Authorize] 
+        public async Task<IActionResult> UpdateProfile(UpdateProfileViewModel model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            // Check if the model state is valid
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try{
+        
+                // Delegate the update logic to the service layer
+                var updatedPatient = await _patientService.UpdateProfileAsUserAsync(model, new SystemUserId(userId));
+
+                // Return OK with the updated user
+                return Ok(updatedPatient);
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions (e.g., update failure) and return an error response
+                return BadRequest(new { message = ex.Message });
+            }
+        }
 
 
 }

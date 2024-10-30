@@ -91,6 +91,43 @@ namespace Hospital.Services
                 }
             }
         }
+
+         public async Task SendConfirmationEmailAsync(string email, string token)
+        {
+            // Construct the confirmation link
+            string confirmationLink = GenerateEmailVerification(email, token);
+
+            // Send the confirmation email
+            await SendEmailConfirmationEmailAsync(email, confirmationLink);
+        }
+
+        public string GenerateDeleteLink(string email, string token)
+        {
+            // Construct the delete link using application's base URL
+            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
+            return $"{baseUrl}/confirm-delete-account?email={email}&token={token}";
+        }
+
+        public string GenerateSetupLink(string email, string token)
+        {
+            // Construct the setup link using application's base URL
+            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
+            return $"{baseUrl}/setup-password?email={email}&token={token}";
+        }
+
+        public string GenerateResetLink(string email, string token)
+        {
+            // Construct the setup link using application's base URL
+            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
+            return $"{baseUrl}/reset-password?email={email}&token={token}";
+        }
+
+        public string GenerateEmailVerification(string email, string token)
+        {
+            // Construct the setup link using application's base URL
+            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
+            return $"{baseUrl}/confirm-email?email={email}&token={token}";
+        }
         
     }
 }

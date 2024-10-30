@@ -16,14 +16,16 @@ namespace Hospital.Domain.Users.SystemUser
         private readonly IPasswordService _passwordService;
         private readonly IEmailService _emailService;
         private readonly IPatientRepository _patientRepository;
+        private readonly ILoggingService _loggingService;
 
-        public SystemUserService(IUnitOfWork unitOfWork, ISystemUserRepository systemUserRepository, IPasswordService passwordService, IEmailService emailService, IPatientRepository patientRepository)
+        public SystemUserService(IUnitOfWork unitOfWork, ISystemUserRepository systemUserRepository, IPasswordService passwordService, IEmailService emailService, IPatientRepository patientRepository, ILoggingService loggingService)
         {
             this._unitOfWork = unitOfWork;
             this._systemUserRepository = systemUserRepository;
             this._passwordService = passwordService;
             this._emailService = emailService;
             this._patientRepository = patientRepository;
+            this._loggingService = loggingService;
         }
 
         public async Task<SystemUserDto> RegisterUserAsync(RegisterUserViewModel model)
@@ -59,7 +61,7 @@ namespace Hospital.Domain.Users.SystemUser
             await _systemUserRepository.AddUserAsync(newUser);
 
             // Generate a one-time setup link
-            string setupLink = GenerateSetupLink(model.Email, newUser.VerifyToken);
+            string setupLink = _emailService.GenerateSetupLink(model.Email, newUser.VerifyToken);
 
             // Send the registration email with the setup link
             await _emailService.SendRegistrationEmailAsync(newUser.Email, setupLink);
@@ -126,7 +128,7 @@ namespace Hospital.Domain.Users.SystemUser
             await _systemUserRepository.AddUserAsync(newUser);
 
             // Generate a one-time setup link
-            string setupLink = GenerateEmailVerification(model.Email, newUser.VerifyToken);
+            string setupLink = _emailService.GenerateEmailVerification(model.Email, newUser.VerifyToken);
 
             // Send the registration email with the setup link
             await _emailService.SendRegistrationEmailAsync(newUser.Email, setupLink);
@@ -165,7 +167,7 @@ namespace Hospital.Domain.Users.SystemUser
             user.TokenExpiry = DateTime.UtcNow.AddHours(1); // Token valid for 1 hour
 
             // Generate reset link
-            string resetLink = GenerateResetLink(user.Email, user.ResetToken);
+            string resetLink = _emailService.GenerateResetLink(user.Email, user.ResetToken);
             await _emailService.SendPasswordResetEmailAsync(user.Email, resetLink);
 
             // Commit the transaction
@@ -337,6 +339,9 @@ namespace Hospital.Domain.Users.SystemUser
                 return null;   
 
             await this._systemUserRepository.Remove(user);
+            
+            await this._loggingService.LogAccountDeletionAsync(user.Id.ToString(), DateTime.UtcNow);
+
             await this._unitOfWork.CommitAsync();
 
             return new SystemUserDto
@@ -431,48 +436,11 @@ namespace Hospital.Domain.Users.SystemUser
             user.TokenExpiry = DateTime.UtcNow.AddHours(24); // Token valid for 24 hours
 
             // Send the account deletion confirmation email
-            string deleteLink = GenerateDeleteLink(user.Email, token);
+            string deleteLink = _emailService.GenerateDeleteLink(user.Email, token);
             await _emailService.SendAccountDeletionEmailAsync(user.Email, deleteLink);
 
             // Commit the changes
             await _unitOfWork.CommitAsync();
-        }
-
-        private string GenerateDeleteLink(string email, string token)
-        {
-            // Construct the delete link using application's base URL
-            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
-            return $"{baseUrl}/confirm-delete-account?email={email}&token={token}";
-        }
-
-        private string GenerateSetupLink(string email, string token)
-        {
-            // Construct the setup link using application's base URL
-            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
-            return $"{baseUrl}/setup-password?email={email}&token={token}";
-        }
-
-        private string GenerateResetLink(string email, string token)
-        {
-            // Construct the setup link using application's base URL
-            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
-            return $"{baseUrl}/reset-password?email={email}&token={token}";
-        }
-
-        private string GenerateEmailVerification(string email, string token)
-        {
-            // Construct the setup link using application's base URL
-            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
-            return $"{baseUrl}/confirm-email?email={email}&token={token}";
-        }
-
-        public async Task SendConfirmationEmailAsync(string email, string token)
-        {
-            // Construct the confirmation link
-            string confirmationLink = GenerateEmailVerification(email, token);
-
-            // Send the confirmation email
-            await _emailService.SendEmailConfirmationEmailAsync(email, confirmationLink);
         }
     
     }

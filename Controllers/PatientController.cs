@@ -71,39 +71,6 @@ namespace Hospital.Controllers
         * Patients cannot list their appointments without completing the registration process:
         * To verify this, we use the isVerified property in the SystemUser entity.
         */
-
-        // Update the patient's profile details
-        // PUT: api/Patient/5/update-profile
-        [HttpPut("{id}/update-profile")]
-        [Authorize] 
-        public async Task<IActionResult> UpdateProfile(Guid id, UpdateProfileViewModel model)
-        {
-            // Check if the model state is valid
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            // Check if the user ID in the route matches the current user's ID
-            if (id != model.Id)
-            {
-                return BadRequest(); // Return 400 if ID in the route doesn't match the current user's ID
-            }
-
-            try
-            {
-                // Delegate the update logic to the service layer
-                var updatedPatient = await _patientService.UpdateProfileAsync(model, id);
-
-                // Return OK with the updated user
-                return Ok(updatedPatient);
-            }
-            catch (Exception ex)
-            {
-                // Handle any exceptions (e.g., update failure) and return an error response
-                return BadRequest(new { message = ex.Message });
-            }
-        }
         
 
     }
