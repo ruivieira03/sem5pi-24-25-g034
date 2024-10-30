@@ -5,8 +5,7 @@ using Hospital.Services;
 using Hospital.ViewModels;
 using Hospital.Domain.Shared;
 
-namespace Hospital.Domain.Patients
-{
+namespace Hospital.Domain.Patients{
     public class PatientRegistrationService{
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISystemUserRepository _systemUserRepository;
@@ -23,14 +22,14 @@ namespace Hospital.Domain.Patients
         public async Task<PatientDto> RegisterPatientProfileAsync(PatientProfileViewModel model){
             
             if (await _patientRepository.GetPatientByEmailAsync(model.Email) != null)
-                throw new Exception("Email already taken.");            // Bussines Rule , Verfiy Unique Email
+                throw new Exception("Email already taken.");                        // Bussines Rule , Verfiy Unique Email
         
             if (await _patientRepository.GetPatientByPhoneNumberAsync(model.PhoneNumber) != null)
-                throw new Exception("Phone Number already in use.");    // Bussines Rule , Verfiy Unique PhoneNumber
+                throw new Exception("Phone Number already in use.");             // Bussines Rule , Verfiy Unique PhoneNumber
 
-            // Create a new Patient from the registration model
-
-            var newPatient = new Patient(
+        
+            var newPatient = new Patient(                            // Create a new Patient from the registration model
+                
                 firstName: model.FirstName,         
                 lastName: model.LastName,           
                 dateOfBirth: model.DateOfBirth,     
@@ -41,18 +40,14 @@ namespace Hospital.Domain.Patients
                 emergencyContact: model.EmergencyContact,
                 appointmentHistory: model.AppointmentHistory,
                 allergiesOrMedicalConditions: model.AllergiesOrMedicalConditions
-            );
+            ); 
+            await _patientRepository.AddPatientAsync(newPatient); // Save the patient to the repository  
+            await _unitOfWork.CommitAsync();                // Commit the transaction
 
-            // Save the patient to the repository
-            await _patientRepository.AddPatientAsync(newPatient);
-
-            // Commit the transaction
-            await _unitOfWork.CommitAsync();
-
-            // Return a DTO with the new patient’s details
-            return new PatientDto   
-            {
-                Id = newPatient.Id.AsGuid(), // Assuming PatientId has an AsGuid method
+    
+            return new PatientDto{                      // Return a DTO with the new patient’s details
+               
+                Id = newPatient.Id.AsGuid(),            // Assuming PatientId has an AsGuid method
                 FirstName = newPatient.FirstName,
                 LastName = newPatient.LastName,
                 DateOfBirth = newPatient.DateOfBirth,
@@ -66,8 +61,7 @@ namespace Hospital.Domain.Patients
             };
         }
 
-
-        /*
+          /*
 
         // #TODO Change method to be sequencial
         public string GenerateMedicalRecordNumber(){
@@ -86,9 +80,11 @@ namespace Hospital.Domain.Patients
             
     }
     */
+
+
+     
         // #TODO Change method to be sequencial
-        public string GenerateMedicalRecordNumber() 
-        {
+        public string GenerateMedicalRecordNumber() {
             var random = new Random();
             return random.Next(100000, 999999).ToString(); // Generates a 6-digit random number
         }
