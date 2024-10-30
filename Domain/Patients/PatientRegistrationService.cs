@@ -38,7 +38,9 @@ namespace Hospital.Domain.Patients
                 medicalRecordNumber: GenerateMedicalRecordNumber(), 
                 email: model.Email,                  
                 phoneNumber: model.PhoneNumber,      
-                emergencyContact: model.EmergencyContact
+                emergencyContact: model.EmergencyContact,
+                appointmentHistory: model.AppointmentHistory,
+                allergiesOrMedicalConditions: model.AllergiesOrMedicalConditions
             );
 
             // Save the patient to the repository
@@ -58,7 +60,9 @@ namespace Hospital.Domain.Patients
                 MedicalRecordNumber = newPatient.MedicalRecordNumber,
                 Email = newPatient.Email,
                 PhoneNumber = newPatient.PhoneNumber,
-                EmergencyContact = newPatient.EmergencyContact
+                EmergencyContact = newPatient.EmergencyContact,
+                AppointmentHistory = newPatient.AppointmentHistory,
+                AllergiesOrMedicalConditions = newPatient.AllergiesOrMedicalConditions
             };
         }
 

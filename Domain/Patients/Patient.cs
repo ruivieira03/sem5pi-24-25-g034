@@ -35,7 +35,7 @@ namespace Hospital.Domain.Patients
 
         // Constructor to create a new patient with necessary details
         public Patient(string firstName, string lastName, DateTime dateOfBirth, string gender,
-                       string medicalRecordNumber, string email, string phoneNumber, string emergencyContact)
+                       string medicalRecordNumber, string email, string phoneNumber, string emergencyContact, List<string> appointmentHistory, List<string> allergiesOrMedicalConditions)
         {
             Id = new PatientId(Guid.NewGuid()); // Generate a new unique ID == guid // Duvida prof Eapli//Arqsi Aqui ou no serviço.
             FirstName = firstName;
@@ -47,8 +47,8 @@ namespace Hospital.Domain.Patients
             PhoneNumber = phoneNumber; // Phone must be unique
             EmergencyContact = emergencyContact;
 
-            AppointmentHistory = new List<string>();
-            AllergiesOrMedicalConditions = new List<string>();
+            AppointmentHistory = appointmentHistory;
+            AllergiesOrMedicalConditions = allergiesOrMedicalConditions;
         
         }
 

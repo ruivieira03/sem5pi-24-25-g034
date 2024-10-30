@@ -8,90 +8,68 @@ using Hospital.Services;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SystemUserController : ControllerBase
-{
+public class SystemUserController : ControllerBase{
     private readonly SystemUserService _systemUserService;
 
-    public SystemUserController(SystemUserService systemUserService)
-    {
+    public SystemUserController(SystemUserService systemUserService){
         _systemUserService = systemUserService;
     }
 
     // POST api/SystemUser/register
     [HttpPost("register")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserViewModel model)
-    {
+    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserViewModel model){
 
         // Check if the model state is valid
-        if (!ModelState.IsValid)
-        {
+        if (!ModelState.IsValid){
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            // Delegate the user registration logic to the service layer
+        try{
             var newUserDto = await _systemUserService.RegisterUserAsync(model);
 
             // Return a Created response with the new user's details
             return CreatedAtAction(nameof(RegisterUser), new { id = newUserDto.Id }, newUserDto);
-        }
-        catch (Exception ex)
-        {
-            // Handle any exceptions (e.g., user creation failure) and return an error response
-            return BadRequest(new { message = ex.Message });
+        }catch (Exception ex){
+            return BadRequest(new { message = ex.Message }); // Display error message
         }
     }
 
     // POST api/SystemUser/register-patient
     [HttpPost("register-patient")]
     [AllowAnonymous]
-    public async Task<IActionResult> RegisterPatient([FromBody] PatientUserViewModel model)
-    {
+    public async Task<IActionResult> RegisterPatient([FromBody] PatientUserViewModel model){
 
         // Check if the model state is valid
-        if (!ModelState.IsValid)
-        {
+        if (!ModelState.IsValid){
             return BadRequest(ModelState);
         }
-
-        try
-        {
-            // Delegate the user registration logic to the service layer
+        try{
             var newUserDto = await _systemUserService.RegisterPatientUserAsync(model);
+            return CreatedAtAction(nameof(RegisterUser), new { id = newUserDto.Id }, newUserDto); // Return a Created response with the new user's details
 
-            // Return a Created response with the new user's details
-            return CreatedAtAction(nameof(RegisterUser), new { id = newUserDto.Id }, newUserDto);
-        }
-        catch (Exception ex)
-        {
-            // Handle any exceptions (e.g., user creation failure) and return an error response
-            return BadRequest(new { message = ex.Message });
+        }catch (Exception ex){
+            return BadRequest(new { message = ex.Message });// Handle any exceptions (e.g., user creation failure) and return an error response
         }
     }
 
     // GET: api/SystemUser
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<IEnumerable<SystemUserDto>>> GetAll()
-    {
+    public async Task<ActionResult<IEnumerable<SystemUserDto>>> GetAll(){
         var users = await _systemUserService.GetAllAsync();
-        return Ok(users); // Return OK status with the list of users
+        return Ok(users);   // Return status Okwith the list of users
     }
 
     // GET: api/SystemUser/5
     [HttpGet("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> GetById(Guid id)
-    {
+    public async Task<ActionResult<SystemUserDto>> GetById(Guid id){
         var user = await _systemUserService.GetByIdAsync(new SystemUserId(id));
 
-        if (user == null)
-        {
+        if (user == null){
             return NotFound(); // Return 404 if user not found
         }
-
         return Ok(user); // Return OK status with the user data
     }
 
@@ -102,26 +80,22 @@ public class SystemUserController : ControllerBase
     // PUT: api/SystemUser/5
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> Update(Guid id, SystemUserDto dto)
-    {
-        if (id != dto.Id)
-        {
+    public async Task<ActionResult<SystemUserDto>> Update(Guid id, SystemUserDto dto){
+        
+        if (id != dto.Id){
             return BadRequest(); // Return 400 if ID in the route doesn't match the DTO
         }
 
-        try
-        {
+        try{
             var updatedUser = await _systemUserService.UpdateAsync(dto);
 
-            if (updatedUser == null)
-            {
+            if (updatedUser == null){
                 return NotFound(); // Return 404 if user not found
             }
 
             return Ok(updatedUser); // Return OK with the updated user
         }
-        catch (BusinessRuleValidationException ex)
-        {
+        catch (BusinessRuleValidationException ex){
             return BadRequest(new { Message = ex.Message }); // Return 400 if any business rule fails
         }
     }
@@ -129,37 +103,29 @@ public class SystemUserController : ControllerBase
     // Inactivate: api/SystemUser/5
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> SoftDelete(Guid id)
-    {
+    public async Task<ActionResult<SystemUserDto>> SoftDelete(Guid id){
         var user = await _systemUserService.InactivateAsync(new SystemUserId(id));
 
-        if (user == null)
-        {
+        if (user == null){
             return NotFound(); // Return 404 if user not found
         }
-
         return Ok(user); // Return OK with the inactivated user's details
     }
 
     // DELETE: api/SystemUser/5/hard
     [HttpDelete("{id}/hard")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> HardDelete(Guid id)
-    {
-        try
-        {
+    public async Task<ActionResult<SystemUserDto>> HardDelete(Guid id) {
+        
+        try{
             var user = await _systemUserService.DeleteAsync(new SystemUserId(id));
-
-            if (user == null)
-            {
-                return NotFound(); // Return 404 if user not found
+            if (user == null){
+            return NotFound(); // Breaks and returns NotFound Immidieatly
             }
+            return Ok(user); 
 
-            return Ok(user); // Return OK with the deleted user's details
-        }
-        catch (BusinessRuleValidationException ex)
-        {
-            return BadRequest(new { Message = ex.Message }); // Return 400 if any business rule fails
+        }catch (BusinessRuleValidationException ex){
+            return BadRequest(new { Message = ex.Message });
         }
     }
 
