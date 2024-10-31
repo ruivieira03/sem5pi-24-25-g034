@@ -8,17 +8,19 @@ using Hospital.Domain.Users.SystemUser;
 using Hospital.Domain.Patients;
 using Hospital.Domain.Shared;
 
-namespace Hospital.Controllers{
+namespace Hospital.Controllers
+{
     [ApiController]
     [Route("api/[controller]")]
-    public class PatientController : ControllerBase{
+    public class PatientController : ControllerBase
+    {
         private readonly PatientRegistrationService _patientRegistrationService;
         private readonly ISystemUserRepository _systemUserRepository;
         private readonly SystemUserService _systemUserService;
         private readonly PatientService _patientService;
 
-        public PatientController(PatientRegistrationService patientRegistrationService, ISystemUserRepository systemUserRepository, PatientService patientService){
-
+        public PatientController(PatientRegistrationService patientRegistrationService, ISystemUserRepository systemUserRepository, PatientService patientService)
+        {
             _patientRegistrationService = patientRegistrationService;
             _systemUserRepository = systemUserRepository;
             _patientService = patientService;
@@ -27,83 +29,82 @@ namespace Hospital.Controllers{
         // POST api/patient/register-profile
         [HttpPost("register-profile")]
         [Authorize(Roles = "Admin")]
-         public async Task<IActionResult> RegisterPatientProfile([FromBody] PatientProfileViewModel model){
+         public async Task<IActionResult> RegisterPatientProfile([FromBody] PatientProfileViewModel model)
+        {
 
-            if (!ModelState.IsValid)  // Baiscally check if Ui is valid
-                return BadRequest(ModelState); // 500 BadRequest
-            
-
-            try{ 
-                var newPatientDto = await _patientRegistrationService.RegisterPatientProfileAsync(model);                  // Delegate the user registration logic to the service layer
-                return CreatedAtAction(nameof(RegisterPatientProfile), new { id = newPatientDto.Id }, newPatientDto);   // Return a Created response with the new user's details
-
-            }catch (Exception ex){
-                return BadRequest(new { message = ex.Message });            // Pops 500 error with message
+            // Check if the model state is valid
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
 
-        }
+            try
+            {
+                // Delegate the user registration logic to the service layer
+                var newPatientDto = await _patientRegistrationService.RegisterPatientProfileAsync(model);
 
-
-    
-
-        [HttpPut("{id}/update-profile")]
-        [Authorize] 
-        public async Task<IActionResult> UpdateProfile(Guid id, UpdateProfileViewModel model){
-            
-           if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-             
-            if (id != model.Id)
-                return BadRequest(); 
-            
-
-            try{
-                var updatedPatient = await _patientService.UpdateProfileAsync(model, id);
-                return Ok(updatedPatient);
-
-            }catch (Exception ex){
+                // Return a Created response with the new user's details
+                return CreatedAtAction(nameof(RegisterPatientProfile), new { id = newPatientDto.Id }, newPatientDto);
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions (e.g., user creation failure) and return an error response
                 return BadRequest(new { message = ex.Message });
             }
         }
-
-
-    // GET api/patient/list-patients
-        [HttpGet("list-patients")] 
-        [Authorize(Roles = "Admin")] 
+             // Get api/patient/list-patients
+ 
+        [HttpGet("list-patients")] // get list-patients
+        [Authorize(Roles = "Admin")] // for now admin , future add staff  
       
   public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll(){
         var patient = await _patientService.GetAllAsync();
         return Ok(patient); // Return OK status with the list of users
        
     }
+      
 
 
-    /*
 
-    public async Task<IActionResult> DeleteProfile(Guid id){
-    
-    try {
-       
-        var patient = await _patientService.GeStPatientByIdAsync(id);  // verifica se paciente existe
-        if (patient == null){
-            return NotFound(new { Message = "Paciente não encontrado" }); //  Admin selects patients Retorna 404 se o paciente não existir
+
+        /* Missing Additional endpoints for patient actions can be added here, e.g., GetById, Update, etc.
+        * Patients cannot list their appointments without completing the registration process:
+        * To verify this, we use the isVerified property in the SystemUser entity.
+        */
+
+        // Update the patient's profile details
+        // PUT: api/Patient/5/update-profile
+        [HttpPut("{id}/update-profile")]
+        [Authorize] 
+        public async Task<IActionResult> UpdateProfile(Guid id, UpdateProfileViewModel model)
+        {
+            // Check if the model state is valid
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check if the user ID in the route matches the current user's ID
+            if (id != model.Id)
+            {
+                return BadRequest(); // Return 400 if ID in the route doesn't match the current user's ID
+            }
+
+            try
+            {
+                // Delegate the update logic to the service layer
+                var updatedPatient = await _patientService.UpdateProfileAsync(model, id);
+
+                // Return OK with the updated user
+                return Ok(updatedPatient);
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions (e.g., update failure) and return an error response
+                return BadRequest(new { message = ex.Message });
+            }
         }
-
-        // Confirmação de exclusão - este método apenas prepara para a exclusão
         
-        var deletedPatient = await _patientService.DeleteProfileAsync(id);
-        return Ok(new { Message = "Perfil do paciente excluído com sucesso", deletedPatient }); // Retorna sucesso e detalhes do paciente excluído
 
-    }catch (BusinessRuleValidationException ex){ 
-
-          return BadRequest(new { Message = ex.Message }); // Retorna 400 em caso de falha de regras de negócio}
     }
-    catch (Exception ex){  
-         return StatusCode(500, new { Message = "Ocorreu um erro ao excluir o perfil do paciente.", Error = ex.Message }); // Retorna 500 em caso de erro interno}
-    }
-    */
-
-   
-
-  }
 }

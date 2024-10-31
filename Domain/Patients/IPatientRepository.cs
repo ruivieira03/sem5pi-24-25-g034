@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
 
-namespace Hospital.Domain.Patients{
-    public interface IPatientRepository{
+namespace Hospital.Domain.Patients
+{
+    public interface IPatientRepository
+    {
         Task<Patient> GetByIdAsync(PatientId id); // Get patient by Id
         Task<Patient> GetMedicalRecordNumberAsync(int medicalRecordNumber); // Get patient by Medical Record Number
         Task<Patient> GetPatientByEmailAsync(string email); // Get patient by Email

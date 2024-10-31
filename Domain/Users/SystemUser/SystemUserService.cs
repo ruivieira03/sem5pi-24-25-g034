@@ -188,18 +188,18 @@ namespace Hospital.Domain.Users.SystemUser
 
         // Reset password using the reset token
 
-        public async Task<SystemUserDto> ResetPasswordAsync(string email, string newPassword){
-
-            var user = await _systemUserRepository.GetUserByEmailAsync(email); // get User
-
-            if (user == null){
+        public async Task<SystemUserDto> ResetPasswordAsync(string email, string newPassword)
+        {
+            var user = await _systemUserRepository.GetUserByEmailAsync(email);
+            if (user == null)
+            {
                 throw new Exception("User not found.");
             }
             
             // Check if the token is valid
             bool isValidToken = await _passwordService.ValidateTokenForUser(email, user.ResetToken);
-
-            if (!isValidToken){
+            if (!isValidToken)
+            {
                 throw new Exception("Invalid or expired reset token.");
             }
 
@@ -210,7 +210,8 @@ namespace Hospital.Domain.Users.SystemUser
 
             await _unitOfWork.CommitAsync();
 
-            return new SystemUserDto{
+            return new SystemUserDto
+            {
                 Id = user.Id.AsGuid(),
                 Username = user.Username,
                 Role = user.Role,
@@ -226,10 +227,12 @@ namespace Hospital.Domain.Users.SystemUser
 
 
         // Fetch all users
-        public async Task<List<SystemUserDto>> GetAllAsync(){
+        public async Task<List<SystemUserDto>> GetAllAsync()
+        {
             var users = await this._systemUserRepository.GetAllAsync();
             
-            List<SystemUserDto> userDtos = users.ConvertAll(user => new SystemUserDto{
+            List<SystemUserDto> userDtos = users.ConvertAll(user => new SystemUserDto
+            {
                 Id = user.Id.AsGuid(),
                 Username = user.Username,
                 Role = user.Role,
@@ -243,7 +246,8 @@ namespace Hospital.Domain.Users.SystemUser
         }
 
         // Fetch user by Id
-        public async Task<SystemUserDto> GetByIdAsync(SystemUserId id){
+        public async Task<SystemUserDto> GetByIdAsync(SystemUserId id)
+        {
             var user = await this._systemUserRepository.GetByIdAsync(id);
             
             if(user == null)
@@ -265,7 +269,8 @@ namespace Hospital.Domain.Users.SystemUser
         }
 
         // Update user
-        public async Task<SystemUserDto> UpdateAsync(SystemUserDto dto){
+        public async Task<SystemUserDto> UpdateAsync(SystemUserDto dto)
+        {
             var user = await this._systemUserRepository.GetByIdAsync(new SystemUserId(dto.Id)); 
 
             if (user == null)
@@ -280,7 +285,8 @@ namespace Hospital.Domain.Users.SystemUser
 
             await this._unitOfWork.CommitAsync();
 
-            return new SystemUserDto{
+            return new SystemUserDto
+            {
                 Id = user.Id.AsGuid(),
                 Username = user.Username,
                 Role = user.Role,
@@ -295,7 +301,8 @@ namespace Hospital.Domain.Users.SystemUser
         }
 
         // Inactivate user
-        public async Task<SystemUserDto> InactivateAsync(SystemUserId id){
+        public async Task<SystemUserDto> InactivateAsync(SystemUserId id)
+        {
             var user = await this._systemUserRepository.GetByIdAsync(id); 
 
             if (user == null)
@@ -306,7 +313,8 @@ namespace Hospital.Domain.Users.SystemUser
 
             await this._unitOfWork.CommitAsync();
 
-            return new SystemUserDto{
+            return new SystemUserDto
+            {
                 Id = user.Id.AsGuid(),
                 Username = user.Username,
                 Role = user.Role,
@@ -321,7 +329,8 @@ namespace Hospital.Domain.Users.SystemUser
         }
 
         // Delete user
-        public async Task<SystemUserDto> DeleteAsync(SystemUserId userId){
+        public async Task<SystemUserDto> DeleteAsync(SystemUserId userId)
+        {
             var user = await this._systemUserRepository.GetByIdAsync(userId); 
 
             if (user == null)
@@ -330,7 +339,8 @@ namespace Hospital.Domain.Users.SystemUser
             await this._systemUserRepository.Remove(user);
             await this._unitOfWork.CommitAsync();
 
-            return new SystemUserDto{
+            return new SystemUserDto
+            {
                 Id = user.Id.AsGuid(),
                 Username = user.Username,
                 Role = user.Role,
@@ -346,38 +356,52 @@ namespace Hospital.Domain.Users.SystemUser
 
         // Validate email token
 
-        public async Task<bool> ValidateEmailTokenAsync(string email, string token){
-            
-            var user = await _systemUserRepository.GetUserByEmailAsync(email); 
+        public async Task<bool> ValidateEmailTokenAsync(string email, string token)
+        {
+            // Retrieve the user based on the provided email
+            var user = await _systemUserRepository.GetUserByEmailAsync(email);
         
+            // Check if user exists
             if (user == null)
-                return false;       // Email does not exist     
+            {
+                return false; // Email does not exist
+            }
+
+            // Validate the token: Check if it matches the stored token and is not expired
             bool tokenIsValid = user.VerifyToken == token && user.TokenExpiry > DateTime.UtcNow;
 
             return tokenIsValid;
         }
 
         // Validate delete token
-        public async Task<bool> ValidateDeleteTokenAsync(string email, string token){
+        public async Task<bool> ValidateDeleteTokenAsync(string email, string token)
+        {
+            // Retrieve the user based on the provided email
             var user = await _systemUserRepository.GetUserByEmailAsync(email);
         
-            if (user == null){
+            // Check if user exists
+            if (user == null)
+            {
                 return false; // Email does not exist
             }
 
             // Validate the token: Check if it matches the stored token and is not expired
             bool tokenIsValid = user.DeleteToken == token && user.TokenExpiry > DateTime.UtcNow;
+
             return tokenIsValid;
         }
 
-        public async Task<bool> ConfirmEmailAsync(string email, string token){
+        public async Task<bool> ConfirmEmailAsync(string email, string token)
+        {
             var user = await _systemUserRepository.GetUserByEmailAsync(email);
-
             if (user == null)
+            {
                 return false; // User not found
-            
+            }
 
-            if (user.VerifyToken != token || user.TokenExpiry < DateTime.UtcNow){
+            // Assume user has Token and TokenExpiry properties
+            if (user.VerifyToken != token || user.TokenExpiry < DateTime.UtcNow)
+            {
                 return false; // Invalid token or expired
             }
 
@@ -387,18 +411,23 @@ namespace Hospital.Domain.Users.SystemUser
 
             await _systemUserRepository.UpdateUserAsync(user); // Update the user
             await _unitOfWork.CommitAsync(); // Commit the transaction
-            return true;                    // Email confirmed successfully
+            return true; // Email confirmed successfully
         }
 
-        public async Task RequestAccountDeletionAsync(SystemUserId userId){
+        public async Task RequestAccountDeletionAsync(SystemUserId userId)
+        {
             // Verify if the user exists
             var user = await _systemUserRepository.GetByIdAsync(userId);
             if (user == null)
+            {
                 throw new InvalidOperationException("User not found.");
-            
-            var token = Guid.NewGuid().ToString(); // Generate a unique token for account deletion confirmation
+            }
+
+            // Generate a unique token for account deletion confirmation
+            var token = Guid.NewGuid().ToString();
             user.DeleteToken = token;
-                                                            // Set the token expiry time
+
+            // Set the token expiry time
             user.TokenExpiry = DateTime.UtcNow.AddHours(24); // Token valid for 24 hours
 
             // Send the account deletion confirmation email
