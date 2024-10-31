@@ -25,10 +25,10 @@ namespace Hospital.Domain.Patients{
                 throw new Exception("Email already taken.");                        // Bussines Rule , Verfiy Unique Email
         
             if (await _patientRepository.GetPatientByPhoneNumberAsync(model.PhoneNumber) != null)
-                throw new Exception("Phone Number already in use.");             // Bussines Rule , Verfiy Unique PhoneNumber
+                throw new Exception("Phone Number already in use.");                  // Bussines Rule , Verfiy Unique PhoneNumber
 
         
-            var newPatient = new Patient(                            // Create a new Patient from the registration model
+            var newPatient = new Patient(                                           // Create a new Patient from the registration model
                 
                 firstName: model.FirstName,         
                 lastName: model.LastName,           
@@ -77,18 +77,5 @@ namespace Hospital.Domain.Patients{
     }
     
     
-
-/*
-     
-        // #TODO Change method to be sequencial
-        public string GenerateMedicalRecordNumber() {
-            var random = new Random();
-            return random.Next(100000, 999999).ToString(); // Generates a 6-digit random number
-        }
-
-    
-
-    }
-    */
     }
 }
