@@ -5,41 +5,35 @@ using Hospital.Services;
 using Hospital.ViewModels;
 using Hospital.Domain.Shared;
 
-namespace Hospital.Domain.Patients
-{
-    public class PatientRegistrationService
-    {
+namespace Hospital.Domain.Patients{
+    public class PatientRegistrationService{
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISystemUserRepository _systemUserRepository;
         private readonly IEmailService _emailService;
         private readonly IPatientRepository _patientRepository;
 
-        public PatientRegistrationService(IUnitOfWork unitOfWork, ISystemUserRepository systemUserRepository, IEmailService emailService, IPatientRepository patientRepository)
-        {
+            // Service Constructor
+        public PatientRegistrationService(IUnitOfWork unitOfWork, ISystemUserRepository systemUserRepository, IEmailService emailService, IPatientRepository patientRepository){
+            
             this._unitOfWork = unitOfWork;
             this._systemUserRepository = systemUserRepository;
             this._emailService = emailService;
             this._patientRepository = patientRepository;
         }
 
-        public async Task<PatientDto> RegisterPatientProfileAsync(PatientProfileViewModel model)
-        {
-            // Validate the email
-            if (await _patientRepository.GetPatientByEmailAsync(model.Email) != null)
-            {
+        public async Task<PatientDto> RegisterPatientProfileAsync(PatientProfileViewModel model){
+
+            if (await _patientRepository.GetPatientByEmailAsync(model.Email) != null)       // Verify Email
                 throw new Exception("Email already taken.");
-            }
+            
 
-            // Verify if the Phone Number is already in use
-
-            if (await _patientRepository.GetPatientByPhoneNumberAsync(model.PhoneNumber) != null)
-            {
-                throw new Exception("Phone Number already in use.");
+            if (await _patientRepository.GetPatientByPhoneNumberAsync(model.PhoneNumber) != null){// Verify if the Phone Number is already in use
+                throw new Exception("Patient with Phone Number already in use.");
             }
 
             // Create a new Patient from the registration model
             var newPatient = new Patient(
-                firstName: model.FirstName,         
+                firstName: model.FirstName,          
                 lastName: model.LastName,           
                 dateOfBirth: model.DateOfBirth,     
                 gender: model.Gender,                
@@ -48,17 +42,12 @@ namespace Hospital.Domain.Patients
                 phoneNumber: model.PhoneNumber,      
                 emergencyContact: model.EmergencyContact 
             );
+            await _patientRepository.AddPatientAsync(newPatient);// Save the patient to the repository
+            await _unitOfWork.CommitAsync();                    // Commit the transaction
 
-            // Save the patient to the repository
-            await _patientRepository.AddPatientAsync(newPatient);
 
-            // Commit the transaction
-            await _unitOfWork.CommitAsync();
-
-            // Return a DTO with the new patient’s details
-            return new PatientDto
-            {
-                Id = newPatient.Id.AsGuid(), // Assuming PatientId has an AsGuid method
+            return new PatientDto{                       // Return a DTO with the new patient’s details
+                Id = newPatient.Id.AsGuid(),            // Assuming PatientId has an AsGuid method
                 FirstName = newPatient.FirstName,
                 LastName = newPatient.LastName,
                 DateOfBirth = newPatient.DateOfBirth,

@@ -4,10 +4,9 @@ using Hospital.Domain.Shared;
 using System.ComponentModel.DataAnnotations.Schema;
 using Hospital.Domain.Users.SystemUser;
 
-namespace Hospital.Domain.Patients
-{
-    public class Patient : Entity<PatientId>
-    {
+namespace Hospital.Domain.Patients{
+    public class Patient : Entity<PatientId>{
+
         // Public properties for EF Core to bind to
         public string FirstName { get; set; }                        // First name of the patient
         public string LastName { get; set; }                         // Last name of the patient
@@ -26,8 +25,8 @@ namespace Hospital.Domain.Patients
 
 
         // Parameterless constructor for EF Core
-        public Patient(){
-            Id = new PatientId(Guid.NewGuid()); // Initialize Id here if needed
+        protected Patient(){
+            Id = new PatientId(Guid.NewGuid());             // Initialize Id here if needed
             AppointmentHistory = new List<string>();
             AllergiesOrMedicalConditions = new List<string>();
 
@@ -35,8 +34,8 @@ namespace Hospital.Domain.Patients
 
         // Constructor to create a new patient with necessary details
         public Patient(string firstName, string lastName, DateTime dateOfBirth, string gender,
-                       string medicalRecordNumber, string email, string phoneNumber, string emergencyContact)
- {
+                       string medicalRecordNumber, string email, string phoneNumber, string emergencyContact){
+
             Id = new PatientId(Guid.NewGuid()); // Generate a new unique ID == guid
             FirstName = firstName;
             LastName = lastName;
@@ -46,19 +45,17 @@ namespace Hospital.Domain.Patients
             Email = email; // Email must be unique
             PhoneNumber = phoneNumber; // Phone must be unique
             EmergencyContact = emergencyContact;
-
             AppointmentHistory = new List<string>();
             AllergiesOrMedicalConditions = new List<string>();
         
         }
 
         // Method to update patient profile details
-        public void UpdateProfile(string firstName, string lastName, string email, string phoneNumber, string emergencyContact)
-        {
+        public void UpdateProfile(string firstName, string lastName, string email, string phoneNumber, string emergencyContact){
             FirstName = firstName;
             LastName = lastName;
-            Email = email; // Email can trigger additional verification if changed
-            PhoneNumber = phoneNumber; // Phone can trigger additional verification if changed
+            Email = email;                              // Email can trigger additional verification if changed
+            PhoneNumber = phoneNumber;                  // Phone can trigger additional verification if changed
             EmergencyContact = emergencyContact;
         }
         

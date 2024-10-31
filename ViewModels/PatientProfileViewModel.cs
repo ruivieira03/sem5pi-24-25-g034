@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Hospital.Domain.Patients;
 
-namespace Hospital.ViewModels
-{
-    public class PatientProfileViewModel
-    {
+namespace Hospital.ViewModels{
+    public class PatientProfileViewModel{
+
         [Required(ErrorMessage = "First name is required.")]
         [MaxLength(50, ErrorMessage = "First name cannot exceed 50 characters.")]
         public string FirstName { get; set; } // Added FirstName
@@ -35,9 +34,9 @@ namespace Hospital.ViewModels
         public string PhoneNumber { get; set; } // Existing property
 
         [Required(ErrorMessage = "Emergency contact is required.")]
-        public string EmergencyContact { get; set; } // Added EmergencyContact
+        public string EmergencyContact { get; set; } // No restrictions because can be a 
 
         public List<string> AllergiesOrMedicalConditions { get; set; } = new List<string>(); // Added allergies/conditions
-        public List<string> AppointmentHistory { get; set; } = new List<string>(); // Added appointment history
+        public List<string> AppointmentHistory { get; set; } = new List<string>();          //Added appointment history
     }
 }

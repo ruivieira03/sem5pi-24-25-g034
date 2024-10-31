@@ -8,20 +8,17 @@ using Hospital.Services;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SystemUserController : ControllerBase
-{
+public class SystemUserController : ControllerBase{
     private readonly SystemUserService _systemUserService;
 
-    public SystemUserController(SystemUserService systemUserService)
-    {
+    public SystemUserController(SystemUserService systemUserService){
         _systemUserService = systemUserService;
     }
 
     // POST api/SystemUser/register
     [HttpPost("register")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserViewModel model)
-    {
+    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserViewModel model){
 
         // Check if the model state is valid
         if (!ModelState.IsValid)
