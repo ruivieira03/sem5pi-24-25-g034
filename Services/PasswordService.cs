@@ -43,19 +43,5 @@ namespace Hospital.Services
             return password;
         }
 
-        public async Task<bool> ValidateTokenForUser(string email, string token)
-        {
-            // Retrieve the user by email
-            var user = await _systemUserRepository.GetUserByEmailAsync(email);
-            if (user == null)
-            {
-                return false; // User not found
-            }
-
-            // Check if the token matches and is not expired
-            bool isValid = user.ResetToken == token && user.TokenExpiry > DateTime.UtcNow;
-            return isValid;
-        }
-
     }
 }

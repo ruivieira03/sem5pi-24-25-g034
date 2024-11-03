@@ -130,16 +130,19 @@ public class AccountController : Controller
     * GET: api/account/setup-password
     * This endpoint is used to validate the token sent to the user's email after registration.
     * It requires the user's email and the token.
+    * Only used to check if the token is valid.
     */
 
     [HttpGet("setup-password")]
     [AllowAnonymous]
-    public async Task<IActionResult> ValidateToken(string email, string token)
+    public async Task<IActionResult> ValidateToken()
     {
-        // Logic to validate the token
-        // Checking if the token is valid for the given email
 
-        bool isValid = await _passwordService.ValidateTokenForUser(email, token);
+        // Extract email and token from the request's query string
+        string email = Request.Query["email"].ToString();
+        string token = Request.Query["token"].ToString();
+
+        bool isValid = await _systemUserService.ValidateTokenForUser(email, token);
 
         if (!isValid)
         {
@@ -147,34 +150,6 @@ public class AccountController : Controller
         }
 
         return Ok(new { message = "Token is valid." });
-    }
-
-
-    /** POST: api/account/setup-password
-    * This endpoint is used to set a new password for the user after they have registered.
-    * It requires the user's email and the new password.
-    */
-
-    [HttpPost("setup-password")]
-    [AllowAnonymous]
-    public async Task<IActionResult> SetNewPassword([FromBody] PasswordResetViewModel model)
-    {
-
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        try
-        {
-            await _systemUserService.ResetPasswordAsync(model.Email, model.Password);
-            return Ok(new { Message = "Password has been reset successfully." });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Message = ex.Message });
-        }
-
     }
 
     /** POST: api/account/request-password-reset
@@ -198,7 +173,7 @@ public class AccountController : Controller
     }
 
     /** POST: api/account/reset-password
-    * This endpoint is used to set a new password for the user after they have registered.
+    * This endpoint is used to reset the password for the user after they have registered.
     * It requires the user's email and the new password.
     */
 
@@ -206,6 +181,7 @@ public class AccountController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> ResetPassword([FromBody] PasswordResetViewModel model)
     {
+        string email = Request.Query["email"].ToString();
 
         if (!ModelState.IsValid)
         {
@@ -214,7 +190,7 @@ public class AccountController : Controller
 
         try
         {
-            await _systemUserService.ResetPasswordAsync(model.Email, model.Password);
+            await _systemUserService.ResetPasswordAsync(email, model.Password);
             return Ok(new { Message = "Password has been reset successfully." });
         }
         catch (Exception ex)
@@ -266,7 +242,6 @@ public class AccountController : Controller
         }
         catch (Exception ex)
         {
-            // Log the exception (consider using a logging framework)
             return BadRequest(new { Message = "An error occurred during confirmation." });
         }
     }
@@ -315,19 +290,10 @@ public class AccountController : Controller
             // Call the service method to validate the email and token
             bool isValid = await _systemUserService.ValidateDeleteTokenAsync(email, token);
 
-            // Await user retrieval
-            var user = await _systemUserRepository.GetUserByEmailAsync(email);
-
-            // Check if user exists
-            if (user == null)
-            {
-                return NotFound(new { Message = "User not found." });
-            }
-
             if (isValid)
             {
                 // Proceed with account deletion
-                await _systemUserService.DeleteAsync(new SystemUserId(user.Id.Value.ToString()));
+                await _systemUserService.DeleteAsync(email);
                  
                 return Ok(new { Message = "Account deleted successfully." });
             }
