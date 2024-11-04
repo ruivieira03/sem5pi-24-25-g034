@@ -56,33 +56,26 @@ namespace Hospital.Controllers{
         
         // PUT: api/Patient/5/update-profile Update the patient's profile details
         [HttpPut("{id}/update-profile")]
-        [Authorize(Roles = "Admin")] 
-public async Task<IActionResult> UpdateProfile(Guid id, UpdateProfileViewModel model) {
-    
-    if (!ModelState.IsValid) {
-        return BadRequest(ModelState);
-    }
+        [Authorize] 
+        public async Task<IActionResult> UpdateProfile(Guid id, UpdateProfileViewModel model){
+            
+            if (!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
 
-    if (id != model.Id) {
-        return BadRequest(new { message = "ID in the route doesn't match the patient's ID" });
-    }
+             if (id != model.Id){
+                return BadRequest(); // Return 400 if ID in the route doesn't match the current user's ID
+            }
 
-    try {
-        var updatedPatient = await _patientService.UpdateProfileAsync(model, id);
+            try {
 
-        // Check for changes in sensitive data and send notification
-        if (model.ContainsSensitiveDataChanges()) { // Assuming a method like this exists
-            await _notificationService.SendEmailAsync(updatedPatient.Email, "Profile Update Notification", "Your profile has been updated.");
+                var updatedPatient = await _patientService.UpdateProfileAsync(model, id); // Delegate the update logic to the service layer
+                return Ok(updatedPatient); // Return OK with the updated user
+
+            }catch (Exception ex){
+                return BadRequest(new { message = ex.Message, innerException = ex.InnerException?.Message });
+            }
         }
-
-        // Log the update action for audit purposes
-        _logger.LogInformation($"Patient profile updated by Admin {User.Identity.Name} for Patient ID: {id}");
-
-        return Ok(new { message = "Profile updated successfully", patient = updatedPatient });
-    } catch (Exception ex) {
-        return BadRequest(new { message = ex.Message, innerException = ex.InnerException?.Message });
-    }
-}
         
 
         // GET: api/patient/list-patients

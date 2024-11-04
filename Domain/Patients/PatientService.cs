@@ -28,13 +28,12 @@ namespace Hospital.Domain.Patients{
             if (existingPatient == null){
                 throw new InvalidOperationException("Patient not found.");
             }
+               // Bussines Rules , Name ,Contact Information , Medical History and Allergies are editable
 
             existingPatient.FirstName = model.FirstName;
             existingPatient.LastName = model.LastName;
-            existingPatient.DateOfBirth = model.DateOfBirth;
-            existingPatient.Gender = model.Gender;
             existingPatient.Email = model.Email;
-            existingPatient.PhoneNumber = model.PhoneNumber;
+            existingPatient.PhoneNumber = model.PhoneNumber;                    
             existingPatient.EmergencyContact = model.EmergencyContact;
             existingPatient.AllergiesOrMedicalConditions = model.AllergiesOrMedicalConditions;
             existingPatient.AppointmentHistory = model.AppointmentHistory;
@@ -46,8 +45,6 @@ namespace Hospital.Domain.Patients{
 
                 FirstName = existingPatient.FirstName,
                 LastName = existingPatient.LastName,
-                DateOfBirth = existingPatient.DateOfBirth,
-                Gender = existingPatient.Gender,
                 Email = existingPatient.Email,
                 PhoneNumber = existingPatient.PhoneNumber,
                 EmergencyContact = existingPatient.EmergencyContact,
