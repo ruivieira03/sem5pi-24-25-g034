@@ -56,20 +56,8 @@ namespace Hospital.Domain.Patients{
             };
         }
 
-        public async Task DeleteAsync(PatientId patientId){
-            var existingPatient = await _patientRepository.GetByIdAsync(patientId);
-            
-            if (existingPatient == null){
-                throw new InvalidOperationException("Patient not found.");
-            }
 
-            await _patientRepository.Remove(existingPatient);
-            await _unitOfWork.CommitAsync();
-    
-        }
-
-
-       public async Task<List<PatientDto>> GetAllAsync(){
+       public async Task<List<PatientDto>> GetAllAsync(){ //List all patients by...
     var patients = await _patientRepository.GetAllAsync();
             List<PatientDto> patientDto= patients.ConvertAll(patient => new PatientDto { 
                 Id = patient.Id.AsGuid(),
@@ -85,6 +73,22 @@ namespace Hospital.Domain.Patients{
             });
             return patientDto;
     }
+
+
+        public async Task DeleteAsync(PatientId patientId){
+            var existingPatient = await _patientRepository.GetByIdAsync(patientId);
+            
+            if (existingPatient == null){
+                throw new InvalidOperationException("Patient not found.");
+            }
+
+            await _patientRepository.Remove(existingPatient);
+            await _unitOfWork.CommitAsync();
+    
+        }
+
+
+   
 
     
 

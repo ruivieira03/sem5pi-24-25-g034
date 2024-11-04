@@ -21,14 +21,14 @@ namespace Hospital.Domain.Patients{
 
         public async Task<PatientDto> RegisterPatientProfileAsync(PatientProfileViewModel model){
             
-            if (await _patientRepository.GetPatientByEmailAsync(model.Email) != null)
-                throw new Exception("Email already taken.");                        // Bussines Rule , Verfiy Unique Email
+            if (await _patientRepository.GetPatientByEmailAsync(model.Email) != null)        // If user with that email already exists...
+                throw new Exception("Email already taken.");                                // Bussines Rule , Verfiy Unique Email
         
             if (await _patientRepository.GetPatientByPhoneNumberAsync(model.PhoneNumber) != null)
-                throw new Exception("Phone Number already in use.");                  // Bussines Rule , Verfiy Unique PhoneNumber
-
+                throw new Exception("Phone Number already in use.");                       // If user with that phoneNumber already exists...
+                                                                                          // Create a new Patient from the registration model
         
-            var newPatient = new Patient(                                           // Create a new Patient from the registration model
+            var newPatient = new Patient(                                          
                 
                 firstName: model.FirstName,         
                 lastName: model.LastName,           
@@ -42,12 +42,12 @@ namespace Hospital.Domain.Patients{
                 allergiesOrMedicalConditions: model.AllergiesOrMedicalConditions
             ); 
             await _patientRepository.AddPatientAsync(newPatient); // Save the patient to the repository  
-            await _unitOfWork.CommitAsync();                // Commit the transaction
+            await _unitOfWork.CommitAsync();                      // Commit the transaction
 
     
-            return new PatientDto{                      // Return a DTO with the new patient’s details
+            return new PatientDto{                               // Return a DTO with the new patient’s details
                
-                Id = newPatient.Id.AsGuid(),            // Assuming PatientId has an AsGuid method
+                Id = newPatient.Id.AsGuid(),                    // Assuming PatientId has an AsGuid method
                 FirstName = newPatient.FirstName,
                 LastName = newPatient.LastName,
                 DateOfBirth = newPatient.DateOfBirth,
