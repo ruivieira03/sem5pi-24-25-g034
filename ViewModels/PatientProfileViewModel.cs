@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Hospital.Domain.Patients;
 
-namespace Hospital.ViewModels{
+namespace Hospital.ViewModels{   // Al us , regarding Patient Profile Here.
     public class PatientProfileViewModel{
         [Required(ErrorMessage = "First name is required.")]
         [MaxLength(50, ErrorMessage = "First name cannot exceed 50 characters.")]
@@ -21,8 +21,8 @@ namespace Hospital.ViewModels{
         [Required(ErrorMessage = "Gender is required.")]
         public string Gender { get; set; } // Added Gender
 
-        [Required(ErrorMessage = "Email is required.")]             //Todo Verfiy Email tructure (9 Numberes only) format.
-        [EmailAddress(ErrorMessage = "Invalid email format.")]
+        [Required(ErrorMessage = "Email is required.")]             //Todo Verfiy Email tructure  format.
+        [EmailAddress(ErrorMessage = "Invalid email format.")]  //update : Email format verified:         
         public string Email { get; set; } // Existing property
 
         [Required(ErrorMessage = "Phone number is required.")]    //Todo Verfiy Phonenuymber structure (9 Numberes only)
