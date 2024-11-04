@@ -28,7 +28,7 @@ namespace Hospital.Domain.Patients{
             if (existingPatient == null){
                 throw new InvalidOperationException("Patient not found.");
             }
-               // Bussines Rules , Name ,Contact Information , Medical History and Allergies are editable
+               // Bussines Verified here Rules:  Name ,Contact Information ,Medical History and Allergies only Editable . 
 
             existingPatient.FirstName = model.FirstName;
             existingPatient.LastName = model.LastName;

@@ -26,7 +26,7 @@ namespace Hospital.Controllers{
         // POST api/patient/register-profile    
         [HttpPost("register-profile")]
         [Authorize(Roles = "Admin")]
-         public async Task<IActionResult> RegisterPatientProfile([FromBody] PatientProfileViewModel model){
+         public async Task<IActionResult> RegisterPatientProfile([FromBody] RegisterPatientProfileViewModel model){
 
             // Check if all ViewModel Inputs the model state is valid
             if (!ModelState.IsValid){
@@ -56,7 +56,7 @@ namespace Hospital.Controllers{
         
         // PUT: api/Patient/5/update-profile Update the patient's profile details
         [HttpPut("{id}/update-profile")]
-        [Authorize] 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProfile(Guid id, UpdateProfileViewModel model){
             
             if (!ModelState.IsValid){
@@ -70,7 +70,7 @@ namespace Hospital.Controllers{
             try {
 
                 var updatedPatient = await _patientService.UpdateProfileAsync(model, id); // Delegate the update logic to the service layer
-                return Ok(updatedPatient); // Return OK with the updated user
+                return Ok(updatedPatient);              // Return OK with the updated user
 
             }catch (Exception ex){
                 return BadRequest(new { message = ex.Message, innerException = ex.InnerException?.Message });

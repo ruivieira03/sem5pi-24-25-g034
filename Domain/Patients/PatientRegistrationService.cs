@@ -19,7 +19,10 @@ namespace Hospital.Domain.Patients{
             this._patientRepository = patientRepository;
         }
 
-        public async Task<PatientDto> RegisterPatientProfileAsync(PatientProfileViewModel model){
+
+        // Bussines Rules : ContactInformation:
+
+        public async Task<PatientDto> RegisterPatientProfileAsync(RegisterPatientProfileViewModel model){
             
             if (await _patientRepository.GetPatientByEmailAsync(model.Email) != null)        // If user with that email already exists...
                 throw new Exception("Email already taken.");                                // Bussines Rule , Verfiy Unique Email
@@ -63,7 +66,7 @@ namespace Hospital.Domain.Patients{
 
           
  
-        //#TODO Change method to be sequencial
+        //In complete Functioning
         public string GenerateMedicalRecordNumber(){
 
             var numberPatients = _patientRepository.GetAllAsync().Result.Count;
