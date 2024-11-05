@@ -2,16 +2,16 @@ using System;
 using Hospital.Domain.Shared;
 using Newtonsoft.Json;
 
-namespace Hospital.Domain.operationrequestmanagement
+namespace Hospital.Domain.Patients
 {
-    public class OperationRequestId : EntityId
+    public class PatientId : EntityId
     {
         [JsonConstructor]
-        public OperationRequestId(Guid value) : base(value)
+        public PatientId(Guid value) : base(value)
         {
         }
 
-        public OperationRequestId(String value) : base(value)
+        public PatientId(String value) : base(value)
         {
         }
 

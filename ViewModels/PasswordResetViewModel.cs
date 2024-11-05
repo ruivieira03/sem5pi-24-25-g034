@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hospital.ViewModels
 {
-    public class PasswordResetModel
+    public class PasswordResetViewModel
     {
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email address.")]

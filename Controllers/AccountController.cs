@@ -40,20 +40,20 @@ public class AccountController : Controller
 {
     private readonly ISystemUserRepository _systemUserRepository;
 
-    private readonly IEmailService _emailService;
     private readonly IPasswordService _passwordService;
+    private readonly SystemUserService _systemUserService;
 
-    public AccountController(ISystemUserRepository systemUserRepository, IEmailService emailService, IPasswordService passwordService)
+    public AccountController(ISystemUserRepository systemUserRepository, IPasswordService passwordService, SystemUserService systemUserService)
     {
         _systemUserRepository = systemUserRepository;
-        _emailService = emailService;
         _passwordService = passwordService;
+        _systemUserService = systemUserService;
     }
 
 
-    [HttpPost("login")]
+    [HttpPost("login")]   //login
     [AllowAnonymous]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request, string returnUrl = "/home")
+    public async Task<IActionResult> Login([FromBody] LoginRequestViewModel request, string returnUrl = "/home")
     {
         var user = await _systemUserRepository.GetUserByUsernameAsync(request.Username);
 
@@ -71,6 +71,8 @@ public class AccountController : Controller
         {
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Role, user.Role.ToString()), // Role is an enum
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.Value.ToString())
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -100,19 +102,14 @@ public class AccountController : Controller
             Name = User.Identity.Name,
             Email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
             Roles = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value,
-            ProfileImage = User.Claims.FirstOrDefault(c => c.Type == "picture")?.Value  
+            userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
+            
         });
     }
 
     /**
      * Logout
      * 
-     * Logs the user out by signing them out of both Auth0 and the local cookie authentication scheme.
-     * 
-     * @param returnUrl The URL where the user should be redirected after a successful logout. Defaults to "/home".
-     * @returns A task that performs the sign-out operations.
-     * 
-     * Ensure the **Allowed Logout URLs** in Auth0 settings include the return URL.
      */
     [Authorize]
     [HttpGet("logout")]
@@ -125,6 +122,12 @@ public class AccountController : Controller
         await HttpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
+
+    /**
+    * GET: api/account/setup-password
+    * This endpoint is used to validate the token sent to the user's email after registration.
+    * It requires the user's email and the token.
+    */
 
     [HttpGet("setup-password")]
     [AllowAnonymous]
@@ -143,33 +146,198 @@ public class AccountController : Controller
         return Ok(new { message = "Token is valid." });
     }
 
+
+    /** POST: api/account/setup-password
+    * This endpoint is used to set a new password for the user after they have registered.
+    * It requires the user's email and the new password.
+    */
+
     [HttpPost("setup-password")]
     [AllowAnonymous]
-    public async Task<IActionResult> SetNewPassword([FromBody] PasswordResetModel model)
+    public async Task<IActionResult> SetNewPassword([FromBody] PasswordResetViewModel model)
     {
-        // Logic to set the new password
+
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var user = await _systemUserRepository.GetUserByEmailAsync(model.Email);
-        if (user == null)
+        try
         {
-            return NotFound(new { message = "User not found." });
+            await _systemUserService.ResetPasswordAsync(model.Email, model.Password);
+            return Ok(new { Message = "Password has been reset successfully." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
         }
 
-        // Hash and set the new password
-        string hashedPassword = _passwordService.HashPassword(model.Password);
-        user.Password = hashedPassword;
-
-        // Clear the reset token and expiry after password has been reset
-        user.ResetToken = "";
-        user.TokenExpiry = null;
-
-        await _systemUserRepository.UpdateUserAsync(user); // Ensure you have this method implemented
-
-        return Ok(new { message = "Password has been set successfully." });
     }
+
+    /** POST: api/account/request-password-reset
+    * This endpoint is used to set a new password for the user after they have registered.
+    * It requires the user's email and the new password.
+    */
+
+    [HttpPost("request-password-reset")]
+    [AllowAnonymous]
+    public async Task<IActionResult> RequestPasswordReset([FromBody] PasswordResetRequestViewModel model)
+    {
+        try
+        {
+            await _systemUserService.RequestPasswordResetAsync(model.Email);
+            return Ok(new { Message = "Password reset link has been sent to your email." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    /** POST: api/account/reset-password
+    * This endpoint is used to set a new password for the user after they have registered.
+    * It requires the user's email and the new password.
+    */
+
+    [HttpPost("reset-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ResetPassword([FromBody] PasswordResetViewModel model)
+    {
+
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            await _systemUserService.ResetPasswordAsync(model.Email, model.Password);
+            return Ok(new { Message = "Password has been reset successfully." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    // GET api/account/confirm-email
+    [HttpGet("confirm-email")]
+    [AllowAnonymous] // Allow access to this endpoint without authentication
+    public async Task<IActionResult> ConfirmEmail()
+    {
+        // Extract email and token from the request's query string
+        string email = Request.Query["email"].ToString();
+        string token = Request.Query["token"].ToString();
+
+        // Ensure that both email and token are provided
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+        {
+            return BadRequest(new { Message = "Email or token is missing." });
+        }
+
+        try
+        {
+            // Call the service method to validate the email and token
+            bool isValid = await _systemUserService.ValidateEmailTokenAsync(email, token);
+
+            if (isValid)
+            {
+                // Proceed with confirming the email
+
+                var res = await _systemUserService.ConfirmEmailAsync(email, token);
+
+                if (res)
+                {
+                    return Ok(new { Message = "Email confirmed successfully." });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Failed to confirm the email." });
+                }
+
+            }
+            else
+            {
+                return BadRequest(new { Message = "Invalid token or email confirmation failed." });
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the exception (consider using a logging framework)
+            return BadRequest(new { Message = "An error occurred during confirmation." });
+        }
+    }
+
+    // GET api/account/request-delete-account
+    [HttpGet("request-delete-account")]
+    [Authorize(Roles = "Patient")] // Only patients can request account deletion
+    public async Task<IActionResult> RequestDeleteAccount()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized("User ID is missing.");
+        }
+
+        try
+        {
+            await _systemUserService.RequestAccountDeletionAsync(new SystemUserId(userId));
+            return Ok(new { Message = "A confirmation email has been sent to your registered email address." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    // GET api/account/confirm-delete-account
+    [HttpGet("confirm-delete-account")]
+    [AllowAnonymous] // Allow access to this endpoint without authentication
+
+    public async Task<IActionResult> ConfirmDeleteAccount()
+    {
+    // Extract email and token from the request's query string
+    string email = Request.Query["email"].ToString();
+    string token = Request.Query["token"].ToString();
+
+    // Ensure that both email and token are provided
+    if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+    {
+        return BadRequest(new { Message = "Email or token is missing." });
+    }
+
+    try
+    {
+            // Call the service method to validate the email and token
+            bool isValid = await _systemUserService.ValidateDeleteTokenAsync(email, token);
+
+            // Await user retrieval
+            var user = await _systemUserRepository.GetUserByEmailAsync(email);
+
+            // Check if user exists
+            if (user == null)
+            {
+                return NotFound(new { Message = "User not found." });
+            }
+
+            if (isValid)
+            {
+                // Proceed with account deletion
+                await _systemUserService.DeleteAsync(new SystemUserId(user.Id.Value.ToString()));
+                return Ok(new { Message = "Account deleted successfully." });
+            }
+            else
+            {
+                return BadRequest(new { Message = "Invalid token or email confirmation failed." });
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            return BadRequest(new { Message = "An error occurred during confirmation.", Details = ex.Message });
+        }
+    }
+
 
 }
