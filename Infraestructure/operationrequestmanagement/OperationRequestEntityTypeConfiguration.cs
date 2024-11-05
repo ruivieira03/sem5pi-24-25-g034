@@ -45,7 +45,7 @@ namespace Hospital.Infraestructure.operationrequestmanagement
                 {
                     ID = new OperationRequestId(Guid.NewGuid()),
                     PatientID = Guid.NewGuid(),
-                    DoctorID = new LicenseNumber(Guid.NewGuid()),
+                    DoctorID = Guid.NewGuid(),
                     OperationTypeID = "1",
                     DeadlineDate = new System.DateTime(2022, 12, 31),
                     Priority = 1
@@ -54,7 +54,7 @@ namespace Hospital.Infraestructure.operationrequestmanagement
                 {
                     ID = new OperationRequestId(Guid.NewGuid()),
                     PatientID = Guid.NewGuid(),
-                    DoctorID = new LicenseNumber(Guid.NewGuid()),
+                    DoctorID = Guid.NewGuid(),
                     OperationTypeID = "2",
                     DeadlineDate = new System.DateTime(2022, 12, 31),
                     Priority = 2
@@ -63,7 +63,7 @@ namespace Hospital.Infraestructure.operationrequestmanagement
                 {
                     ID = new OperationRequestId(Guid.NewGuid()),
                     PatientID = Guid.NewGuid(),
-                    DoctorID = new LicenseNumber(Guid.NewGuid()),
+                    DoctorID = Guid.NewGuid(),
                     OperationTypeID = "3",
                     DeadlineDate = new System.DateTime(2022, 12, 31),
                     Priority = 3

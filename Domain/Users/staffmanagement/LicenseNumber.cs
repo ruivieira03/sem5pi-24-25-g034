@@ -15,6 +15,10 @@ namespace Hospital.Domain.Users.staffmanagement
         {
         }
 
+        private LicenseNumber() : base(Guid.Empty)
+        {
+        }
+
         override
         protected  Object createFromString(String text){
             return new Guid(text);

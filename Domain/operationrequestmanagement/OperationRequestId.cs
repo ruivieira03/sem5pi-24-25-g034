@@ -15,6 +15,10 @@ namespace Hospital.Domain.operationrequestmanagement
         {
         }
 
+        private OperationRequestId() : base(Guid.Empty)
+        {
+        }
+
         override
         protected  Object createFromString(String text){
             return new Guid(text);
@@ -25,7 +29,6 @@ namespace Hospital.Domain.operationrequestmanagement
             Guid obj = (Guid) base.ObjValue;
             return obj.ToString();
         }
-        
         
         public Guid AsGuid(){
             return (Guid) base.ObjValue;

@@ -42,7 +42,7 @@ namespace Hospital.Domain.operationrequestmanagement
             {
                 ID = newRequest.ID.AsGuid(),
                 PatientID = newRequest.PatientID,
-                DoctorID = newRequest.DoctorID.AsGuid(),
+                DoctorID = newRequest.DoctorID,
                 OperationTypeID = newRequest.OperationTypeID,
                 DeadlineDate = newRequest.DeadlineDate,
                 Priority = newRequest.Priority
@@ -60,7 +60,7 @@ namespace Hospital.Domain.operationrequestmanagement
             {
                 ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID.AsGuid(),
+                DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority
@@ -78,7 +78,7 @@ namespace Hospital.Domain.operationrequestmanagement
             {
                 ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID.AsGuid(),
+                DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority
@@ -96,7 +96,7 @@ namespace Hospital.Domain.operationrequestmanagement
             {
                 ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID.AsGuid(),
+                DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority
@@ -114,7 +114,7 @@ namespace Hospital.Domain.operationrequestmanagement
             {
                 ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID.AsGuid(),
+                DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority
@@ -132,7 +132,7 @@ namespace Hospital.Domain.operationrequestmanagement
             {
                 ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID.AsGuid(),
+                DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority
@@ -151,7 +151,7 @@ namespace Hospital.Domain.operationrequestmanagement
             {
                 ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID.AsGuid(),
+                DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority
@@ -181,7 +181,7 @@ namespace Hospital.Domain.operationrequestmanagement
             {
                 ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID.AsGuid(),
+                DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority
@@ -206,7 +206,7 @@ namespace Hospital.Domain.operationrequestmanagement
             {
                 ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID.AsGuid(),
+                DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority

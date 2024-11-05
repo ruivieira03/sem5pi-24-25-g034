@@ -14,7 +14,7 @@ namespace Hospital.ViewModels
         public Guid PatientID { get; set; }
 
         [Required(ErrorMessage = "Doctor ID is required")]
-        public LicenseNumber DoctorID { get; set; }
+        public Guid DoctorID { get; set; }
 
         [Required(ErrorMessage = "Operation Type ID is required")]
         public string OperationTypeID { get; set; }
