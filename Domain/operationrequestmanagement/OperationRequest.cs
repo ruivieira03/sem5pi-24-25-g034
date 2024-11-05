@@ -4,7 +4,7 @@ using Hospital.Domain.Users.staffmanagement;
 
 namespace Hospital.Domain.operationrequestmanagement
 {
-    public class OperationRequest
+    public class OperationRequest : Entity<OperationRequestId>, IAggregateRoot
     {
         public OperationRequestId ID { get; set; } // Unique identifier for the operation request
         public Guid PatientID { get; set; } // Identifier for the patient linked to this operation request
