@@ -1,12 +1,11 @@
-/*namespace Hospital.Tests.Domain;
+namespace Hospital.Tests;
 
 using System;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.Domain.Patients;
 using Xunit;
 
-    public class SystemUserTests
-    {
+    public class SystemUserTests{
 
         [Fact]
         public void Constructor_ShouldInitialize_AdminUser()
@@ -117,4 +116,6 @@ using Xunit;
             Assert.False(result);
         }
         
-    }*/
+    }
+
+    

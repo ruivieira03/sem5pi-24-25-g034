@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Hospital
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
+namespace Hospital{
+    public class Program{
+
+        public static void Main(string[] args){
             CreateWebHostBuilder(args).Build().Run();
         }
 

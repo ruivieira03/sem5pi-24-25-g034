@@ -2,17 +2,13 @@ using System;
 using Hospital.Domain.Shared;
 using Newtonsoft.Json;
 
-namespace Hospital.Domain.Users.SystemUser
-{
-    public class SystemUserId : EntityId
-    {
+namespace Hospital.Domain.Users.SystemUser{
+    public class SystemUserId : EntityId{
         [JsonConstructor]
-        public SystemUserId(Guid value) : base(value)
-        {
+        public SystemUserId(Guid value) : base(value){
         }
 
-        public SystemUserId(String value) : base(value)
-        {
+        public SystemUserId(String value) : base(value){
         }
 
         override

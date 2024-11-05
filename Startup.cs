@@ -19,20 +19,27 @@ using Hospital.Services;
 using Hospital.Infraestructure.Patients;
 using Hospital.Domain.Patients;
 
-namespace Hospital
-{
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
+namespace Hospital{
+    public class Startup{
+        public Startup(IConfiguration configuration){
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
+        public void ConfigureServices(IServiceCollection services){
+
+
+
+services.AddLogging(loggingBuilder =>     //logs
+            {
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
+                loggingBuilder.AddFilter("Microsoft.EntityFrameworkCore", LogLevel.Error); // Suppress EF Core warnings
+            });
+
+
             services.AddDistributedMemoryCache();
 
             services.AddSession(options => {
@@ -40,6 +47,7 @@ namespace Hospital
                     options.Cookie.HttpOnly = true;
                     options.Cookie.IsEssential = true;
                     });
+                    
 
             // https support for authentication
             services.Configure<CookiePolicyOptions> ( options => {
@@ -73,23 +81,19 @@ namespace Hospital
     
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-           if (env.IsDevelopment())
-            {
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env){
+           if (env.IsDevelopment()){
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
+
+            else{
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-    
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
@@ -100,8 +104,7 @@ namespace Hospital
             });
         }
 
-        public void ConfigureMyServices(IServiceCollection services)
-        {
+        public void ConfigureMyServices(IServiceCollection services){
             services.AddTransient<IUnitOfWork,UnitOfWork>();
 
             services.AddTransient<ISystemUserRepository,SystemUserRepository>();
