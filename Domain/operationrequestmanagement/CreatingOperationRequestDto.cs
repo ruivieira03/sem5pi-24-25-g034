@@ -4,14 +4,14 @@ namespace Hospital.Domain.operationrequestmanagement
 {
     public class CreatingOperationRequestDto
     {
-        public OperationRequestId ID { get; set; }
+        public Guid ID { get; set; }
         public Guid PatientID { get; set; }
-        public LicenseNumber DoctorID { get; set; }
+        public Guid DoctorID { get; set; }
         public string OperationTypeID { get; set; }
         public DateTime DeadlineDate { get; set; }
         public int Priority { get; set; }
 
-        public CreatingOperationRequestDto(OperationRequestId ID, Guid PatientID, LicenseNumber DoctorID, string OperationTypeID, DateTime DeadlineDate, int Priority)
+        public CreatingOperationRequestDto(Guid ID, Guid PatientID, Guid DoctorID, string OperationTypeID, DateTime DeadlineDate, int Priority)
         {
             this.ID = ID;
             this.PatientID = PatientID;

@@ -40,9 +40,9 @@ namespace Hospital.Domain.operationrequestmanagement
             // Return a DTO with the new request’s details
             return new OperationRequestDto
             {
-                ID = newRequest.ID,
+                ID = newRequest.ID.AsGuid(),
                 PatientID = newRequest.PatientID,
-                DoctorID = newRequest.DoctorID,
+                DoctorID = newRequest.DoctorID.AsGuid(),
                 OperationTypeID = newRequest.OperationTypeID,
                 DeadlineDate = newRequest.DeadlineDate,
                 Priority = newRequest.Priority
@@ -206,9 +206,9 @@ namespace Hospital.Domain.operationrequestmanagement
 
             return new OperationRequestDto
             {
-                ID = request.ID,
+                ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID,
+                DoctorID = request.DoctorID.AsGuid(),
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority

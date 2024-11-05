@@ -21,28 +21,28 @@ namespace Hospital.Infraestructure.operationrequestmanagement
             return await _context.OperationRequests.FirstOrDefaultAsync(request => request.ID == id);
         }
 
-        // Retrieves an OperationRequest by the patient's name
-        public async Task<OperationRequest> GetOperationRequestsByPatientAsync(string name)
+        // Retrieves all OperationRequests by the patient's name
+        public async Task<List<OperationRequest>> GetOperationRequestsByPatientAsync(string name)
         {
-            return await _context.OperationRequests.FirstOrDefaultAsync(request => request.PatientID == name);
+            return await _context.OperationRequests.Where(request => request.PatientID == name).ToListAsync();
         }
 
-        // Retrieves an OperationRequest by the operation type identifier
-        public async Task<OperationRequest> GetOperationRequestsByTypeAsync(string operationTypeId)
+        // Retrieves all OperationRequests by the operation type identifier
+        public async Task<List<OperationRequest>> GetOperationRequestsByTypeAsync(string operationTypeId)
         {
-            return await _context.OperationRequests.FirstOrDefaultAsync(request => request.OperationTypeID == operationTypeId);
+            return await _context.OperationRequests.Where(request => request.OperationTypeID == operationTypeId).ToListAsync();
         }
 
-        // Retrieves an OperationRequest by its priority level
-        public async Task<OperationRequest> GetOperationRequestsByPriorityAsync(int priority)
+        // Retrieves all OperationRequests by its priority level
+        public async Task<List<OperationRequest>> GetOperationRequestsByPriorityAsync(int priority)
         {
-            return await _context.OperationRequests.FirstOrDefaultAsync(request => request.Priority == priority);
+            return await _context.OperationRequests.Where(request => request.Priority == priority).ToListAsync();
         }
 
-        // Retrieves an OperationRequest by its status
-        public async Task<OperationRequest> GetOperationRequestsByStatusAsync(string status)
+        // Retrieves all OperationRequests by its status
+        public async Task<List<OperationRequest>> GetOperationRequestsByStatusAsync(string status)
         {
-            return await _context.OperationRequests.FirstOrDefaultAsync(request => request.Status == status);
+            return await _context.OperationRequests.Where(request => request.Status == status).ToListAsync();
         }
 
         // Adds a new OperationRequest to the database

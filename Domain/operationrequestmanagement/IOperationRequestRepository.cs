@@ -6,10 +6,10 @@ namespace Hospital.Domain.operationrequestmanagement
     public interface IOperationRequestRepository
     {
         Task<OperationRequest> GetByIdAsync(OperationRequestId id); // Get request by Id
-        Task<OperationRequest> GetOperationRequestsByPatientAsync(string name); // Get all requests by patient name
-        Task<OperationRequest> GetOperationRequestsByTypeAsync(string operationTypeId); // Get all requests by type
-        Task<OperationRequest> GetOperationRequestsByPriorityAsync(int priority); // Get all requests by priority
-        Task<OperationRequest> GetOperationRequestsByStatusAsync(string status); // Get all requests by status
+        Task<List<OperationRequest>> GetOperationRequestsByPatientAsync(string name); // Get all requests by patient name
+        Task<List<OperationRequest>> GetOperationRequestsByTypeAsync(string operationTypeId); // Get all requests by type
+        Task<List<OperationRequest>> GetOperationRequestsByPriorityAsync(int priority); // Get all requests by priority
+        Task<List<OperationRequest>> GetOperationRequestsByStatusAsync(string status); // Get all requests by status
         Task AddOperationRequestAsync(OperationRequest request); // Add a new request
         Task UpdateOperationRequestAsync(OperationRequest request); // Update an existing request
         Task Remove(OperationRequest request); // Remove a request
