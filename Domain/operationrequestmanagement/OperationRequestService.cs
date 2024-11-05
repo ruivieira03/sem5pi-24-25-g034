@@ -86,10 +86,10 @@ namespace Hospital.Domain.operationrequestmanagement
         }
 
         //fetch operation request by patient name
-        public async Task<IEnumerable<OperationRequestDto>> GetOperationRequestsByPatientAsync(string name)
+        public async Task<IEnumerable<OperationRequestDto>> GetOperationRequestsByPatientAsync(Guid PatientId)
         {
             // Get all operation requests by patient name from the repository
-            var requests = await _operationRequestRepository.GetOperationRequestsByPatientAsync(name);
+            var requests = await _operationRequestRepository.GetOperationRequestsByPatientAsync(PatientId);
 
             // Map the requests to DTOs
             return requests.Select(request => new OperationRequestDto
@@ -139,6 +139,7 @@ namespace Hospital.Domain.operationrequestmanagement
             });
         }
 
+        /* STATUS BELONGS TO APPOINTMENT (See 3.4 and 3.6 on the specifications document)
         //fetch operation request by status
         public async Task<IEnumerable<OperationRequestDto>> GetOperationRequestsByStatusAsync(string status)
         {
@@ -156,6 +157,7 @@ namespace Hospital.Domain.operationrequestmanagement
                 Priority = request.Priority
             });
         }
+        */
 
         //Update operation request
         public async Task<OperationRequestDto> UpdateOperationRequestAsync(OperationRequestDto dto)

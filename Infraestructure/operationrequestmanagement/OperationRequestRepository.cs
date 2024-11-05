@@ -21,10 +21,10 @@ namespace Hospital.Infraestructure.operationrequestmanagement
             return await _context.OperationRequests.FirstOrDefaultAsync(request => request.ID == id);
         }
 
-        // Retrieves all OperationRequests by the patient's name
-        public async Task<List<OperationRequest>> GetOperationRequestsByPatientAsync(string name)
+        // Retrieves all OperationRequests by the patient's id
+        public async Task<List<OperationRequest>> GetOperationRequestsByPatientAsync(Guid patientId)
         {
-            return await _context.OperationRequests.Where(request => request.PatientID == name).ToListAsync();
+            return await _context.OperationRequests.Where(request => request.PatientID == patientId).ToListAsync();
         }
 
         // Retrieves all OperationRequests by the operation type identifier
@@ -39,11 +39,13 @@ namespace Hospital.Infraestructure.operationrequestmanagement
             return await _context.OperationRequests.Where(request => request.Priority == priority).ToListAsync();
         }
 
+        /* STATUS BELONGS TO APPOINTMENT (See 3.4 and 3.6 on the specifications document)
         // Retrieves all OperationRequests by its status
         public async Task<List<OperationRequest>> GetOperationRequestsByStatusAsync(string status)
         {
             return await _context.OperationRequests.Where(request => request.Status == status).ToListAsync();
         }
+        */
 
         // Adds a new OperationRequest to the database
         public async Task AddOperationRequestAsync(OperationRequest request)

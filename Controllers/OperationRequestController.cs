@@ -62,9 +62,9 @@ public class OperationRequestController : ControllerBase
     // GET: api/OperationRequest/patient/{name}
     [Authorize(Roles = "Admin, Doctor")]
     [HttpGet("patient/{name}")]
-    public async Task<ActionResult<OperationRequestDto>> GetByPatient(string name)
+    public async Task<ActionResult<OperationRequestDto>> GetByPatient(Guid patientId)
     {
-        var request = await _operationRequestService.GetOperationRequestsByPatientAsync(name);
+        var request = await _operationRequestService.GetOperationRequestsByPatientAsync(patientId);
         return Ok(request); // Return OK status with the request details
     }
 
@@ -86,6 +86,7 @@ public class OperationRequestController : ControllerBase
         return Ok(request); // Return OK status with the request details
     }
 
+    /* STATUS BELONGS TO APPOINTMENT (See 3.4 and 3.6 on the specifications document)
     // GET: api/OperationRequest/status/{status}
     [Authorize(Roles = "Admin, Doctor")]
     [HttpGet("status/{status}")]
@@ -94,11 +95,12 @@ public class OperationRequestController : ControllerBase
         var request = await _operationRequestService.GetOperationRequestsByStatusAsync(status);
         return Ok(request); // Return OK status with the request details
     }
+    */
 
     // PUT: api/OperationRequest/5
-    [Authorize(Roles = "Admin, Doctor")]
     [HttpPut("{id}")]
-    public async Task<ActionResult<OperationRequestDto>> Update(OperationRequestId id, OperationRequestDto dto)
+    [Authorize(Roles = "Admin, Doctor")]
+    public async Task<ActionResult<OperationRequestDto>> Update([FromRoute] OperationRequestId id, [FromBody] OperationRequestDto dto)
     {
         if (id.AsGuid() != dto.ID)
         {

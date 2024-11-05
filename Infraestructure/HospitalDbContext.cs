@@ -4,6 +4,8 @@ using Hospital.Infraestructure.Users;
 using Hospital.Domain.Shared;
 using Hospital.Infraestructure.Patients;
 using Hospital.Domain.Patients;
+using Hospital.Infraestructure.operationrequestmanagement;
+using Hospital.Domain.operationrequestmanagement;
 
 namespace Hospital.Infraestructure
 {
@@ -13,6 +15,7 @@ namespace Hospital.Infraestructure
     {
         public DbSet<SystemUser> SystemUsers { get; set; }
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<OperationRequest> OperationRequests { get; set; }
 
         public HospitalDbContext(DbContextOptions options) : base(options)
         {
@@ -24,6 +27,8 @@ namespace Hospital.Infraestructure
             modelBuilder.ApplyConfiguration(new SystemUserEntityTypeConfiguration());
 
             modelBuilder.ApplyConfiguration(new PatientEntityTypeConfiguration());
+
+            modelBuilder.ApplyConfiguration(new OperationRequestEntityTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
