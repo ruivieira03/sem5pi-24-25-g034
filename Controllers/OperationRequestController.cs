@@ -100,7 +100,7 @@ public class OperationRequestController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<OperationRequestDto>> Update(OperationRequestId id, OperationRequestDto dto)
     {
-        if (id != dto.ID)
+        if (id.AsGuid() != dto.ID)
         {
             return BadRequest(); // Return 400 if ID in the route doesn't match the DTO
         }

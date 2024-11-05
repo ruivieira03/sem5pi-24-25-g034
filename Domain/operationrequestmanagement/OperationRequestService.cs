@@ -58,9 +58,9 @@ namespace Hospital.Domain.operationrequestmanagement
             // Map the requests to DTOs
             return requests.Select(request => new OperationRequestDto
             {
-                ID = request.ID,
+                ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID,
+                DoctorID = request.DoctorID.AsGuid(),
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority
@@ -76,9 +76,9 @@ namespace Hospital.Domain.operationrequestmanagement
             // Map the request to a DTO
             return new OperationRequestDto
             {
-                ID = request.ID,
+                ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID,
+                DoctorID = request.DoctorID.AsGuid(),
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority
@@ -94,9 +94,9 @@ namespace Hospital.Domain.operationrequestmanagement
             // Map the requests to DTOs
             return requests.Select(request => new OperationRequestDto
             {
-                ID = request.ID,
+                ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID,
+                DoctorID = request.DoctorID.AsGuid(),
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority
@@ -112,9 +112,9 @@ namespace Hospital.Domain.operationrequestmanagement
             // Map the requests to DTOs
             return requests.Select(request => new OperationRequestDto
             {
-                ID = request.ID,
+                ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID,
+                DoctorID = request.DoctorID.AsGuid(),
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority
@@ -130,9 +130,9 @@ namespace Hospital.Domain.operationrequestmanagement
             // Map the requests to DTOs
             return requests.Select(request => new OperationRequestDto
             {
-                ID = request.ID,
+                ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID,
+                DoctorID = request.DoctorID.AsGuid(),
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority
@@ -148,9 +148,9 @@ namespace Hospital.Domain.operationrequestmanagement
             // Map the requests to DTOs
             return requests.Select(request => new OperationRequestDto
             {
-                ID = request.ID,
+                ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID,
+                DoctorID = request.DoctorID.AsGuid(),
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority
@@ -161,16 +161,12 @@ namespace Hospital.Domain.operationrequestmanagement
         public async Task<OperationRequestDto> UpdateOperationRequestAsync(OperationRequestDto dto)
         {
             // Get the operation request from the repository
-            var request = await _operationRequestRepository.GetByIdAsync(dto.ID);
+            var request = await _operationRequestRepository.GetByIdAsync(new OperationRequestId(dto.ID));
 
             // Update the request with the new details
-            request.Update(
-                dto.PatientID,
-                dto.DoctorID,
-                dto.OperationTypeID,
-                dto.DeadlineDate,
-                dto.Priority
-            );
+            request.OperationTypeID = dto.OperationTypeID;
+            request.DeadlineDate = dto.DeadlineDate;
+            request.Priority = dto.Priority;
 
             // Save the updated request to the repository
             await _operationRequestRepository.UpdateOperationRequestAsync(request);
@@ -181,9 +177,9 @@ namespace Hospital.Domain.operationrequestmanagement
             // Return a DTO with the updated request’s details
             return new OperationRequestDto
             {
-                ID = request.ID,
+                ID = request.ID.AsGuid(),
                 PatientID = request.PatientID,
-                DoctorID = request.DoctorID,
+                DoctorID = request.DoctorID.AsGuid(),
                 OperationTypeID = request.OperationTypeID,
                 DeadlineDate = request.DeadlineDate,
                 Priority = request.Priority
