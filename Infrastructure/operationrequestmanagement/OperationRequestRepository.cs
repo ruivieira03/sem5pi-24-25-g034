@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Hospital.Domain.operationrequestmanagement;
 
-namespace Hospital.Infraestructure.operationrequestmanagement
+namespace Hospital.Infrastructure.operationrequestmanagement
 {
     public class OperationRequestRepository : IOperationRequestRepository
     {

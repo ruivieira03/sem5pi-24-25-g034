@@ -4,7 +4,7 @@ using Hospital.Domain.operationrequestmanagement;
 using Hospital.Domain.Users.staffmanagement;
 using Hospital.Domain.Shared;
 
-namespace Hospital.Infraestructure.operationrequestmanagement
+namespace Hospital.Infrastructure.operationrequestmanagement
 {
     internal class OperationRequestEntityTypeConfiguration : IEntityTypeConfiguration<OperationRequest>
     {
