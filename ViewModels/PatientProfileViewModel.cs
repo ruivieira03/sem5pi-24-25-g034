@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using Hospital.Domain.Patients;
 
 namespace Hospital.ViewModels{
-    public class PatientProfileViewModel{
+    public class RegisterPatientProfileViewModel{
         [Required(ErrorMessage = "First name is required.")]
         [MaxLength(50, ErrorMessage = "First name cannot exceed 50 characters.")]
         public required string FirstName { get; set; } // Added FirstName

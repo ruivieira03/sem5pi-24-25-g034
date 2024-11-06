@@ -19,7 +19,7 @@ namespace Hospital.Domain.Patients{
             this._patientRepository = patientRepository;
         }
 
-        public async Task<PatientDto> RegisterPatientProfileAsync(PatientProfileViewModel model)
+        public async Task<PatientDto> RegisterPatientProfileAsync(RegisterPatientProfileViewModel model)
         {
             // Validate the email
             if (await _patientRepository.GetPatientByEmailAsync(model.Email) != null){
