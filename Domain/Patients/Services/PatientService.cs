@@ -1,4 +1,3 @@
-
 using Hospital.Domain.Shared;
 using Hospital.Services;
 using Hospital.Domain.Users.SystemUser;
@@ -21,10 +20,7 @@ namespace Hospital.Domain.Patients{
         }
 
 
-//Us rui
-
         public async Task<PatientDto> UpdateProfileAsUserAsync(UpdateProfileViewModel model, SystemUserId userId){
-            
             if (model == null){
                 throw new ArgumentNullException(nameof(model));
             }
@@ -77,7 +73,8 @@ namespace Hospital.Domain.Patients{
 
             if (model.EmergencyContact != null) existingPatient.EmergencyContact = model.EmergencyContact;
 
-            var newPatientDto = new PatientDto{
+            var newPatientDto = new PatientDto
+            {
                 Id = existingPatient.Id.AsGuid(),
                 FirstName = existingPatient.FirstName,
                 LastName = existingPatient.LastName,
@@ -90,13 +87,9 @@ namespace Hospital.Domain.Patients{
                 AppointmentHistory = existingPatient.AppointmentHistory
             };
 
-       
-
             string changedFields = _loggingService.GetChangedFields(originalPatientDto, newPatientDto);
             
-            
             await _loggingService.LogProfileUpdateAsync(existingPatient.Id.ToString(), changedFields, DateTime.UtcNow);
-            
             
             if (originalEmail != newPatientDto.Email || originalPhoneNumber != newPatientDto.PhoneNumber) {
                 // Generate and store the reset token
@@ -108,7 +101,6 @@ namespace Hospital.Domain.Patients{
 
                 await _emailService.SendEmailConfirmationEmailAsync(newPatientDto.Email, setupLink);
             }
-
 
             await _patientRepository.UpdatePatientAsync(existingPatient);
 
@@ -122,69 +114,32 @@ namespace Hospital.Domain.Patients{
         
 
 
-        // This is the main method
+        // 5.8.7
 
 
         public async Task<PatientDto> UpdateProfileAsync(UpdatePatientProfileViewModel model, Guid patientId){
             
-            if (model == null){  // Get input verification from Update
+            if (model == null){
                 throw new ArgumentNullException(nameof(model));
             }
 
             var existingPatient = await _patientRepository.GetByIdAsync(new PatientId(patientId));
-            
-            var originalPatientDto = new PatientDto{
-                Id = existingPatient.Id.AsGuid(),
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                DateOfBirth = existingPatient.DateOfBirth,
-                Gender = existingPatient.Gender,
-                Email = model.Email,
-                PhoneNumber = existingPatient.PhoneNumber,
-                EmergencyContact = existingPatient.EmergencyContact,
-                AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
-                AppointmentHistory = existingPatient.AppointmentHistory
-            };
            
             if (existingPatient == null){
                 throw new InvalidOperationException("Patient not found.");
             }
+            //update atributes
 
-           var newPatientDto = new PatientDto{
-                Id = existingPatient.Id.AsGuid(),
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                DateOfBirth = existingPatient.DateOfBirth,
-                Gender = existingPatient.Gender,
-                Email = model.Email,
-                PhoneNumber = model.PhoneNumber,
-                EmergencyContact = model.EmergencyContact,
-                AllergiesOrMedicalConditions = model.AllergiesOrMedicalConditions,
-                AppointmentHistory = model.AppointmentHistory
-            };
-
-            if (existingPatient.Email != newPatientDto.Email || existingPatient.PhoneNumber != newPatientDto.PhoneNumber) {
-                // Generate and store the reset token
-                existingPatient.VerifyToken = existingPatient.VerifyToken = Guid.NewGuid().ToString();
-                existingPatient.TokenExpiry = DateTime.UtcNow.AddHours(48); // Token valid for 48 hours
-                existingPatient.isVerified = false;
-
-                string setupLink = _emailService.GenerateEmailVerification(newPatientDto.Email, existingPatient.VerifyToken);
-
-                await _emailService.SendEmailConfirmationEmailAsync(newPatientDto.Email, setupLink);
-            }
-
-        string changedFields = _loggingService.GetChangedFields(originalPatientDto,newPatientDto);
-
-            await _loggingService.LogProfileUpdateAsync(existingPatient.Id.ToString(), changedFields, DateTime.UtcNow);
-            
+            existingPatient.FirstName = model.FirstName;
+            existingPatient.LastName = model.LastName;
+            existingPatient.Email = model.Email;
+            existingPatient.PhoneNumber = model.PhoneNumber;
+            existingPatient.EmergencyContact = model.EmergencyContact;
 
             await _patientRepository.UpdatePatientAsync(existingPatient);   // Update Database
             await _unitOfWork.CommitAsync();                                // Commit transaction on it
 
-
-          return new PatientDto{
-
+            return new PatientDto{
                 Id = existingPatient.Id.AsGuid(),
                 FirstName = existingPatient.FirstName,
                 LastName = existingPatient.LastName,
@@ -197,13 +152,9 @@ namespace Hospital.Domain.Patients{
                 AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
                 AppointmentHistory = existingPatient.AppointmentHistory,
             };
-
-
         }
-            
 
-              
-        
+
            public async Task DeleteAsync(PatientId patientId){
 
             var existingPatient = await _patientRepository.GetByIdAsync(patientId);
@@ -219,7 +170,8 @@ namespace Hospital.Domain.Patients{
     
 
 
-       public async Task<List<PatientDto>> GetAllAsync(){
+       public async Task<List<PatientDto>> GetAllAsync()
+{
     var patients = await _patientRepository.GetAllAsync();
             List<PatientDto> patientDto= patients.ConvertAll(patient => new PatientDto { 
 
@@ -236,11 +188,7 @@ namespace Hospital.Domain.Patients{
             });
             return patientDto;
     }
-    }
+     
 }
-
-    
-    
-    
-
+}
     

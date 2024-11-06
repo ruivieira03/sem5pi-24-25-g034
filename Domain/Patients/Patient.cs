@@ -4,7 +4,6 @@ using Hospital.Domain.Users.SystemUser;
 
 namespace Hospital.Domain.Patients{
     public class Patient : Entity<PatientId>{
-        // Public properties for EF Core to bind to
         public string FirstName { get; set; }                        // First name of the patient
         public string LastName { get; set; }                         // Last name of the patient
        
@@ -19,12 +18,8 @@ namespace Hospital.Domain.Patients{
         public string EmergencyContact { get; set; }                 // Emergency contact information
         public List<string>? AppointmentHistory { get; set; }    // List of previous and upcoming appointments
         public SystemUser? SystemUser { get; set; } // Navigation property back to SystemUser
-        public bool isVerified { get; set; } // For storing the email verification status
-        public string? ResetToken { get; set; } // For storing the reset token
 
-        public string? VerifyToken { get; set; } // For storing the verification token
-        public string? DeleteToken { get; set; } // For storing the delete token
-        public DateTime? TokenExpiry { get; set; } // For storing the token expiry time
+    
 
 
         // Parameterless constructor for EF Core
@@ -48,7 +43,6 @@ namespace Hospital.Domain.Patients{
             PhoneNumber = phoneNumber;                      
             // Phone must be unique
             EmergencyContact = emergencyContact;
-
             AppointmentHistory = appointmentHistory;
             AllergiesOrMedicalConditions = allergiesOrMedicalConditions;
         

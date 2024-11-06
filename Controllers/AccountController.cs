@@ -196,8 +196,7 @@ public class AccountController : Controller
     // GET api/account/confirm-email
     [HttpGet("confirm-email")]
     [AllowAnonymous] // Allow access to this endpoint without authentication
-    public async Task<IActionResult> ConfirmEmail()
-    {
+    public async Task<IActionResult> ConfirmEmail(){
         // Extract email and token from the request's query string
         string email = Request.Query["email"].ToString();
         string token = Request.Query["token"].ToString();
@@ -228,8 +227,7 @@ public class AccountController : Controller
                 return BadRequest(new { Message = "Invalid token or email confirmation failed." });
             }
         }
-        catch (Exception ex)
-        {
+        catch (Exception){
             return BadRequest(new { Message = "An error occurred during confirmation." });
         }
     }
