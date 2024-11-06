@@ -1,11 +1,7 @@
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using Hospital.ViewModels;
 using Hospital.Domain.Shared;
 using Hospital.Services;
 using Hospital.Domain.Patients;
-using Hospital.Domain.Users.SystemUser;
 
 namespace Hospital.Domain.Users.SystemUser
 {
@@ -16,14 +12,16 @@ namespace Hospital.Domain.Users.SystemUser
         private readonly IPasswordService _passwordService;
         private readonly IEmailService _emailService;
         private readonly IPatientRepository _patientRepository;
+        private readonly ILoggingService _loggingService;
 
-        public SystemUserService(IUnitOfWork unitOfWork, ISystemUserRepository systemUserRepository, IPasswordService passwordService, IEmailService emailService, IPatientRepository patientRepository)
+        public SystemUserService(IUnitOfWork unitOfWork, ISystemUserRepository systemUserRepository, IPasswordService passwordService, IEmailService emailService, IPatientRepository patientRepository, ILoggingService loggingService)
         {
             this._unitOfWork = unitOfWork;
             this._systemUserRepository = systemUserRepository;
             this._passwordService = passwordService;
             this._emailService = emailService;
             this._patientRepository = patientRepository;
+            this._loggingService = loggingService;
         }
 
         public async Task<SystemUserDto> RegisterUserAsync(RegisterUserViewModel model)
@@ -59,7 +57,7 @@ namespace Hospital.Domain.Users.SystemUser
             await _systemUserRepository.AddUserAsync(newUser);
 
             // Generate a one-time setup link
-            string setupLink = GenerateSetupLink(model.Email, newUser.VerifyToken);
+            string setupLink = _emailService.GenerateSetupLink(model.Email, newUser.VerifyToken);
 
             // Send the registration email with the setup link
             await _emailService.SendRegistrationEmailAsync(newUser.Email, setupLink);
@@ -87,7 +85,7 @@ namespace Hospital.Domain.Users.SystemUser
         // This method is similar to the RegisterUserAsync method, but it also links the patient profile to the new user
         public async Task<SystemUserDto> RegisterPatientUserAsync(PatientUserViewModel model)
         {
-            // Verify if the username is already taken
+            // Verify if the username and email is already taken
 
             if (await _systemUserRepository.GetUserByUsernameAsync(model.Username) != null)
             {
@@ -126,7 +124,7 @@ namespace Hospital.Domain.Users.SystemUser
             await _systemUserRepository.AddUserAsync(newUser);
 
             // Generate a one-time setup link
-            string setupLink = GenerateEmailVerification(model.Email, newUser.VerifyToken);
+            string setupLink = _emailService.GenerateEmailVerification(model.Email, newUser.VerifyToken);
 
             // Send the registration email with the setup link
             await _emailService.SendRegistrationEmailAsync(newUser.Email, setupLink);
@@ -143,7 +141,6 @@ namespace Hospital.Domain.Users.SystemUser
                 Email = newUser.Email,
                 PhoneNumber = newUser.PhoneNumber,
                 IAMId = newUser.IAMId,
-                ResetToken = newUser.ResetToken,
                 TokenExpiry = newUser.TokenExpiry,
                 isVerified = newUser.isVerified,
                 VerifyToken = newUser.VerifyToken
@@ -165,7 +162,7 @@ namespace Hospital.Domain.Users.SystemUser
             user.TokenExpiry = DateTime.UtcNow.AddHours(1); // Token valid for 1 hour
 
             // Generate reset link
-            string resetLink = GenerateResetLink(user.Email, user.ResetToken);
+            string resetLink = _emailService.GenerateResetLink(user.Email, user.ResetToken);
             await _emailService.SendPasswordResetEmailAsync(user.Email, resetLink);
 
             // Commit the transaction
@@ -180,7 +177,6 @@ namespace Hospital.Domain.Users.SystemUser
                 PhoneNumber = user.PhoneNumber,
                 IAMId = user.IAMId,
                 ResetToken = user.ResetToken,
-                TokenExpiry = user.TokenExpiry,
                 isVerified = user.isVerified,
                 VerifyToken = user.VerifyToken
             };
@@ -197,7 +193,7 @@ namespace Hospital.Domain.Users.SystemUser
             }
             
             // Check if the token is valid
-            bool isValidToken = await _passwordService.ValidateTokenForUser(email, user.ResetToken);
+            bool isValidToken = await ValidateTokenForUser(email, user.ResetToken);
             if (!isValidToken)
             {
                 throw new Exception("Invalid or expired reset token.");
@@ -205,13 +201,12 @@ namespace Hospital.Domain.Users.SystemUser
 
             // Hash and update the new password
             user.Password = _passwordService.HashPassword(newPassword);
-            user.ResetToken = "";  // Clear reset token after use
+            user.ResetToken = null;  // Clear reset token after use
             user.TokenExpiry = null;
 
             await _unitOfWork.CommitAsync();
 
-            return new SystemUserDto
-            {
+            return new SystemUserDto{
                 Id = user.Id.AsGuid(),
                 Username = user.Username,
                 Role = user.Role,
@@ -220,8 +215,7 @@ namespace Hospital.Domain.Users.SystemUser
                 IAMId = user.IAMId,
                 ResetToken = user.ResetToken,
                 TokenExpiry = user.TokenExpiry,
-                isVerified = user.isVerified,
-                VerifyToken = user.VerifyToken
+                isVerified = user.isVerified
             };
         }
 
@@ -239,7 +233,11 @@ namespace Hospital.Domain.Users.SystemUser
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IAMId = user.IAMId,
-                isVerified = user.isVerified
+                isVerified = user.isVerified,
+                VerifyToken = user.VerifyToken,
+                ResetToken = user.ResetToken,
+                TokenExpiry = user.TokenExpiry,
+                DeleteToken = user.DeleteToken
             });
 
             return userDtos;
@@ -250,8 +248,10 @@ namespace Hospital.Domain.Users.SystemUser
         {
             var user = await this._systemUserRepository.GetByIdAsync(id);
             
-            if(user == null)
-                return null;
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
 
             return new SystemUserDto
             {
@@ -261,10 +261,11 @@ namespace Hospital.Domain.Users.SystemUser
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IAMId = user.IAMId,
+                isVerified = user.isVerified,
+                VerifyToken = user.VerifyToken,
                 ResetToken = user.ResetToken,
                 TokenExpiry = user.TokenExpiry,
-                isVerified = user.isVerified,
-                VerifyToken = user.VerifyToken
+                DeleteToken = user.DeleteToken
             };
         }
 
@@ -274,7 +275,9 @@ namespace Hospital.Domain.Users.SystemUser
             var user = await this._systemUserRepository.GetByIdAsync(new SystemUserId(dto.Id)); 
 
             if (user == null)
-                return null;   
+            {
+                throw new Exception("User not found.");
+            }  
 
             // Update user details
             user.Username = dto.Username;
@@ -293,10 +296,11 @@ namespace Hospital.Domain.Users.SystemUser
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IAMId = user.IAMId,
+                isVerified = user.isVerified,
+                VerifyToken = user.VerifyToken,
                 ResetToken = user.ResetToken,
                 TokenExpiry = user.TokenExpiry,
-                isVerified = user.isVerified,
-                VerifyToken = user.VerifyToken
+                DeleteToken = user.DeleteToken
             };
         }
 
@@ -306,7 +310,9 @@ namespace Hospital.Domain.Users.SystemUser
             var user = await this._systemUserRepository.GetByIdAsync(id); 
 
             if (user == null)
-                return null;   
+            {
+                throw new Exception("User not found.");
+            }   
 
             // Inactivate user (mark as inactive, or adjust the field you use to signify activity)
             user.ResetToken = null; // #TODO: inactivate user logic
@@ -321,22 +327,28 @@ namespace Hospital.Domain.Users.SystemUser
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IAMId = user.IAMId,
+                isVerified = user.isVerified,
+                VerifyToken = user.VerifyToken,
                 ResetToken = user.ResetToken,
                 TokenExpiry = user.TokenExpiry,
-                isVerified = user.isVerified,
-                VerifyToken = user.VerifyToken
+                DeleteToken = user.DeleteToken
             };
         }
 
         // Delete user
-        public async Task<SystemUserDto> DeleteAsync(SystemUserId userId)
+        public async Task<SystemUserDto> DeleteAsync(string email)
         {
-            var user = await this._systemUserRepository.GetByIdAsync(userId); 
+            var user = await this._systemUserRepository.GetUserByEmailAsync(email); 
 
             if (user == null)
-                return null;   
+            {
+                throw new Exception("User not found.");
+            }
 
             await this._systemUserRepository.Remove(user);
+            
+            await this._loggingService.LogAccountDeletionAsync(user.Id.ToString(), DateTime.UtcNow);
+
             await this._unitOfWork.CommitAsync();
 
             return new SystemUserDto
@@ -347,11 +359,28 @@ namespace Hospital.Domain.Users.SystemUser
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IAMId = user.IAMId,
+                isVerified = user.isVerified,
+                VerifyToken = user.VerifyToken,
                 ResetToken = user.ResetToken,
                 TokenExpiry = user.TokenExpiry,
-                isVerified = user.isVerified,
-                VerifyToken = user.VerifyToken
+                DeleteToken = user.DeleteToken
             };
+        }
+
+         // Validate reset token
+
+        public async Task<bool> ValidateTokenForUser(string email, string token)
+        {
+            // Retrieve the user by email
+            var user = await _systemUserRepository.GetUserByEmailAsync(email);
+            if (user == null)
+            {
+                return false; // User not found
+            }
+
+            // Check if the token matches and is not expired
+            bool isValid = user.ResetToken == token && user.TokenExpiry > DateTime.UtcNow;
+            return isValid;
         }
 
         // Validate email token
@@ -379,10 +408,9 @@ namespace Hospital.Domain.Users.SystemUser
             // Retrieve the user based on the provided email
             var user = await _systemUserRepository.GetUserByEmailAsync(email);
         
-            // Check if user exists
             if (user == null)
             {
-                return false; // Email does not exist
+                throw new Exception("User not found.");
             }
 
             // Validate the token: Check if it matches the stored token and is not expired
@@ -394,15 +422,16 @@ namespace Hospital.Domain.Users.SystemUser
         public async Task<bool> ConfirmEmailAsync(string email, string token)
         {
             var user = await _systemUserRepository.GetUserByEmailAsync(email);
+            
             if (user == null)
             {
-                return false; // User not found
+                throw new Exception("User not found.");
             }
 
             // Assume user has Token and TokenExpiry properties
             if (user.VerifyToken != token || user.TokenExpiry < DateTime.UtcNow)
             {
-                return false; // Invalid token or expired
+                throw new Exception("Invalid token or expired");
             }
 
             user.isVerified = true; // Set email confirmation
@@ -418,6 +447,7 @@ namespace Hospital.Domain.Users.SystemUser
         {
             // Verify if the user exists
             var user = await _systemUserRepository.GetByIdAsync(userId);
+
             if (user == null)
             {
                 throw new InvalidOperationException("User not found.");
@@ -431,48 +461,43 @@ namespace Hospital.Domain.Users.SystemUser
             user.TokenExpiry = DateTime.UtcNow.AddHours(24); // Token valid for 24 hours
 
             // Send the account deletion confirmation email
-            string deleteLink = GenerateDeleteLink(user.Email, token);
+            string deleteLink = _emailService.GenerateDeleteLink(user.Email, token);
             await _emailService.SendAccountDeletionEmailAsync(user.Email, deleteLink);
 
             // Commit the changes
             await _unitOfWork.CommitAsync();
         }
 
-        private string GenerateDeleteLink(string email, string token)
+        // Delete user
+        public async Task<SystemUserDto> DeleteFromIdAsync(SystemUserId id)
         {
-            // Construct the delete link using application's base URL
-            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
-            return $"{baseUrl}/confirm-delete-account?email={email}&token={token}";
-        }
+            var user = await this._systemUserRepository.GetByIdAsync(id); 
 
-        private string GenerateSetupLink(string email, string token)
-        {
-            // Construct the setup link using application's base URL
-            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
-            return $"{baseUrl}/setup-password?email={email}&token={token}";
-        }
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
 
-        private string GenerateResetLink(string email, string token)
-        {
-            // Construct the setup link using application's base URL
-            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
-            return $"{baseUrl}/reset-password?email={email}&token={token}";
-        }
+            await this._systemUserRepository.Remove(user);
+            
+            await this._loggingService.LogAccountDeletionAsync(user.Id.ToString(), DateTime.UtcNow);
 
-        private string GenerateEmailVerification(string email, string token)
-        {
-            // Construct the setup link using application's base URL
-            string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
-            return $"{baseUrl}/confirm-email?email={email}&token={token}";
-        }
+            await this._unitOfWork.CommitAsync();
 
-        public async Task SendConfirmationEmailAsync(string email, string token)
-        {
-            // Construct the confirmation link
-            string confirmationLink = GenerateEmailVerification(email, token);
-
-            // Send the confirmation email
-            await _emailService.SendEmailConfirmationEmailAsync(email, confirmationLink);
+            return new SystemUserDto
+            {
+                Id = user.Id.AsGuid(),
+                Username = user.Username,
+                Role = user.Role,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                IAMId = user.IAMId,
+                isVerified = user.isVerified,
+                VerifyToken = user.VerifyToken,
+                ResetToken = user.ResetToken,
+                TokenExpiry = user.TokenExpiry,
+                DeleteToken = user.DeleteToken
+            };
         }
     
     }

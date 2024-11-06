@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.ViewModels;
 using Hospital.Domain.Shared;
-using Hospital.Services;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -96,9 +94,6 @@ public class SystemUserController : ControllerBase
     }
 
 
-
-
-
     // PUT: api/SystemUser/5
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
@@ -146,9 +141,10 @@ public class SystemUserController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<SystemUserDto>> HardDelete(Guid id)
     {
+
         try
         {
-            var user = await _systemUserService.DeleteAsync(new SystemUserId(id));
+            var user = await _systemUserService.DeleteFromIdAsync(new SystemUserId(id));
 
             if (user == null)
             {

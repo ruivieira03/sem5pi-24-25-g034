@@ -1,10 +1,6 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace Hospital.Domain.Shared
-{
-    public interface IRepository<TEntity, TEntityId>
-    {
+namespace Hospital.Domain.Shared{
+    public interface IRepository<TEntity, TEntityId>{
         Task<List<TEntity>> GetAllAsync();
         Task<TEntity> GetByIdAsync(TEntityId id);
         Task<List<TEntity>> GetByIdsAsync(List<TEntityId> ids);

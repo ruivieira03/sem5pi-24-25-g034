@@ -1,19 +1,12 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using Hospital.Domain.Users.SystemUser;
 
 namespace Hospital.Services
 {
     public class PasswordService : IPasswordService
     {
-        private readonly ISystemUserRepository _systemUserRepository;
-
-        // Injecting the ISystemUserRepository through the constructor
-        public PasswordService(ISystemUserRepository systemUserRepository)
-        {
-            _systemUserRepository = systemUserRepository;
-        }
+        
         public string HashPassword(string password)
         {
             // Hashing the password using SHA256
@@ -41,20 +34,6 @@ namespace Hospital.Services
             // #TODO: since this password is hashed, users need to know it.
             var password = Guid.NewGuid().ToString().Substring(0, 8);
             return password;
-        }
-
-        public async Task<bool> ValidateTokenForUser(string email, string token)
-        {
-            // Retrieve the user by email
-            var user = await _systemUserRepository.GetUserByEmailAsync(email);
-            if (user == null)
-            {
-                return false; // User not found
-            }
-
-            // Check if the token matches and is not expired
-            bool isValid = user.ResetToken == token && user.TokenExpiry > DateTime.UtcNow;
-            return isValid;
         }
 
     }

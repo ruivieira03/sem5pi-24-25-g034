@@ -1,4 +1,3 @@
-using System;
 
 namespace Hospital.Domain.Shared
 {
@@ -6,8 +5,7 @@ namespace Hospital.Domain.Shared
     {
         public string Details { get; }
 
-        public BusinessRuleValidationException(string message) : base(message)
-        {
+        public BusinessRuleValidationException(string message) : base(message){
             
         }
 

@@ -2,15 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Auth0.AspNetCore.Authentication;
-using System.Threading.Tasks;
-using System;
-using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using MySql.Data.MySqlClient;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.Services;
 using Hospital.ViewModels;
+using Hospital.Domain.Patients;
 
 /**
  * AccountController
@@ -42,12 +39,14 @@ public class AccountController : Controller
 
     private readonly IPasswordService _passwordService;
     private readonly SystemUserService _systemUserService;
+    private readonly PatientService _patientService;
 
-    public AccountController(ISystemUserRepository systemUserRepository, IPasswordService passwordService, SystemUserService systemUserService)
+    public AccountController(ISystemUserRepository systemUserRepository, IPasswordService passwordService, SystemUserService systemUserService, PatientService patientService)
     {
         _systemUserRepository = systemUserRepository;
         _passwordService = passwordService;
         _systemUserService = systemUserService;
+        _patientService = patientService;
     }
 
 
@@ -62,9 +61,10 @@ public class AccountController : Controller
             return Unauthorized("Invalid username.");
         }
 
-        // #TODO: Here it should also verify the password
-        // For now, using without it
-        // if (!VerifyPassword(request.Password, user.Password)) // Implement password verification
+        string hashedPassword = _passwordService.HashPassword(request.Password);
+
+        if (!user.AuthenticateWithoutIAM(request.Username, hashedPassword))
+            return Unauthorized("Invalid combination of username and password.");
 
         // Create claims for the user
         var claims = new List<Claim>
@@ -95,11 +95,8 @@ public class AccountController : Controller
      */
     [Authorize]
     [HttpGet("profile")]
-    public IActionResult Profile()
-    {
-        return Ok(new
-        {
-            Name = User.Identity.Name,
+    public IActionResult Profile(){
+        return Ok(new{
             Email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
             Roles = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value,
             userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
@@ -127,16 +124,19 @@ public class AccountController : Controller
     * GET: api/account/setup-password
     * This endpoint is used to validate the token sent to the user's email after registration.
     * It requires the user's email and the token.
+    * Only used to check if the token is valid.
     */
 
     [HttpGet("setup-password")]
     [AllowAnonymous]
-    public async Task<IActionResult> ValidateToken(string email, string token)
+    public async Task<IActionResult> ValidateToken()
     {
-        // Logic to validate the token
-        // Checking if the token is valid for the given email
 
-        bool isValid = await _passwordService.ValidateTokenForUser(email, token);
+        // Extract email and token from the request's query string
+        string email = Request.Query["email"].ToString();
+        string token = Request.Query["token"].ToString();
+
+        bool isValid = await _systemUserService.ValidateTokenForUser(email, token);
 
         if (!isValid)
         {
@@ -144,34 +144,6 @@ public class AccountController : Controller
         }
 
         return Ok(new { message = "Token is valid." });
-    }
-
-
-    /** POST: api/account/setup-password
-    * This endpoint is used to set a new password for the user after they have registered.
-    * It requires the user's email and the new password.
-    */
-
-    [HttpPost("setup-password")]
-    [AllowAnonymous]
-    public async Task<IActionResult> SetNewPassword([FromBody] PasswordResetViewModel model)
-    {
-
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        try
-        {
-            await _systemUserService.ResetPasswordAsync(model.Email, model.Password);
-            return Ok(new { Message = "Password has been reset successfully." });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Message = ex.Message });
-        }
-
     }
 
     /** POST: api/account/request-password-reset
@@ -195,7 +167,7 @@ public class AccountController : Controller
     }
 
     /** POST: api/account/reset-password
-    * This endpoint is used to set a new password for the user after they have registered.
+    * This endpoint is used to reset the password for the user after they have registered.
     * It requires the user's email and the new password.
     */
 
@@ -203,6 +175,7 @@ public class AccountController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> ResetPassword([FromBody] PasswordResetViewModel model)
     {
+        string email = Request.Query["email"].ToString();
 
         if (!ModelState.IsValid)
         {
@@ -211,7 +184,7 @@ public class AccountController : Controller
 
         try
         {
-            await _systemUserService.ResetPasswordAsync(model.Email, model.Password);
+            await _systemUserService.ResetPasswordAsync(email, model.Password);
             return Ok(new { Message = "Password has been reset successfully." });
         }
         catch (Exception ex)
@@ -236,34 +209,27 @@ public class AccountController : Controller
         }
 
         try
-        {
+{
             // Call the service method to validate the email and token
             bool isValid = await _systemUserService.ValidateEmailTokenAsync(email, token);
 
-            if (isValid)
-            {
+            if (isValid){
                 // Proceed with confirming the email
 
                 var res = await _systemUserService.ConfirmEmailAsync(email, token);
 
-                if (res)
-                {
+                if (res){
                     return Ok(new { Message = "Email confirmed successfully." });
-                }
-                else
-                {
+                }else{
                     return BadRequest(new { Message = "Failed to confirm the email." });
                 }
 
-            }
-            else
-            {
+            }else{
                 return BadRequest(new { Message = "Invalid token or email confirmation failed." });
             }
         }
         catch (Exception ex)
         {
-            // Log the exception (consider using a logging framework)
             return BadRequest(new { Message = "An error occurred during confirmation." });
         }
     }
@@ -312,19 +278,11 @@ public class AccountController : Controller
             // Call the service method to validate the email and token
             bool isValid = await _systemUserService.ValidateDeleteTokenAsync(email, token);
 
-            // Await user retrieval
-            var user = await _systemUserRepository.GetUserByEmailAsync(email);
-
-            // Check if user exists
-            if (user == null)
-            {
-                return NotFound(new { Message = "User not found." });
-            }
-
             if (isValid)
             {
                 // Proceed with account deletion
-                await _systemUserService.DeleteAsync(new SystemUserId(user.Id.Value.ToString()));
+                await _systemUserService.DeleteAsync(email);
+                 
                 return Ok(new { Message = "Account deleted successfully." });
             }
             else
@@ -338,6 +296,35 @@ public class AccountController : Controller
             return BadRequest(new { Message = "An error occurred during confirmation.", Details = ex.Message });
         }
     }
+
+        // Update the patient's profile details
+        // PUT: api/account/update-profile
+        [HttpPut("{update-profile}")]
+        [Authorize] 
+        public async Task<IActionResult> UpdateProfile(UpdateProfileViewModel model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            // Check if the model state is valid
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try{
+        
+                // Delegate the update logic to the service layer
+                var updatedPatient = await _patientService.UpdateProfileAsUserAsync(model, new SystemUserId(userId));
+
+                // Return OK with the updated user
+                return Ok(updatedPatient);
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions (e.g., update failure) and return an error response
+                return BadRequest(new { message = ex.Message });
+            }
+        }
 
 
 }
