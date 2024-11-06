@@ -12,48 +12,45 @@ namespace Hospital.Domain.Patients{
         private readonly IEmailService _emailService;
         private readonly IPatientRepository _patientRepository;
 
-        public PatientRegistrationService(IUnitOfWork unitOfWork, ISystemUserRepository systemUserRepository, IEmailService emailService, IPatientRepository patientRepository){
+        public PatientRegistrationService(IUnitOfWork unitOfWork, ISystemUserRepository systemUserRepository, IEmailService emailService, IPatientRepository patientRepository) {
             this._unitOfWork = unitOfWork;
             this._systemUserRepository = systemUserRepository;
             this._emailService = emailService;
             this._patientRepository = patientRepository;
         }
 
-        public async Task<PatientDto> RegisterPatientProfileAsync(RegisterPatientProfileViewModel model)
-        {
-            // Validate the email
-            if (await _patientRepository.GetPatientByEmailAsync(model.Email) != null){
-                throw new Exception("Email already taken.");
-            }
 
-            // Verify if the Phone Number is already in use
+        // Bussines Rules : ContactInformation:
 
-            if (await _patientRepository.GetPatientByPhoneNumberAsync(model.PhoneNumber) != null){
-                throw new Exception("Phone Number already in use.");
-            }
-
-            // Create a new Patient from the registration model
-            var newPatient = new Patient(
+        public async Task<PatientDto> RegisterPatientProfileAsync(RegisterPatientProfileViewModel model){
+            
+            if (await _patientRepository.GetPatientByEmailAsync(model.Email) != null)        // If user with that email already exists...
+                throw new Exception("Email already taken.");                                // Bussines Rule , Verfiy Unique Email
+        
+            if (await _patientRepository.GetPatientByPhoneNumberAsync(model.PhoneNumber) != null)
+                throw new Exception("Phone Number already in use.");                       // If user with that phoneNumber already exists...
+                                                                                          // Create a new Patient from the registration model
+        
+            var newPatient = new Patient(                                          
+                
                 firstName: model.FirstName,         
                 lastName: model.LastName,           
                 dateOfBirth: model.DateOfBirth,     
                 gender: model.Gender,                
-                medicalRecordNumber: model.MedicalRecordNumber, 
+                medicalRecordNumber: GenerateMedicalRecordNumber(), 
                 email: model.Email,                  
                 phoneNumber: model.PhoneNumber,      
-                emergencyContact: model.EmergencyContact 
-            );
+                emergencyContact: model.EmergencyContact,
+                appointmentHistory: model.AppointmentHistory,
+                allergiesOrMedicalConditions: model.AllergiesOrMedicalConditions
+            ); 
+            await _patientRepository.AddPatientAsync(newPatient); // Save the patient to the repository  
+            await _unitOfWork.CommitAsync();                      // Commit the transaction
 
-            // Save the patient to the repository
-            await _patientRepository.AddPatientAsync(newPatient);
-
-            // Commit the transaction
-            await _unitOfWork.CommitAsync();
-
-            // Return a DTO with the new patient’s details
-            
-            return new PatientDto{
-                Id = newPatient.Id.AsGuid(), // Assuming PatientId has an AsGuid method
+    
+            return new PatientDto{                               // Return a DTO with the new patient’s details
+               
+                Id = newPatient.Id.AsGuid(),                    // Assuming PatientId has an AsGuid method
                 FirstName = newPatient.FirstName,
                 LastName = newPatient.LastName,
                 DateOfBirth = newPatient.DateOfBirth,
@@ -61,10 +58,27 @@ namespace Hospital.Domain.Patients{
                 MedicalRecordNumber = newPatient.MedicalRecordNumber,
                 Email = newPatient.Email,
                 PhoneNumber = newPatient.PhoneNumber,
-                EmergencyContact = newPatient.EmergencyContact
+                EmergencyContact = newPatient.EmergencyContact,
+                AppointmentHistory = newPatient.AppointmentHistory,
+                AllergiesOrMedicalConditions = newPatient.AllergiesOrMedicalConditions
             };
         }
 
-    }
+          
+ 
+        //In complete Functioning
+        public string GenerateMedicalRecordNumber(){
 
+            var numberPatients = _patientRepository.GetAllAsync().Result.Count;
+
+            string formattedDate = DateTime.Now.ToString("yyyyMM");
+            string combinedString = $"{formattedDate}{numberPatients:D6}";  // Combine the date and zero-padded number
+            string patientId = combinedString;
+           
+            return patientId;
+            
+    }
+    
+    
+    }
 }
