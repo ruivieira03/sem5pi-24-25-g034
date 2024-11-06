@@ -18,7 +18,7 @@ namespace Hospital.Infrastructure
         public DbSet<AccountDeletionLog> AccountDeletionLogs { get; set; }
         public DbSet<ProfileUpdateLog> ProfileUpdateLogs { get; set; }
 
-        // Updated constructor to accept IPasswordService
+        //  Constructor to accept IPasswordService
         public HospitalDbContext(DbContextOptions<HospitalDbContext> options, IPasswordService passwordService)
             : base(options)
         {
