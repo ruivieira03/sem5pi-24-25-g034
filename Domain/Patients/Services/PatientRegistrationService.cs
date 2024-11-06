@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.Services;
 using Hospital.ViewModels;

@@ -1,6 +1,6 @@
 using Hospital.Domain.Logs;
 
-namespace Hospital.Infraestructure.Logs
+namespace Hospital.Infrastructure.Logs
 
 {
     public interface ILogRepository

@@ -1,7 +1,6 @@
-using System.Threading.Tasks;
 using Hospital.Domain.Shared;
 
-namespace Hospital.Infraestructure{
+namespace Hospital.Infrastructure{
     public class UnitOfWork : IUnitOfWork{
         private readonly HospitalDbContext _context;
 

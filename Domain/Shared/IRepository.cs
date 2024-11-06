@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Hospital.Domain.Shared{
     public interface IRepository<TEntity, TEntityId>{

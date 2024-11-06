@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Hospital.Domain.Shared;
 
 
-namespace Hospital.Infraestructure.Shared{
+namespace Hospital.Infrastructure.Shared{
     public class BaseRepository<TEntity,TEntityId> : IRepository<TEntity,TEntityId>
     where TEntity : Entity<TEntityId>
     where TEntityId : EntityId{

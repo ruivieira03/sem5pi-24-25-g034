@@ -1,15 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Hospital.Domain.Users.SystemUser;
-using Hospital.Infraestructure.Users;
-using Hospital.Domain.Shared;
-using Hospital.Infraestructure.Patients;
+using Hospital.Infrastructure.Users;
+using Hospital.Infrastructure.Patients;
 using Hospital.Domain.Patients;
 using Hospital.Domain.Logs;
-using Hospital.Infraestructure.Logs;
+using Hospital.Infrastructure.Logs;
 using Hospital.Services;
-using System;
 
-namespace Hospital.Infraestructure
+namespace Hospital.Infrastructure
 {
     public class HospitalDbContext : DbContext
     {

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 
 namespace Hospital.Domain.Users.SystemUser{
     public interface ISystemUserRepository{

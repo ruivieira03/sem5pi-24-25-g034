@@ -1,12 +1,7 @@
 using Hospital.Domain.Patients;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Hospital.Infraestructure;
-using Hospital.Domain.Patients;
 
-namespace Hospital.Infraestructure.Patients
+namespace Hospital.Infrastructure.Patients
 {
     public class PatientRepository : IPatientRepository
     {

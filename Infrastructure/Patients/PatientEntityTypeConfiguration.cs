@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Hospital.Domain.Patients;
-using Hospital.Domain.Users.SystemUser;
 
-namespace Hospital.Infraestructure.Patients{
+namespace Hospital.Infrastructure.Patients{
     public class PatientEntityTypeConfiguration : IEntityTypeConfiguration<Patient>{
         public void Configure(EntityTypeBuilder<Patient> builder)
         {

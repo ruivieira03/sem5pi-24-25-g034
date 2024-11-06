@@ -1,4 +1,3 @@
-using System;
 
 namespace Hospital.Domain.Shared{
     /// <summary>

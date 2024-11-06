@@ -1,12 +1,8 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using Hospital.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Hospital.Services;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.Domain.Patients;
-using Hospital.Domain.Shared;
 
 namespace Hospital.Controllers{
     [ApiController]

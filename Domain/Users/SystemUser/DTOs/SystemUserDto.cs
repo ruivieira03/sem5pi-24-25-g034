@@ -1,5 +1,3 @@
-using System;
-using Hospital.Domain.Shared;
 using Hospital.Domain.Patients;
 
 namespace Hospital.Domain.Users.SystemUser
