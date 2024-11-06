@@ -6,7 +6,7 @@ namespace Hospital.Domain.operationrequestmanagement
 {
     public class OperationRequestDto
     {
-        public Guid ID { get; set; } // Unique identifier for the operation request
+        public Guid Id { get; set; } // Unique identifier for the operation request
         public Guid PatientID { get; set; } // Identifier for the patient linked to this operation request
         public Guid DoctorID { get; set; } // Identifier for the doctor who requested the operation
         public string OperationTypeID { get; set; } // Identifier for the type of operation to be performed

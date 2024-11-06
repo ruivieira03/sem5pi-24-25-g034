@@ -14,10 +14,10 @@ namespace Hospital.Infraestructure.operationrequestmanagement
             builder.ToTable("OperationRequest");
 
             // Primary key definition
-            builder.HasKey(b => b.ID);
+            builder.HasKey(b => b.Id);
 
             // Configure the Id property with a value converter
-            builder.Property(b => b.ID)
+            builder.Property(b => b.Id)
                 .HasConversion(
                     id => id.AsGuid(), // Convert OperationRequestId to Guid
                     value => new OperationRequestId(value) // Convert Guid to OperationRequestId
@@ -43,7 +43,7 @@ namespace Hospital.Infraestructure.operationrequestmanagement
             builder.HasData(
                 new OperationRequest
                 {
-                    ID = new OperationRequestId(Guid.NewGuid()),
+                    Id = new OperationRequestId(Guid.NewGuid()),
                     PatientID = Guid.NewGuid(),
                     DoctorID = Guid.NewGuid(),
                     OperationTypeID = "1",
@@ -52,7 +52,7 @@ namespace Hospital.Infraestructure.operationrequestmanagement
                 },
                 new OperationRequest
                 {
-                    ID = new OperationRequestId(Guid.NewGuid()),
+                    Id = new OperationRequestId(Guid.NewGuid()),
                     PatientID = Guid.NewGuid(),
                     DoctorID = Guid.NewGuid(),
                     OperationTypeID = "2",
@@ -61,7 +61,7 @@ namespace Hospital.Infraestructure.operationrequestmanagement
                 },
                 new OperationRequest
                 {
-                    ID = new OperationRequestId(Guid.NewGuid()),
+                    Id = new OperationRequestId(Guid.NewGuid()),
                     PatientID = Guid.NewGuid(),
                     DoctorID = Guid.NewGuid(),
                     OperationTypeID = "3",

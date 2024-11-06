@@ -23,7 +23,6 @@ namespace Hospital.Domain.operationrequestmanagement
         {
             // Create a new OperationRequest
             var newRequest = new OperationRequest(
-                new OperationRequestId(Guid.NewGuid()),
                 model.PatientID,
                 model.DoctorID,
                 model.OperationTypeID,
@@ -40,7 +39,7 @@ namespace Hospital.Domain.operationrequestmanagement
             // Return a DTO with the new request’s details
             return new OperationRequestDto
             {
-                ID = newRequest.ID.AsGuid(),
+                Id = newRequest.Id.AsGuid(),
                 PatientID = newRequest.PatientID,
                 DoctorID = newRequest.DoctorID,
                 OperationTypeID = newRequest.OperationTypeID,
@@ -58,7 +57,7 @@ namespace Hospital.Domain.operationrequestmanagement
             // Map the requests to DTOs
             return requests.Select(request => new OperationRequestDto
             {
-                ID = request.ID.AsGuid(),
+                Id = request.Id.AsGuid(),
                 PatientID = request.PatientID,
                 DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,
@@ -76,7 +75,7 @@ namespace Hospital.Domain.operationrequestmanagement
             // Map the request to a DTO
             return new OperationRequestDto
             {
-                ID = request.ID.AsGuid(),
+                Id = request.Id.AsGuid(),
                 PatientID = request.PatientID,
                 DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,
@@ -94,7 +93,7 @@ namespace Hospital.Domain.operationrequestmanagement
             // Map the requests to DTOs
             return requests.Select(request => new OperationRequestDto
             {
-                ID = request.ID.AsGuid(),
+                Id = request.Id.AsGuid(),
                 PatientID = request.PatientID,
                 DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,
@@ -112,7 +111,7 @@ namespace Hospital.Domain.operationrequestmanagement
             // Map the requests to DTOs
             return requests.Select(request => new OperationRequestDto
             {
-                ID = request.ID.AsGuid(),
+                Id = request.Id.AsGuid(),
                 PatientID = request.PatientID,
                 DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,
@@ -130,7 +129,7 @@ namespace Hospital.Domain.operationrequestmanagement
             // Map the requests to DTOs
             return requests.Select(request => new OperationRequestDto
             {
-                ID = request.ID.AsGuid(),
+                Id = request.Id.AsGuid(),
                 PatientID = request.PatientID,
                 DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,
@@ -163,7 +162,7 @@ namespace Hospital.Domain.operationrequestmanagement
         public async Task<OperationRequestDto> UpdateOperationRequestAsync(OperationRequestDto dto)
         {
             // Get the operation request from the repository
-            var request = await _operationRequestRepository.GetByIdAsync(new OperationRequestId(dto.ID));
+            var request = await _operationRequestRepository.GetByIdAsync(new OperationRequestId(dto.Id));
 
             // Update the request with the new details
             request.OperationTypeID = dto.OperationTypeID;
@@ -179,7 +178,7 @@ namespace Hospital.Domain.operationrequestmanagement
             // Return a DTO with the updated request’s details
             return new OperationRequestDto
             {
-                ID = request.ID.AsGuid(),
+                Id = request.Id.AsGuid(),
                 PatientID = request.PatientID,
                 DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,
@@ -204,7 +203,7 @@ namespace Hospital.Domain.operationrequestmanagement
 
             return new OperationRequestDto
             {
-                ID = request.ID.AsGuid(),
+                Id = request.Id.AsGuid(),
                 PatientID = request.PatientID,
                 DoctorID = request.DoctorID,
                 OperationTypeID = request.OperationTypeID,

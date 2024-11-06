@@ -18,7 +18,7 @@ namespace Hospital.Infraestructure.operationrequestmanagement
         // Retrieves an OperationRequest by its unique identifier
         public async Task<OperationRequest> GetByIdAsync(OperationRequestId id)
         {
-            return await _context.OperationRequests.FirstOrDefaultAsync(request => request.ID == id);
+            return await _context.OperationRequests.FirstOrDefaultAsync(request => request.Id == id);
         }
 
         // Retrieves all OperationRequests by the patient's id

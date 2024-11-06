@@ -7,9 +7,6 @@ namespace Hospital.ViewModels
 {
     public class OperationRequestViewModel
     {
-        [Required(ErrorMessage = "Operation Request ID is required")]
-        public OperationRequestId ID { get; set; }
-        
         [Required(ErrorMessage = "Patient ID is required")]
         public Guid PatientID { get; set; }
 

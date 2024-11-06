@@ -6,18 +6,20 @@ namespace Hospital.Domain.operationrequestmanagement
 {
     public class OperationRequest : Entity<OperationRequestId>, IAggregateRoot
     {
-        public OperationRequestId ID { get; set; } // Unique identifier for the operation request
+        //public OperationRequestId ID { get; set; } // Unique identifier for the operation request
         public Guid PatientID { get; set; } // Identifier for the patient linked to this operation request
         public Guid DoctorID { get; set; } // Identifier for the doctor who requested the operation
         public string OperationTypeID { get; set; } // Identifier for the type of operation to be performed
         public DateTime DeadlineDate { get; set; } // Suggested deadline date to perform the operation
         public int Priority { get; set; } // Priority level for performing the operation
 
-        public OperationRequest() { } // Empty constructor
+        public OperationRequest() { 
+            Id = new OperationRequestId(Guid.NewGuid());
+        } // Empty constructor
 
-        public OperationRequest(OperationRequestId id, Guid patientID, Guid doctorID, string operationTypeID, DateTime deadlineDate, int priority)
+        public OperationRequest(Guid patientID, Guid doctorID, string operationTypeID, DateTime deadlineDate, int priority)
         {
-            this.ID = id;
+            Id = new OperationRequestId(Guid.NewGuid());
             this.PatientID = patientID;
             this.DoctorID = doctorID;
             this.OperationTypeID = operationTypeID;

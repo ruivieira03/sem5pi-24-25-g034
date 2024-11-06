@@ -33,7 +33,7 @@ public class OperationRequestController : ControllerBase
             var newRequestDto = await _operationRequestService.CreateOperationRequestAsync(model);
 
             // Return a Created response with the new request's details
-            return CreatedAtAction(nameof(CreateOperationRequest), new { id = newRequestDto.ID }, newRequestDto);
+            return CreatedAtAction(nameof(CreateOperationRequest), new { id = newRequestDto.Id }, newRequestDto);
         }
         catch (Exception ex)
         {
@@ -102,7 +102,7 @@ public class OperationRequestController : ControllerBase
     [Authorize(Roles = "Admin, Doctor")]
     public async Task<ActionResult<OperationRequestDto>> Update([FromRoute] OperationRequestId id, [FromBody] OperationRequestDto dto)
     {
-        if (id.AsGuid() != dto.ID)
+        if (id.AsGuid() != dto.Id)
         {
             return BadRequest(); // Return 400 if ID in the route doesn't match the DTO
         }
