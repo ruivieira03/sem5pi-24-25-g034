@@ -8,8 +8,7 @@ using Xunit;
     public class SystemUserTests{
 
         [Fact]
-        public void Constructor_ShouldInitialize_AdminUser()
-        {
+        public void Constructor_ShouldInitialize_AdminUser(){
             // Arrange
             string username = "adminUser";
             var role = Roles.Admin;

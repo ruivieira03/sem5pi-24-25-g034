@@ -95,10 +95,8 @@ public class AccountController : Controller
      */
     [Authorize]
     [HttpGet("profile")]
-    public IActionResult Profile()
-    {
-        return Ok(new
-        {
+    public IActionResult Profile(){
+        return Ok(new{
             Name = User.Identity.Name,
             Email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
             Roles = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value,
@@ -236,34 +234,26 @@ public class AccountController : Controller
         }
 
         try
-        {
+{
             // Call the service method to validate the email and token
             bool isValid = await _systemUserService.ValidateEmailTokenAsync(email, token);
 
-            if (isValid)
-            {
+            if (isValid){
                 // Proceed with confirming the email
 
                 var res = await _systemUserService.ConfirmEmailAsync(email, token);
 
-                if (res)
-                {
+                if (res){
                     return Ok(new { Message = "Email confirmed successfully." });
-                }
-                else
-                {
+                }else{
                     return BadRequest(new { Message = "Failed to confirm the email." });
                 }
 
-            }
-            else
-            {
+            }else{
                 return BadRequest(new { Message = "Invalid token or email confirmation failed." });
             }
         }
-        catch (Exception ex)
-        {
-            // Log the exception (consider using a logging framework)
+        catch (Exception){
             return BadRequest(new { Message = "An error occurred during confirmation." });
         }
     }

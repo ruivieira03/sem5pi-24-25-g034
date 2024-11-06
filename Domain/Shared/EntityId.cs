@@ -1,13 +1,10 @@
 using System;
 
-namespace Hospital.Domain.Shared
-
-{
+namespace Hospital.Domain.Shared{
     /// <summary>
     /// Base class for entities.
     /// </summary>
-    public abstract class EntityId: IEquatable<EntityId>, IComparable<EntityId>
-    {
+    public abstract class EntityId: IEquatable<EntityId>, IComparable<EntityId>{
         protected Object ObjValue {get;}
 
         public String Value { 
@@ -32,8 +29,7 @@ namespace Hospital.Domain.Shared
         public abstract String AsString();
 
 
-        public override bool Equals(object obj)
-        {
+        public override bool Equals(object obj){
             if (ReferenceEquals(null, obj)) return false;
             return obj is EntityId other && Equals(other);
         }
@@ -58,20 +54,17 @@ namespace Hospital.Domain.Shared
             return this.Value.CompareTo(other.Value);
         }
 
-        public static bool operator ==(EntityId obj1, EntityId obj2)
-        {
-            if (object.Equals(obj1, null))
-            {
-                if (object.Equals(obj2, null))
-                {
+        public static bool operator ==(EntityId obj1, EntityId obj2){
+            
+            if (object.Equals(obj1, null)){
+                if (object.Equals(obj2, null)){
                     return true;
                 }
                 return false;
             }
             return obj1.Equals(obj2);
         }
-        public static bool operator !=(EntityId x, EntityId y) 
-        {
+        public static bool operator !=(EntityId x, EntityId y) {
             return !(x == y);
         }
     }

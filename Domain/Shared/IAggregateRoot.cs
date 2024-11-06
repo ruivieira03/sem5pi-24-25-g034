@@ -1,7 +1,5 @@
-namespace Hospital.Domain.Shared
-{
-    public interface IAggregateRoot
-    {
+namespace Hospital.Domain.Shared{
+    public interface IAggregateRoot{
         
     }
 }

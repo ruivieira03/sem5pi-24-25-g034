@@ -1,7 +1,5 @@
-namespace Hospital.Domain.Shared
-{
-    public class ContactInformation
-    {
+namespace Hospital.Domain.Shared{
+    public class ContactInformation{
         public int Id { get; set; } // Primary key
 
         public string Email { get; set; } // Email address
@@ -11,8 +9,7 @@ namespace Hospital.Domain.Shared
         public ContactInformation() { }
 
         // Constructor with parameters for easy instantiation
-        public ContactInformation(string email, string phoneNumber)
-        {
+        public ContactInformation(string email, string phoneNumber){
             Email = email;
             PhoneNumber = phoneNumber;
         }

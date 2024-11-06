@@ -12,8 +12,7 @@ namespace Hospital.Domain.Patients
         private readonly IPatientRepository _patientRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public PatientService(IPatientRepository patientRepository, IUnitOfWork unitOfWork)
-        {
+        public PatientService(IPatientRepository patientRepository, IUnitOfWork unitOfWork){
             _patientRepository = patientRepository;
             _unitOfWork = unitOfWork;
         }

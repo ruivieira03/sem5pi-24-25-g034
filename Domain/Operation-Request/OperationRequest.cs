@@ -2,10 +2,8 @@ using System;
 using Hospital.Domain.Shared;
 using Hospital.Domain.Users.staffmanagement;
 
-namespace Hospital.Domain.operationrequestmanagement
-{
-    public class OperationRequest
-    {
+namespace Hospital.Domain.operationrequestmanagement{
+    public class OperationRequest{
         public Guid ID { get; set; } // Unique identifier for the operation request
         public Guid PatientID { get; set; } // Identifier for the patient linked to this operation request
         public LicenseNumber DoctorID { get; set; } // Identifier for the doctor who requested the operation
@@ -15,8 +13,7 @@ namespace Hospital.Domain.operationrequestmanagement
 
         public OperationRequest() { } // Empty constructor
 
-        public OperationRequest(Guid id, Guid patientID, LicenseNumber licenseNumber, Guid operationTypeID, DateTime deadlineDate, int priority)
-        {
+        public OperationRequest(Guid id, Guid patientID, LicenseNumber licenseNumber, Guid operationTypeID, DateTime deadlineDate, int priority){
             this.ID = Guid.NewGuid();
             this.PatientID = patientID;
             this.DoctorID = licenseNumber;

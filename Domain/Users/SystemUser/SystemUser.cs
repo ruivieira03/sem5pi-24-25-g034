@@ -2,11 +2,9 @@ using System;
 using Hospital.Domain.Shared;
 using Hospital.Domain.Patients;
 
-namespace Hospital.Domain.Users.SystemUser
-{
+namespace Hospital.Domain.Users.SystemUser{
     // Enum to represent different user roles in the system
-    public enum Roles
-    {
+    public enum Roles{
         Admin,
         Doctor,
         Nurse,
@@ -14,8 +12,7 @@ namespace Hospital.Domain.Users.SystemUser
         Patient
     }
 
-    public class SystemUser : Entity<SystemUserId>, IAggregateRoot
-    {
+    public class SystemUser : Entity<SystemUserId>, IAggregateRoot{
         // Public properties for EF Core to bind to
         public string Username { get; set; }       // Username of the user
         public Roles Role { get; set; }            // Role (Admin, Doctor, Nurse, etc.)
@@ -34,14 +31,12 @@ namespace Hospital.Domain.Users.SystemUser
 
 
         // Parameterless constructor for EF Core
-        public SystemUser() 
-        {
+        public SystemUser() {
             Id = new SystemUserId(Guid.NewGuid()); // Initialize Id here if needed
         }
 
         // Constructor for admin-registered users (backoffice staff)
-        public SystemUser(string username, Roles role, string email, string phoneNumber, string password, string iamId)
-        {
+        public SystemUser(string username, Roles role, string email, string phoneNumber, string password, string iamId){
             Id = new SystemUserId(Guid.NewGuid());
             Username = username;
             Role = role;
@@ -53,15 +48,13 @@ namespace Hospital.Domain.Users.SystemUser
             isVerified = false; // Admin-registered users are automatically verified
 
             // Backoffice users are registered by admin and must not be patients
-            if (Role == Roles.Patient)
-            {
+            if (Role == Roles.Patient){
                 throw new InvalidOperationException("Patients must use the self-registration process.");
             }
         }
 
         // Constructor for self-registered patient users
-        public SystemUser(string username, string email, string phoneNumber, string password, Patient patient)
-        {
+        public SystemUser(string username, string email, string phoneNumber, string password, Patient patient){
             Id = new SystemUserId(Guid.NewGuid());
             Username = username;
             Role = Roles.Patient;     // Patients are self-registered
@@ -78,8 +71,7 @@ namespace Hospital.Domain.Users.SystemUser
         }
 
         // Simulate IAM authentication (would actually integrate with an external service)
-        public bool Authenticate(string username, string iamId)
-        {
+        public bool Authenticate(string username, string iamId){
             return Username == username && IAMId == iamId;
         }
     }

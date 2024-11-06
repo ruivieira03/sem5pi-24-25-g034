@@ -1,5 +1,4 @@
-public class UpdateProfileViewModel
-{
+public class UpdateProfileViewModel{
     public Guid Id { get; set; }                             // Unique identifier of the patient
     public string FirstName { get; set; }                     // First name of the patient
     public string LastName { get; set; }                      // Last name of the patient
@@ -10,8 +9,7 @@ public class UpdateProfileViewModel
     public string EmergencyContact { get; set; }              // Emergency contact information
     public List<string> AllergiesOrMedicalConditions { get; set; } // Optional allergies or medical conditions
 
-    public UpdateProfileViewModel()
-    {
+    public UpdateProfileViewModel(){
         AllergiesOrMedicalConditions = new List<string>();
     }
 }

@@ -5,14 +5,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Hospital.Infraestructure.Shared;
 using Hospital.Domain.Shared;
 
-namespace Hospital.Infraestructure.Shared
-
-{
+namespace Hospital.Infraestructure.Shared{
     /// <summary>
     /// Based on https://andrewlock.net/strongly-typed-ids-in-ef-core-using-strongly-typed-entity-ids-to-avoid-primitive-obsession-part-4/
     /// </summary>
-    public class StronglyEntityIdValueConverterSelector : ValueConverterSelector
-    {
+    public class StronglyEntityIdValueConverterSelector : ValueConverterSelector{
         private readonly ConcurrentDictionary<(Type ModelClrType, Type ProviderClrType), ValueConverterInfo> _converters
             = new ConcurrentDictionary<(Type ModelClrType, Type ProviderClrType), ValueConverterInfo>();
 

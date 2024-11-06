@@ -7,8 +7,7 @@ using Hospital.Services;
 using Hospital.Domain.Patients;
 using Hospital.Domain.Users.SystemUser;
 
-namespace Hospital.Domain.Users.SystemUser
-{
+namespace Hospital.Domain.Users.SystemUser{
     public class SystemUserService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -210,8 +209,7 @@ namespace Hospital.Domain.Users.SystemUser
 
             await _unitOfWork.CommitAsync();
 
-            return new SystemUserDto
-            {
+            return new SystemUserDto{
                 Id = user.Id.AsGuid(),
                 Username = user.Username,
                 Role = user.Role,

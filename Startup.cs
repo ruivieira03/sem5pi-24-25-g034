@@ -1,18 +1,8 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Auth0.AspNetCore.Authentication;
 using Hospital.Infraestructure;
-using Hospital.Infraestructure.Shared;
 using Hospital.Domain.Shared;
 using System.Diagnostics;
-using System;
-using Hospital.Domain.Users;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.Infraestructure.Users;
 using Hospital.Services;
@@ -57,10 +47,11 @@ services.AddLogging(loggingBuilder =>     //logs
             // inner method gets called twice for some reason, 
             // ignored for now
             services.AddAuth0WebAppAuthentication(options => {
-                    string domain = Configuration["Auth0:Domain"];
-                    string clientId = Configuration["Auth0:ClientId"];
-                    
-                    Debug.Assert(domain != null, "Auth0 Domain token is not set in appsettings.json or in user secrets. USE USER SECRETS if not in prod. Check config documentation. [\"Auth0:Domain\"]");
+                string domain = Configuration["Auth0:Domain"];
+                string clientId = Configuration["Auth0:ClientId"];
+
+
+                Debug.Assert(domain != null, "Auth0 Domain token is not set in appsettings.json or in user secrets. USE USER SECRETS if not in prod. Check config documentation. [\"Auth0:Domain\"]");
                     Debug.Assert(clientId != null, "Auth0 ClientId is not set in appsettings.json or in user secrets. USE USER SECRETS if not in prod. Check config documentation. [\"Auth0:ClientId\"]");
 
                     options.Domain = domain;
@@ -106,14 +97,11 @@ services.AddLogging(loggingBuilder =>     //logs
 
         public void ConfigureMyServices(IServiceCollection services){
             services.AddTransient<IUnitOfWork,UnitOfWork>();
-
             services.AddTransient<ISystemUserRepository,SystemUserRepository>();
             services.AddTransient<SystemUserService>();
-
             services.AddTransient<IPatientRepository, PatientRepository>();
             services.AddTransient<PatientRegistrationService>();
             services.AddTransient<PatientService>();
-
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IPasswordService, PasswordService>();
 
