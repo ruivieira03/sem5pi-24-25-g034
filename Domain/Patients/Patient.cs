@@ -19,6 +19,12 @@ namespace Hospital.Domain.Patients{
         public string EmergencyContact { get; set; }                 // Emergency contact information
         public List<string>? AppointmentHistory { get; set; }    // List of previous and upcoming appointments
         public SystemUser? SystemUser { get; set; } // Navigation property back to SystemUser
+        public bool isVerified { get; set; } // For storing the email verification status
+        public string? ResetToken { get; set; } // For storing the reset token
+
+        public string? VerifyToken { get; set; } // For storing the verification token
+        public string? DeleteToken { get; set; } // For storing the delete token
+        public DateTime? TokenExpiry { get; set; } // For storing the token expiry time
 
 
         // Parameterless constructor for EF Core
@@ -38,8 +44,9 @@ namespace Hospital.Domain.Patients{
             DateOfBirth = dateOfBirth;
             Gender = gender;
             MedicalRecordNumber = medicalRecordNumber;
-            Email = email; // Email must be unique
-            PhoneNumber = phoneNumber; // Phone must be unique
+            Email = email;                                  // Email must be unique
+            PhoneNumber = phoneNumber;                      
+            // Phone must be unique
             EmergencyContact = emergencyContact;
 
             AppointmentHistory = appointmentHistory;
