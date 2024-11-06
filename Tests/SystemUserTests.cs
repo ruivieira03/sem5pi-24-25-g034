@@ -1,16 +1,14 @@
-/*namespace Hospital.Tests.Domain;
+namespace Hospital.Tests;
 
 using System;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.Domain.Patients;
 using Xunit;
 
-    public class SystemUserTests
-    {
+    public class SystemUserTests{
 
         [Fact]
-        public void Constructor_ShouldInitialize_AdminUser()
-        {
+        public void Constructor_ShouldInitialize_AdminUser(){
             // Arrange
             string username = "adminUser";
             var role = Roles.Admin;
@@ -117,4 +115,6 @@ using Xunit;
             Assert.False(result);
         }
         
-    }*/
+    }
+
+    

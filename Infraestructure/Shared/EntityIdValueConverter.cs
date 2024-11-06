@@ -2,17 +2,14 @@ using System;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Hospital.Domain.Shared;
 
-namespace Hospital.Infraestructure.Shared 
-
-{
+namespace Hospital.Infraestructure.Shared {
     public class EntityIdValueConverter<TTypedIdValue> : ValueConverter<TTypedIdValue, String>
-        where TTypedIdValue : EntityId
-    {
-        public EntityIdValueConverter(ConverterMappingHints mappingHints = null) 
+        where TTypedIdValue : EntityId{
+        public EntityIdValueConverter(ConverterMappingHints? mappingHints = null) 
             : base(id => id.Value, value => Create(value), mappingHints)
         {
         }
 
-        private static TTypedIdValue Create(String id) => Activator.CreateInstance(typeof(TTypedIdValue), id) as TTypedIdValue;
+        private static TTypedIdValue? Create(String id) => Activator.CreateInstance(typeof(TTypedIdValue), id) as TTypedIdValue;
     }
 }

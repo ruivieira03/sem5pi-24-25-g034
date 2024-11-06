@@ -1,10 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Hospital.Domain.Users.SystemUser;
 
-namespace Hospital.ViewModels
-{
-    public class RegisterUserViewModel
-    {
+namespace Hospital.ViewModels{
+    public class RegisterUserViewModel{
         [Required(ErrorMessage = "Username is required.")]
         [MaxLength(50, ErrorMessage = "Username cannot exceed 50 characters.")]
         public string Username { get; set; }

@@ -3,10 +3,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Hospital.Domain.Patients;
 using Hospital.Domain.Users.SystemUser;
 
-namespace Hospital.Infraestructure.Patients
-{
-    public class PatientEntityTypeConfiguration : IEntityTypeConfiguration<Patient>
-    {
+namespace Hospital.Infraestructure.Patients{
+    public class PatientEntityTypeConfiguration : IEntityTypeConfiguration<Patient>{
         public void Configure(EntityTypeBuilder<Patient> builder)
         {
             // Table name
