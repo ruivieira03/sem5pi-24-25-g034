@@ -14515,19 +14515,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/admin/.nuget/packages/": {}
+    "/Users/martim/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/admin/Desktop/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj",
+      "projectUniqueName": "/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj",
       "projectName": "sem5pi-24-25-g034",
-      "projectPath": "/Users/admin/Desktop/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj",
-      "packagesPath": "/Users/admin/.nuget/packages/",
-      "outputPath": "/Users/admin/Desktop/sem5pi-24-25-g034/obj/",
+      "projectPath": "/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj",
+      "packagesPath": "/Users/martim/.nuget/packages/",
+      "outputPath": "/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/admin/.nuget/NuGet/NuGet.Config"
+        "/Users/martim/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -14684,8 +14684,16 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file /Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/obj/project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }

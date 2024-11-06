@@ -256,6 +256,51 @@ namespace sem5pi_24_25_g034.Migrations
                 {
                     b.Navigation("SystemUser");
                 });
+
+            modelBuilder.Entity("Hospital.Domain.operationrequestmanagement.OperationRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("DeadlineDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("DoctorID")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("OperationTypeID")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("PatientID")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OperationRequest", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f1b1b3b4-1b3b-4b1b-8b1b-1b3b1b3b1b3b"),
+                            DeadlineDate = new DateTime(2022, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DoctorID = new Guid("1b3b1b3b-1b3b-4b1b-8b1b-1b3b1b3b1b3b"),
+                            OperationTypeID = new Guid("1b3b1b3b-1b3b-4b1b-8b1b-1b3b1b3b1b3b"),
+                            PatientID = new Guid("1b3b1b3b-1b3b-4b1b-8b1b-1b3b1b3b1b3b"),
+                            Priority = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("1b3b1b3b-1b3b-4b1b-8b1b-1b3b1b3b1b3b"),
+                            DeadlineDate = new DateTime(2022, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DoctorID = new Guid("1b3b1b3b-1b3b-4b1b-8b1b-1b3b1b3b1b3b"),
+                            OperationTypeID = new Guid("1b3b1b3b-1b3b-4b1b-8b1b-1b3b1b3b1b3b"),
+                            PatientID = new Guid("1b3b1b3b-1b3b-4b1b-8b1b-1b3b1b3b1b3b"),
+                            Priority = 2
+                        });
+                });
 #pragma warning restore 612, 618
         }
     }

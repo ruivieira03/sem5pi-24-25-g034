@@ -2,20 +2,20 @@ using System;
 using Hospital.Domain.Shared;
 using Newtonsoft.Json;
 
-namespace Hospital.Domain.Users.staffmanagement
+namespace Hospital.Domain.operationrequestmanagement
 {
-    public class LicenseNumber : EntityId
+    public class OperationRequestId : EntityId
     {
         [JsonConstructor]
-        public LicenseNumber(Guid value) : base(value)
+        public OperationRequestId(Guid value) : base(value)
         {
         }
 
-        public LicenseNumber(String value) : base(value)
+        public OperationRequestId(String value) : base(value)
         {
         }
 
-        private LicenseNumber() : base(Guid.Empty)
+        private OperationRequestId() : base(Guid.Empty)
         {
         }
 
@@ -29,9 +29,9 @@ namespace Hospital.Domain.Users.staffmanagement
             Guid obj = (Guid) base.ObjValue;
             return obj.ToString();
         }
-
+        
         public Guid AsGuid(){
             return (Guid) base.ObjValue;
-        } 
+        }
     }
 }
