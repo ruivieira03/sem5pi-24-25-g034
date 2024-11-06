@@ -1,0 +1,13 @@
+# REQUIREMENTS SPRINT 1:
+
+
+### ONLY FOR :
+- USER
+- PATIENT
+- REQUEST
+- SPECIALIZATION
+- AVAILABILITY SLOTS;
+
+
+
+### Excluded : Opeation Type and Staff
