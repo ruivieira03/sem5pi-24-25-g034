@@ -6,31 +6,38 @@ using Hospital.Infraestructure.Patients;
 using Hospital.Domain.Patients;
 using Hospital.Domain.Logs;
 using Hospital.Infraestructure.Logs;
+using Hospital.Services;
+using System;
 
-namespace Hospital.Infraestructure{
+namespace Hospital.Infraestructure
+{
+    public class HospitalDbContext : DbContext
+    {
+        private readonly IPasswordService _passwordService;
 
-    // SystemUsers seed: not using the IAMId private and not using the ContactInformation class: directly definining the Email and PhoneNumber
-    public class HospitalDbContext : DbContext{
         public DbSet<SystemUser> SystemUsers { get; set; }
         public DbSet<Patient> Patients { get; set; }
-        public DbSet<AccountDeletionLog> AccountDeletionLogs { get; set; } 
-        public DbSet<ProfileUpdateLog> ProfileUpdateLogs { get; set; } 
+        public DbSet<AccountDeletionLog> AccountDeletionLogs { get; set; }
+        public DbSet<ProfileUpdateLog> ProfileUpdateLogs { get; set; }
 
-        public HospitalDbContext(DbContextOptions options) : base(options){
+        // Updated constructor to accept IPasswordService
+        public HospitalDbContext(DbContextOptions<HospitalDbContext> options, IPasswordService passwordService)
+            : base(options)
+        {
+            _passwordService = passwordService ?? throw new ArgumentNullException(nameof(passwordService));
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder){
-           // Apply configurations
-            modelBuilder.ApplyConfiguration(new SystemUserEntityTypeConfiguration());
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Using an injected password service
+            modelBuilder.ApplyConfiguration(new SystemUserEntityTypeConfiguration(_passwordService));
 
             modelBuilder.ApplyConfiguration(new PatientEntityTypeConfiguration());
-
             modelBuilder.ApplyConfiguration(new AccountDeletionLogEntityTypeConfiguration());
 
             modelBuilder.ApplyConfiguration(new ProfileUpdateLogEntityTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
-
     }
 }

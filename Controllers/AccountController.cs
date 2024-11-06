@@ -65,9 +65,10 @@ public class AccountController : Controller
             return Unauthorized("Invalid username.");
         }
 
-        // #TODO: Here it should also verify the password
-        // For now, using without it
-        // if (!VerifyPassword(request.Password, user.Password)) // Implement password verification
+        string hashedPassword = _passwordService.HashPassword(request.Password);
+
+        if (!user.AuthenticateWithoutIAM(request.Username, hashedPassword))
+            return Unauthorized("Invalid combination of username and password.");
 
         // Create claims for the user
         var claims = new List<Claim>
@@ -100,7 +101,6 @@ public class AccountController : Controller
     [HttpGet("profile")]
     public IActionResult Profile(){
         return Ok(new{
-            Name = User.Identity.Name,
             Email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
             Roles = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value,
             userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value

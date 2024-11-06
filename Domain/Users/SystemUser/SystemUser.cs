@@ -2,7 +2,8 @@ using System;
 using Hospital.Domain.Shared;
 using Hospital.Domain.Patients;
 
-namespace Hospital.Domain.Users.SystemUser{
+namespace Hospital.Domain.Users.SystemUser
+{
     // Enum to represent different user roles in the system
     public enum Roles{
         Admin,
@@ -73,6 +74,10 @@ namespace Hospital.Domain.Users.SystemUser{
         // Simulate IAM authentication (would actually integrate with an external service)
         public bool Authenticate(string username, string iamId){
             return Username == username && IAMId == iamId;
+        }
+
+        public bool AuthenticateWithoutIAM(string username, string password){
+            return Username == username && Password == password;
         }
     }
 }

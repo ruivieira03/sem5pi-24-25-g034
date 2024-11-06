@@ -1,11 +1,12 @@
-namespace Hospital.Tests;
+namespace Hospital.Tests.Domain;
 
 using System;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.Domain.Patients;
 using Xunit;
 
-    public class SystemUserTests{
+    public class SystemUserTests
+    {
 
         [Fact]
         public void Constructor_ShouldInitialize_AdminUser(){

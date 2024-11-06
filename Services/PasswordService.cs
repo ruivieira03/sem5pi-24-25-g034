@@ -1,19 +1,12 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using Hospital.Domain.Users.SystemUser;
 
 namespace Hospital.Services
 {
     public class PasswordService : IPasswordService
     {
-        private readonly ISystemUserRepository _systemUserRepository;
-
-        // Injecting the ISystemUserRepository through the constructor
-        public PasswordService(ISystemUserRepository systemUserRepository)
-        {
-            _systemUserRepository = systemUserRepository;
-        }
+        
         public string HashPassword(string password)
         {
             // Hashing the password using SHA256

@@ -7,7 +7,8 @@ using Hospital.Services;
 using Hospital.Domain.Patients;
 using Hospital.Domain.Users.SystemUser;
 
-namespace Hospital.Domain.Users.SystemUser{
+namespace Hospital.Domain.Users.SystemUser
+{
     public class SystemUserService
     {
         private readonly IUnitOfWork _unitOfWork;
