@@ -1,14 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Auth0.AspNetCore.Authentication;
-using Hospital.Infraestructure;
+using Hospital.Infrastructure;
 using Hospital.Domain.Shared;
 using System.Diagnostics;
 using Hospital.Domain.Users.SystemUser;
-using Hospital.Infraestructure.Users;
+using Hospital.Infrastructure.Users;
 using Hospital.Services;
-using Hospital.Infraestructure.Patients;
+using Hospital.Infrastructure.Patients;
 using Hospital.Domain.Patients;
-using Hospital.Infraestructure.Logs;
+using Hospital.Infrastructure.Logs;
 
 namespace Hospital{
     public class Startup{

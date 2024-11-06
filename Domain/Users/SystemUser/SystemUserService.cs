@@ -1,11 +1,7 @@
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using Hospital.ViewModels;
 using Hospital.Domain.Shared;
 using Hospital.Services;
 using Hospital.Domain.Patients;
-using Hospital.Domain.Users.SystemUser;
 
 namespace Hospital.Domain.Users.SystemUser
 {

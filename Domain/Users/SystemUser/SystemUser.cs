@@ -1,4 +1,3 @@
-using System;
 using Hospital.Domain.Shared;
 using Hospital.Domain.Patients;
 

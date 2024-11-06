@@ -1,8 +1,7 @@
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Hospital.Domain.Users.SystemUser;
 
-namespace Hospital.Infraestructure.Users
+namespace Hospital.Infrastructure.Users
 {
     public class SystemUserRepository : ISystemUserRepository
     {

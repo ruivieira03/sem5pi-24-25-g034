@@ -1,10 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Hospital.Domain.Users.SystemUser;
-using Hospital.Domain.Shared;
 using Hospital.Services;
 
-namespace Hospital.Infraestructure.Users
+namespace Hospital.Infrastructure.Users
 {
        internal class SystemUserEntityTypeConfiguration : IEntityTypeConfiguration<SystemUser>
        {

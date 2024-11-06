@@ -1,5 +1,4 @@
-using Hospital.Infraestructure.Logs;
-using Hospital.Services;
+using Hospital.Infrastructure.Logs;
 using Hospital.Domain.Shared;
 using Hospital.Domain.Logs;
 using Hospital.Domain.Patients;
@@ -13,14 +12,18 @@ public class LoggingService : ILoggingService
     private readonly IUnitOfWork _unitOfWork;
 
     // Injecting the ILogRepository through the constructor
-    public LoggingService(ILogRepository logRepository, IUnitOfWork unitOfWork)
+    public LoggingService(IUnitOfWork unitOfWork)
     {
-        _logRepository = logRepository;
         _unitOfWork = unitOfWork;
     }
 
     public async Task LogProfileUpdateAsync(string userId, string changedFields, DateTime timestamp)
     {
+        if (string.IsNullOrEmpty(userId))
+        {
+            throw new ArgumentNullException(nameof(userId), "User ID cannot be null or empty.");
+        }
+
         var logEntry = new ProfileUpdateLog
         {
             UserId = userId.ToString(),
@@ -34,6 +37,11 @@ public class LoggingService : ILoggingService
 
     public async Task LogAccountDeletionAsync(string userId, DateTime timestamp)
     {
+        if (string.IsNullOrEmpty(userId))
+        {
+            throw new ArgumentNullException(nameof(userId), "User ID cannot be null or empty.");
+        }
+
         var logEntry = new AccountDeletionLog
         {
             UserId = userId.ToString(),

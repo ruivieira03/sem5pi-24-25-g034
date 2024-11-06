@@ -1,9 +1,7 @@
 using Hospital.Domain.Logs;
-using Hospital.Infraestructure;
-using Microsoft.EntityFrameworkCore;
-using Hospital.Domain.Logs;
+using Hospital.Infrastructure;
 
-namespace Hospital.Infraestructure.Logs
+namespace Hospital.Infrastructure.Logs
 {
     public class LogRepository : ILogRepository
     {

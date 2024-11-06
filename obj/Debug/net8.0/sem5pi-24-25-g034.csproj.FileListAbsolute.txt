@@ -1034,3 +1034,7 @@ C:/Users/User/Desktop/sem5pi-24-25-g034/bin/Debug/net8.0/Microsoft.Extensions.Co
 /Users/admin/Desktop/sem5pi-24-25-g034/obj/Debug/net8.0/sem5pi-24-25-g034.pdb
 /Users/admin/Desktop/sem5pi-24-25-g034/obj/Debug/net8.0/sem5pi-24-25-g034.genruntimeconfig.cache
 /Users/admin/Desktop/sem5pi-24-25-g034/obj/Debug/net8.0/ref/sem5pi-24-25-g034.dll
+<<<<<<< Updated upstream
+=======
+/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/bin/Debug/net8.0/FluentAssertions.dll
+>>>>>>> Stashed changes

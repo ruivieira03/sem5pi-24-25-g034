@@ -2,7 +2,7 @@ using Hospital.Domain.Logs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Hospital.Infraestructure.Logs
+namespace Hospital.Infrastructure.Logs
 {
     public class ProfileUpdateLogEntityTypeConfiguration : IEntityTypeConfiguration<ProfileUpdateLog>
     {

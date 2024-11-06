@@ -133,6 +133,22 @@
           }
         }
       },
+      "FluentAssertions/6.12.1": {
+        "type": "package",
+        "dependencies": {
+          "System.Configuration.ConfigurationManager": "4.4.0"
+        },
+        "compile": {
+          "lib/net6.0/FluentAssertions.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/FluentAssertions.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
       "Google.Protobuf/3.26.1": {
         "type": "package",
         "compile": {
@@ -5085,6 +5101,36 @@
         "lib/netstandard2.0/Dapper.dll",
         "lib/netstandard2.0/Dapper.xml",
         "readme.md"
+      ]
+    },
+    "FluentAssertions/6.12.1": {
+      "sha512": "hciWwryyLw3eonfqhFpOMTXyM1/auJChYslEBA+iGJyuBs5O3t/kA8YaeH4iRo/2Fe3ElSYL86C0miivtZ0f3g==",
+      "type": "package",
+      "path": "fluentassertions/6.12.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "FluentAssertions.png",
+        "fluentassertions.6.12.1.nupkg.sha512",
+        "fluentassertions.nuspec",
+        "lib/net47/FluentAssertions.dll",
+        "lib/net47/FluentAssertions.pdb",
+        "lib/net47/FluentAssertions.xml",
+        "lib/net6.0/FluentAssertions.dll",
+        "lib/net6.0/FluentAssertions.pdb",
+        "lib/net6.0/FluentAssertions.xml",
+        "lib/netcoreapp2.1/FluentAssertions.dll",
+        "lib/netcoreapp2.1/FluentAssertions.pdb",
+        "lib/netcoreapp2.1/FluentAssertions.xml",
+        "lib/netcoreapp3.0/FluentAssertions.dll",
+        "lib/netcoreapp3.0/FluentAssertions.pdb",
+        "lib/netcoreapp3.0/FluentAssertions.xml",
+        "lib/netstandard2.0/FluentAssertions.dll",
+        "lib/netstandard2.0/FluentAssertions.pdb",
+        "lib/netstandard2.0/FluentAssertions.xml",
+        "lib/netstandard2.1/FluentAssertions.dll",
+        "lib/netstandard2.1/FluentAssertions.pdb",
+        "lib/netstandard2.1/FluentAssertions.xml"
       ]
     },
     "Google.Protobuf/3.26.1": {
@@ -14443,6 +14489,7 @@
       "Auth0.AspNetCore.Authentication >= 1.4.1",
       "Auth0.ManagementApi >= 7.27.0",
       "Dapper >= 2.1.35",
+      "FluentAssertions >= 6.12.1",
       "IdentityModel >= 7.0.0",
       "Microsoft.AspNetCore.Authentication.OpenIdConnect >= 8.0.10",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 8.0.10",
@@ -14468,19 +14515,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/admin/.nuget/packages/": {}
+    "/Users/ruivieira/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/admin/Desktop/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj",
+      "projectUniqueName": "/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj",
       "projectName": "sem5pi-24-25-g034",
-      "projectPath": "/Users/admin/Desktop/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj",
-      "packagesPath": "/Users/admin/.nuget/packages/",
-      "outputPath": "/Users/admin/Desktop/sem5pi-24-25-g034/obj/",
+      "projectPath": "/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj",
+      "packagesPath": "/Users/ruivieira/.nuget/packages/",
+      "outputPath": "/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/admin/.nuget/NuGet/NuGet.Config"
+        "/Users/ruivieira/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -14520,6 +14567,10 @@
           "Dapper": {
             "target": "Package",
             "version": "[2.1.35, )"
+          },
+          "FluentAssertions": {
+            "target": "Package",
+            "version": "[6.12.1, )"
           },
           "IdentityModel": {
             "target": "Package",
@@ -14633,8 +14684,16 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file /Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/obj/project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }

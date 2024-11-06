@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Hospital.Domain.Shared;
 using System.ComponentModel.DataAnnotations.Schema;
 using Hospital.Domain.Users.SystemUser;

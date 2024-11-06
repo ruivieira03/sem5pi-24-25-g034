@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Hospital.Domain.Users.SystemUser;
 
 namespace Hospital.Domain.Patients
