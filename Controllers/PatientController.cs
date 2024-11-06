@@ -42,6 +42,7 @@ namespace Hospital.Controllers{
                     message = "Patient profile created successfully", // Sucess message
                     patient = newPatientDto                           // return message and patients
                 });
+                
             }catch (Exception ex){
                 return BadRequest(new { message = ex.Message, innerException = ex.InnerException?.Message });// 
             }
@@ -53,18 +54,17 @@ namespace Hospital.Controllers{
 
 
 
-        /*
         // PUT: api/Patient/5/update-profile Update the patient's profile details
         [HttpPut("{id}/update-profile")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateProfile(Guid id, UpdateProfileViewModel model){
+        public async Task<IActionResult> UpdateProfile(Guid id, UpdatePatientProfileViewModel model){
             
             if (!ModelState.IsValid){
                 return BadRequest(ModelState);
             }
 
-             if (id != model.Id){
-                return BadRequest(); // Return 400 if ID in the route doesn't match the current user's ID
+             if (id != new PatientId(model.PatientId).AsGuid()){
+                return BadRequest();                                        // Return 400 if ID in the route doesn't match the current user's ID
             }
 
             try {
@@ -77,7 +77,7 @@ namespace Hospital.Controllers{
             }
         }
 
-        */
+        
         
 
         // GET: api/patient/list-patients

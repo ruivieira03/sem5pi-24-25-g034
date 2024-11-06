@@ -1,16 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Hospital.Domain.Shared;
-using Hospital.Infraestructure;
 using Hospital.Services;
 using Hospital.Domain.Users.SystemUser;
+using Hospital.ViewModels;
 
-namespace Hospital.Domain.Patients
-{
-    public class PatientService
-    {
+namespace Hospital.Domain.Patients{
+    public class PatientService{
         private readonly IPatientRepository _patientRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISystemUserRepository _systemUserRepository;
@@ -26,17 +21,14 @@ namespace Hospital.Domain.Patients
         }
 
 
-        public async Task<PatientDto> UpdateProfileAsUserAsync(UpdateProfileViewModel model, SystemUserId userId)
-        {
-            if (model == null)
-            {
+        public async Task<PatientDto> UpdateProfileAsUserAsync(UpdateProfileViewModel model, SystemUserId userId){
+            if (model == null){
                 throw new ArgumentNullException(nameof(model));
             }
 
             var existingUser = await _systemUserRepository.GetByIdAsync(userId);
 
-            if (existingUser == null)
-            {
+            if (existingUser == null){
                 throw new InvalidOperationException("User not found.");
             }
 
@@ -44,15 +36,13 @@ namespace Hospital.Domain.Patients
             string originalPhoneNumber = existingUser.PhoneNumber;
 
             var existingPatient = await _patientRepository.GetPatientByEmailAsync(originalEmail);
-            if (existingPatient == null)
-            {
+            if (existingPatient == null){
                 throw new InvalidOperationException("Patient not found.");
             }
 
             // Set the original patient to be able to set the changedFields in the log
 
-            var originalPatientDto = new PatientDto
-            {
+            var originalPatientDto = new PatientDto{
                 Id = existingPatient.Id.AsGuid(),
                 FirstName = existingPatient.FirstName,
                 LastName = existingPatient.LastName,
@@ -72,14 +62,12 @@ namespace Hospital.Domain.Patients
             if (model.LastName != null) existingPatient.LastName = model.LastName;
             if (model.Gender != null) existingPatient.Gender = model.Gender;
 
-            if (model.Email != null) 
-            {
+            if (model.Email != null) {
                 existingPatient.Email = model.Email;
                 existingUser.Email = model.Email;
             }
 
-            if (model.PhoneNumber != null) 
-            { 
+            if (model.PhoneNumber != null) { 
                 existingPatient.PhoneNumber = model.PhoneNumber;
                 existingUser.PhoneNumber = model.PhoneNumber;
             }
@@ -124,68 +112,55 @@ namespace Hospital.Domain.Patients
             return newPatientDto;
         }
 
+        
 
-        public async Task<PatientDto> UpdateProfileAsync(UpdateProfileViewModel model, Guid patientId)
-        {
-            if (model == null)
-            {
+
+        // This is the main method
+
+
+        public async Task<PatientDto> UpdateProfileAsync(UpdatePatientProfileViewModel model, Guid patientId){
+            
+            if (model == null){
                 throw new ArgumentNullException(nameof(model));
             }
 
             var existingPatient = await _patientRepository.GetByIdAsync(new PatientId(patientId));
-            if (existingPatient == null)
-            {
+           
+            if (existingPatient == null){
                 throw new InvalidOperationException("Patient not found.");
             }
+            //update atributes
 
             existingPatient.FirstName = model.FirstName;
             existingPatient.LastName = model.LastName;
-            existingPatient.Gender = model.Gender;
             existingPatient.Email = model.Email;
             existingPatient.PhoneNumber = model.PhoneNumber;
             existingPatient.EmergencyContact = model.EmergencyContact;
 
-            await _patientRepository.UpdatePatientAsync(existingPatient);
-            await _unitOfWork.CommitAsync();
+            await _patientRepository.UpdatePatientAsync(existingPatient);   // Update Database
+            await _unitOfWork.CommitAsync();                                // Commit transaction on it
 
-            return new PatientDto
-            {
+            return new PatientDto{
+                Id = existingPatient.Id.AsGuid(),
                 FirstName = existingPatient.FirstName,
                 LastName = existingPatient.LastName,
                 DateOfBirth = existingPatient.DateOfBirth,
-                Gender = existingPatient.Gender,
                 Email = existingPatient.Email,
+                Gender = existingPatient.Gender,
+                MedicalRecordNumber = existingPatient.MedicalRecordNumber,
                 PhoneNumber = existingPatient.PhoneNumber,
                 EmergencyContact = existingPatient.EmergencyContact,
-                AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions
+                AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
+                AppointmentHistory = existingPatient.AppointmentHistory,
             };
         }
 
 
-       public async Task<List<PatientDto>> GetAllAsync()
-{
-    var patients = await _patientRepository.GetAllAsync();
-            List<PatientDto> patientDto= patients.ConvertAll(patient => new PatientDto { 
-             Id = patient.Id.AsGuid(),
-            FirstName = patient.FirstName,
-             LastName = patient.LastName,
-             DateOfBirth = patient.DateOfBirth,
-             Gender = patient.Gender,
-              Email = patient.Email,
-              PhoneNumber = patient.PhoneNumber,
-            EmergencyContact = patient.EmergencyContact,
-            AllergiesOrMedicalConditions = patient.AllergiesOrMedicalConditions,            
-             AppointmentHistory = patient.AppointmentHistory
-            });
-            return patientDto;
-    }
+           public async Task DeleteAsync(PatientId patientId){
 
-
-        public async Task DeleteAsync(PatientId patientId)
-        {
             var existingPatient = await _patientRepository.GetByIdAsync(patientId);
-            if (existingPatient == null)
-            {
+            
+            if (existingPatient == null){
                 throw new InvalidOperationException("Patient not found.");
             }
 
@@ -193,6 +168,28 @@ namespace Hospital.Domain.Patients
             await _unitOfWork.CommitAsync();
     
         }
+    
+
+
+       public async Task<List<PatientDto>> GetAllAsync()
+{
+    var patients = await _patientRepository.GetAllAsync();
+            List<PatientDto> patientDto= patients.ConvertAll(patient => new PatientDto { 
+
+            Id = patient.Id.AsGuid(),
+            FirstName = patient.FirstName,
+            LastName = patient.LastName,
+            DateOfBirth = patient.DateOfBirth,
+            Gender = patient.Gender,
+            Email = patient.Email,
+            PhoneNumber = patient.PhoneNumber,
+            EmergencyContact = patient.EmergencyContact,
+            AllergiesOrMedicalConditions = patient.AllergiesOrMedicalConditions,            
+             AppointmentHistory = patient.AppointmentHistory
+            });
+            return patientDto;
+    }
+     
     }
 }
     
