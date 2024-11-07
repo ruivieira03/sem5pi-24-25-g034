@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Hospital.Domain.operationrequestmanagement;
+using Hospital.Domain.OperationRequest;
 using Hospital.Domain.Users.staffmanagement;
 using Hospital.Domain.Shared;
 

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
-using Hospital.Domain.operationrequestmanagement;
+using Hospital.Domain.OperationRequest;
 using Hospital.ViewModels;
 using Hospital.Domain.Shared;
 
@@ -26,6 +26,23 @@ public class OperationRequestController : ControllerBase
         {
             return BadRequest(ModelState);
         }
+
+        /*
+        // Check if the user is a doctor
+        if(User.IsInRole("Doctor"))
+        {
+            var doctorIdString = User.FindFirst("sub")?.Value;
+            if (Guid.TryParse(doctorIdString, out var doctorId))
+            {
+                model.DoctorID = doctorId;
+            }
+            else
+            {
+                // Handle the case where the string is not a valid GUID
+                throw new InvalidOperationException("Invalid Doctor ID");
+            }
+        }
+        */
 
         try
         {

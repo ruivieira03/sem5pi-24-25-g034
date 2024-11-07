@@ -257,7 +257,7 @@ namespace sem5pi_24_25_g034.Migrations
                     b.Navigation("SystemUser");
                 });
 
-            modelBuilder.Entity("Hospital.Domain.operationrequestmanagement.OperationRequest", b =>
+            modelBuilder.Entity("Hospital.Domain.OperationRequest.OperationRequest", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("char(36)");

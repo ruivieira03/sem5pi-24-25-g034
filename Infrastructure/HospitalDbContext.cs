@@ -7,7 +7,7 @@ using Hospital.Domain.Logs;
 using Hospital.Infrastructure.Logs;
 using Hospital.Services;
 using Hospital.Infrastructure.operationrequestmanagement;
-using Hospital.Domain.operationrequestmanagement;
+using Hospital.Domain.OperationRequest;
 
 namespace Hospital.Infrastructure
 {
