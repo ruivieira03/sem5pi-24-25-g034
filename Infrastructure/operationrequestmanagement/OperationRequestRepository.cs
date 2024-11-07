@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Hospital.Domain.operationrequestmanagement;
+using Hospital.Domain.OperationRequest;
 
 namespace Hospital.Infrastructure.operationrequestmanagement
 {

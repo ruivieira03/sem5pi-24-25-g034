@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using Hospital.Domain.operationrequestmanagement;
+using Hospital.Domain.OperationRequest;
 using Hospital.Domain.Users.staffmanagement;
 
 namespace Hospital.ViewModels
