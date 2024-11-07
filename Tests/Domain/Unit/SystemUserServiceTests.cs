@@ -151,8 +151,7 @@ namespace Hospital.Tests.Domain.Unit
         }
 
         [Fact]
-        public async Task InactivateAsync_ShouldReturnInactivatedUser_WhenUserExists()
-        {
+        public async Task InactivateAsync_ShouldReturnInactivatedUser_WhenUserExists(){
             // Arrange
             var userId = new SystemUserId(Guid.NewGuid());
             var user = new SystemUser { Id = userId, Username = "user1", Email = "user1@example.com" };
@@ -167,8 +166,7 @@ namespace Hospital.Tests.Domain.Unit
         }
 
         [Fact]
-        public async Task DeleteFromIdAsync_ShouldThrowException_WhenUserNotFound()
-        {
+        public async Task DeleteFromIdAsync_ShouldThrowException_WhenUserNotFound(){
             // Arrange
             var userId = new SystemUserId(Guid.NewGuid());
             _mockSystemUserRepository.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync((SystemUser)null);
@@ -178,8 +176,7 @@ namespace Hospital.Tests.Domain.Unit
         }
 
         [Fact]
-        public async Task ConfirmEmailAsync_ShouldThrowException_WhenUserNotFound()
-        {
+        public async Task ConfirmEmailAsync_ShouldThrowException_WhenUserNotFound(){
             // Arrange
             string email = "nonexistent@example.com";
             string token = "someToken";
@@ -190,8 +187,7 @@ namespace Hospital.Tests.Domain.Unit
         }
 
         [Fact]
-        public async Task ValidateEmailTokenAsync_ShouldReturnFalse_WhenTokenInvalid()
-        {
+        public async Task ValidateEmailTokenAsync_ShouldReturnFalse_WhenTokenInvalid(){
             // Arrange
             string email = "user@example.com";
             string token = "invalidToken";
