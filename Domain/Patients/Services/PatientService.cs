@@ -184,8 +184,7 @@ namespace Hospital.Domain.Patients{
     
 
 
-       public async Task<List<PatientDto>> GetAllAsync()
-{
+       public async Task<List<PatientDto>> GetAllAsync(){
     var patients = await _patientRepository.GetAllAsync();
             List<PatientDto> patientDto= patients.ConvertAll(patient => new PatientDto { 
 
@@ -202,7 +201,33 @@ namespace Hospital.Domain.Patients{
             });
             return patientDto;
     }
-     
+
+           public async Task<PatientDto> GetByIdAsync(PatientId id){
+            var patient = await this._patientRepository.GetByIdAsync(id);
+            
+            if (patient == null){
+                throw new Exception("User not found.");
+            }
+
+
+         return new PatientDto { 
+
+            Id = patient.Id.AsGuid(),
+            FirstName = patient.FirstName,
+            LastName = patient.LastName,
+            DateOfBirth = patient.DateOfBirth,
+            Gender = patient.Gender,
+            Email = patient.Email,
+            PhoneNumber = patient.PhoneNumber,
+            EmergencyContact = patient.EmergencyContact,
+            AllergiesOrMedicalConditions = patient.AllergiesOrMedicalConditions,            
+            AppointmentHistory = patient.AppointmentHistory
+            };
+       
+        }
+        
+        
+    }
 }
-}
+
     

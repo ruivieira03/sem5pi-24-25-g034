@@ -98,14 +98,28 @@ namespace Hospital.Controllers{
 
         
         
-        // GET: api/patient/list-patients
-        [HttpGet("list-patients")] 
+        // GET: api/patient/get-all
+        [HttpGet("getAll")] 
         [Authorize(Roles = "Admin")] 
         public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll(){
             var patient = await _patientService.GetAllAsync();
             return Ok(patient); // Return OK status with the list of users
             
         }
+
+// GET: api/SystemUser/{id}
+    [HttpGet("{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<SystemUserDto>> GetById(Guid id){
+
+        var user = await _patientService.GetByIdAsync(new PatientId(id));
+
+        if (user == null){
+            return NotFound(); // Return 404 if user not found
+        }
+
+        return Ok(user); // Return OK status with the user data
+    }
    
     }
 
