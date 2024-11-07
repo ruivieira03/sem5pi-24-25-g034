@@ -2,7 +2,7 @@ using System;
 using Hospital.Domain.Shared;
 using Newtonsoft.Json;
 
-namespace Hospital.Domain.operationrequestmanagement
+namespace Hospital.Domain.OperationRequest
 {
     public class OperationRequestId : EntityId
     {

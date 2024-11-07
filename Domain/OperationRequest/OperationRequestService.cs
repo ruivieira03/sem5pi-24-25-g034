@@ -6,7 +6,7 @@ using Hospital.ViewModels;
 using Hospital.Domain.Shared;
 using Hospital.Services;
 
-namespace Hospital.Domain.operationrequestmanagement
+namespace Hospital.Domain.OperationRequest
 {
     public class OperationRequestService
     {

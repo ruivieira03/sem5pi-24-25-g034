@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Hospital.Domain.operationrequestmanagement;
+using Hospital.Domain.OperationRequest;
 
-namespace Hospital.Domain.operationrequestmanagement
+namespace Hospital.Domain.OperationRequest
 {
     public interface IOperationRequestRepository
     {
