@@ -27,7 +27,7 @@ namespace Hospital.Domain.Users.SystemUser
         public string? DeleteToken { get; set; } // For storing the delete token
         public DateTime? TokenExpiry { get; set; } // For storing the token expiry time
         public Patient? Patient { get; set; } // Navigation property for patient
-        public PatientId? PatientId { get; set; } // Foreign key for patient
+        public PatientId? PatientId { get; set; } // Foreign key for patientient 
 
 
         // Parameterless constructor for EF Core

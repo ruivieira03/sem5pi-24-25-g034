@@ -130,8 +130,7 @@ public class PatientServiceIntegrationTests
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldThrowException_WhenPatientNotFound()
-    {
+    public async Task DeleteAsync_ShouldThrowException_WhenPatientNotFound(){
         // Arrange
         var patientId = new PatientId(Guid.NewGuid());
         _mockPatientRepository.Setup(repo => repo.GetByIdAsync(patientId)).ReturnsAsync((Patient)null);

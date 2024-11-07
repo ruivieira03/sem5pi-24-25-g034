@@ -9,8 +9,6 @@ using Hospital.Services;
 using Hospital.Infrastructure.Patients;
 using Hospital.Domain.Patients;
 using Hospital.Infrastructure.Logs;
-using Hospital.Domain.OperationRequest;
-using Hospital.Infrastructure.operationrequestmanagement;
 
 namespace Hospital{
     public class Startup{
@@ -81,8 +79,7 @@ namespace Hospital{
                 app.UseDeveloperExceptionPage();
             }
 
-            else{
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            else{ // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -106,8 +103,6 @@ namespace Hospital{
             services.AddTransient<IPatientRepository, PatientRepository>();
             services.AddTransient<PatientRegistrationService>();
             services.AddTransient<PatientService>();
-            services.AddTransient<IOperationRequestRepository, OperationRequestRepository>();
-            services.AddTransient<OperationRequestService>();
 
             services.AddTransient<ILogRepository, LogRepository>();
             services.AddTransient<ILoggingService, LoggingService>();

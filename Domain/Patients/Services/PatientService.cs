@@ -155,7 +155,7 @@ namespace Hospital.Domain.Patients{
         }
 
 
-           public async Task DeleteAsync(PatientId patientId){
+           public async Task <PatientDto> DeleteAsync(PatientId patientId){
 
             var existingPatient = await _patientRepository.GetByIdAsync(patientId);
             
@@ -165,7 +165,21 @@ namespace Hospital.Domain.Patients{
 
             await _patientRepository.Remove(existingPatient);
             await _unitOfWork.CommitAsync();
-    
+
+
+            return new PatientDto{
+                Id = existingPatient.Id.AsGuid(),
+                FirstName = existingPatient.FirstName,
+                LastName = existingPatient.LastName,
+                DateOfBirth = existingPatient.DateOfBirth,
+                Email = existingPatient.Email,
+                Gender = existingPatient.Gender,
+                MedicalRecordNumber = existingPatient.MedicalRecordNumber,
+                PhoneNumber = existingPatient.PhoneNumber,
+                EmergencyContact = existingPatient.EmergencyContact,
+                AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
+                AppointmentHistory = existingPatient.AppointmentHistory,
+            };
         }
     
 
