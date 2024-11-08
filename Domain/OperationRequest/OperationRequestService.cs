@@ -164,6 +164,11 @@ namespace Hospital.Domain.OperationRequest
             // Get the operation request from the repository
             var request = await _operationRequestRepository.GetByIdAsync(new OperationRequestId(dto.Id));
 
+            if (request == null)
+            {
+                throw new Exception("Operation request not found");
+            }
+
             // Update the request with the new details
             request.OperationTypeID = dto.OperationTypeID;
             request.DeadlineDate = dto.DeadlineDate;
