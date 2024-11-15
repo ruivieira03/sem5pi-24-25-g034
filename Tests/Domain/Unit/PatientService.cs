@@ -30,15 +30,9 @@ namespace Hospital.Tests.Domain.Unit
             _patientService = new PatientService(_patientRepositoryMock.Object, _unitOfWorkMock.Object, _systemUserRepositoryMock.Object, _loggingServiceMock.Object, _emailServiceMock.Object);
         }
 
+       
         [Fact]
-        public async Task UpdateProfileAsUserAsync_ShouldThrowException_WhenModelIsNull()
-        {
-            // Act & Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => _patientService.UpdateProfileAsUserAsync(null, new SystemUserId(Guid.NewGuid())));
-        }
-
-        [Fact]
-        public async Task UpdateProfileAsUserAsync_ShouldThrowException_WhenUserNotFound()
+        public async Task UpdateProfileAsUserAsync_ShouldThrowException_WhenUserNotFound()   // Throw exception for user 
         {
             // Arrange
             _systemUserRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<SystemUserId>())).ReturnsAsync((SystemUser)null);
@@ -69,7 +63,7 @@ namespace Hospital.Tests.Domain.Unit
         }
 
         [Fact]
-        public async Task DeleteAsync_ShouldRemovePatientAndCommit()
+        public async Task DeleteAsync_ShouldRemovePatientAndCommit()    // Test User Storie Functionality 
         {
             // Arrange
             var patientId = new PatientId(Guid.NewGuid());

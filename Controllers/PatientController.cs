@@ -3,6 +3,7 @@ using Hospital.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.Domain.Patients;
+//using  org.springframework.hateoas.RepresentationModel;
 
 namespace Hospital.Controllers{
     [ApiController]
@@ -19,9 +20,11 @@ namespace Hospital.Controllers{
             _patientService = patientService;
         }
 
-        // POST api/patient/register-profile    
+        // POST api/patient/register-profile  
+        //@RestController  
         [HttpPost("register-profile")]
         [Authorize(Roles = "Admin")]
+       // @AutoWired
          public async Task<IActionResult> RegisterPatientProfile([FromBody] RegisterPatientProfileViewModel model){
 
             // Check if all ViewModel Inputs the model state is valid
@@ -98,7 +101,7 @@ namespace Hospital.Controllers{
 
         
         
-        // GET: api/patient/get-all
+        // GET: api/patient/getall
         [HttpGet("getAll")] 
         [Authorize(Roles = "Admin")] 
         public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll(){
@@ -107,7 +110,7 @@ namespace Hospital.Controllers{
             
         }
 
-// GET: api/SystemUser/{id}
+// GET: api/Patient/{id}
     [HttpGet("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<SystemUserDto>> GetById(Guid id){
@@ -122,7 +125,6 @@ namespace Hospital.Controllers{
     }
    
     }
-
 
 }
 

@@ -248,7 +248,8 @@ namespace Hospital.Domain.Users.SystemUser
         {
             var user = await this._systemUserRepository.GetByIdAsync(id);
             
-            if (user == null){
+            if (user == null)
+            {
                 throw new Exception("User not found.");
             }
 
@@ -287,7 +288,8 @@ namespace Hospital.Domain.Users.SystemUser
 
             await this._unitOfWork.CommitAsync();
 
-            return new SystemUserDto{
+            return new SystemUserDto
+            {
                 Id = user.Id.AsGuid(),
                 Username = user.Username,
                 Role = user.Role,
@@ -303,10 +305,12 @@ namespace Hospital.Domain.Users.SystemUser
         }
 
         // Inactivate user
-        public async Task<SystemUserDto> InactivateAsync(SystemUserId id){
+        public async Task<SystemUserDto> InactivateAsync(SystemUserId id)
+        {
             var user = await this._systemUserRepository.GetByIdAsync(id); 
 
-            if (user == null){
+            if (user == null)
+            {
                 throw new Exception("User not found.");
             }   
 
@@ -315,7 +319,8 @@ namespace Hospital.Domain.Users.SystemUser
 
             await this._unitOfWork.CommitAsync();
 
-            return new SystemUserDto{
+            return new SystemUserDto
+            {
                 Id = user.Id.AsGuid(),
                 Username = user.Username,
                 Role = user.Role,
@@ -414,15 +419,18 @@ namespace Hospital.Domain.Users.SystemUser
             return tokenIsValid;
         }
 
-        public async Task<bool> ConfirmEmailAsync(string email, string token){
+        public async Task<bool> ConfirmEmailAsync(string email, string token)
+        {
             var user = await _systemUserRepository.GetUserByEmailAsync(email);
             
-            if (user == null){
+            if (user == null)
+            {
                 throw new Exception("User not found.");
             }
 
             // Assume user has Token and TokenExpiry properties
-            if (user.VerifyToken != token || user.TokenExpiry < DateTime.UtcNow){
+            if (user.VerifyToken != token || user.TokenExpiry < DateTime.UtcNow)
+            {
                 throw new Exception("Invalid token or expired");
             }
 
@@ -435,11 +443,13 @@ namespace Hospital.Domain.Users.SystemUser
             return true; // Email confirmed successfully
         }
 
-        public async Task RequestAccountDeletionAsync(SystemUserId userId){
+        public async Task RequestAccountDeletionAsync(SystemUserId userId)
+        {
             // Verify if the user exists
             var user = await _systemUserRepository.GetByIdAsync(userId);
 
-            if (user == null){
+            if (user == null)
+            {
                 throw new InvalidOperationException("User not found.");
             }
 
@@ -459,7 +469,8 @@ namespace Hospital.Domain.Users.SystemUser
         }
 
         // Delete user
-        public async Task<SystemUserDto> DeleteFromIdAsync(SystemUserId id){
+        public async Task<SystemUserDto> DeleteFromIdAsync(SystemUserId id)
+        {
             var user = await this._systemUserRepository.GetByIdAsync(id); 
 
             if (user == null)
