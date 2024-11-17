@@ -1,0 +1,11 @@
+@startuml
+actor User
+
+boundary "«Container (C4)»\nMastersData" as MastersData
+activate User
+User -> MastersData: ◯ POST (/api/patients)
+activate MastersData
+MastersData -> MastersData: receive request body info,\ncreates patient profile\nand saves in DB
+MastersData --> User: response
+
+@enduml
