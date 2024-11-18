@@ -1,117 +1,162 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Auth0.AspNetCore.Authentication;
 using Hospital.Infrastructure;
 using Hospital.Domain.Shared;
-using System.Diagnostics;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.Infrastructure.Users;
 using Hospital.Services;
 using Hospital.Infrastructure.Patients;
 using Hospital.Domain.Patients;
 using Hospital.Infrastructure.Logs;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
-namespace Hospital{
-    public class Startup{
-        public Startup(IConfiguration configuration){
+namespace Hospital
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IConfiguration>(Configuration);
 
-
-
-            services.AddLogging(loggingBuilder =>     //logs
+            // Logging
+            services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.AddConsole();
                 loggingBuilder.AddDebug();
-                loggingBuilder.AddFilter("Microsoft.EntityFrameworkCore", LogLevel.Error); // Suppress EF Core warnings
+                loggingBuilder.AddFilter("Microsoft.EntityFrameworkCore", LogLevel.Error);
             });
 
-
+            // Caching and Session
             services.AddDistributedMemoryCache();
-
             services.AddSession(options => {
-                    options.IdleTimeout = TimeSpan.FromSeconds(10);
-                    options.Cookie.HttpOnly = true;
-                    options.Cookie.IsEssential = true;
-                    });
-                    
+                options.IdleTimeout = TimeSpan.FromMinutes(20);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
-            // https support for authentication
-            services.Configure<CookiePolicyOptions> ( options => {
-                    options.MinimumSameSitePolicy = SameSiteMode.None;
-                    });
-            
-            // inner method gets called twice for some reason, 
-            // ignored for now
-            services.AddAuth0WebAppAuthentication(options => {
-                string domain = Configuration["Auth0:Domain"];
-                string clientId = Configuration["Auth0:ClientId"];
+            // CORS for React client
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp", builder =>
+                    builder.WithOrigins("http://localhost:3000")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials());
+            });
 
+            // JWT Authentication
+            ConfigureJwtAuthentication(services);
 
-                Debug.Assert(domain != null, "Auth0 Domain token is not set in appsettings.json or in user secrets. USE USER SECRETS if not in prod. Check config documentation. [\"Auth0:Domain\"]");
-                    Debug.Assert(clientId != null, "Auth0 ClientId is not set in appsettings.json or in user secrets. USE USER SECRETS if not in prod. Check config documentation. [\"Auth0:ClientId\"]");
+            // Database context configuration
+            ConfigureDatabase(services);
 
-                    options.Domain = domain;
-                    options.ClientId = clientId;
-                    options.CallbackPath = new PathString("/api/");
-                    options.Scope = "openid profile email";
-                    
-                    });
+            // Register application services and repositories
+            RegisterServices(services);
 
-
-            services.AddDbContext<HospitalDbContext>(opt =>
-                opt.UseMySql(Configuration.GetConnectionString("DefaultConnection"), MySqlServerVersion.AutoDetect(Configuration.GetConnectionString("DefaultConnection"))), ServiceLifetime.Scoped);
-
-            ConfigureMyServices(services);
-            
+            // Add controllers with JSON support
             services.AddControllers().AddNewtonsoftJson();
         }
-    
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env){
-           if (env.IsDevelopment()){
+        private void ConfigureJwtAuthentication(IServiceCollection services)
+        {
+            var jwtSettings = Configuration.GetSection("JwtSettings");
+            var secretKey = jwtSettings["SecretKey"];
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtSettings["Issuer"],
+                        ValidAudience = jwtSettings["Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+                    };
+                });
+        }
+
+        private void ConfigureDatabase(IServiceCollection services)
+        {
+            services.AddDbContext<HospitalDbContext>(opt =>
+                opt.UseMySql(
+                    Configuration.GetConnectionString("DefaultConnection"),
+                    MySqlServerVersion.AutoDetect(Configuration.GetConnectionString("DefaultConnection"))),
+                ServiceLifetime.Scoped);
+        }
+
+        private void RegisterServices(IServiceCollection services)
+        {
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<ISystemUserRepository, SystemUserRepository>();
+            services.AddTransient<SystemUserService>();
+            services.AddTransient<IPatientRepository, PatientRepository>();
+            services.AddTransient<PatientRegistrationService>();
+            services.AddTransient<PatientService>();
+            services.AddTransient<ILogRepository, LogRepository>();
+            services.AddTransient<ILoggingService, LoggingService>();
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IPasswordService, PasswordService>();
+        }
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
             }
-
-            else{
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            else
+            {
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseCors("AllowReactApp");
+
             app.UseRouting();
             app.UseSession();
-            app.UseAuthentication();
+
+            // Authentication middleware and Authorization middleware
+            app.UseAuthentication(); // Using JWT Bearer Authentication
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-        }
 
-        public void ConfigureMyServices(IServiceCollection services){
-            services.AddTransient<IUnitOfWork,UnitOfWork>();
-            services.AddTransient<ISystemUserRepository,SystemUserRepository>();
-            services.AddTransient<SystemUserService>();
-            services.AddTransient<IPatientRepository, PatientRepository>();
-            services.AddTransient<PatientRegistrationService>();
-            services.AddTransient<PatientService>();
-
-            services.AddTransient<ILogRepository, LogRepository>();
-            services.AddTransient<ILoggingService, LoggingService>();
-
-            services.AddTransient<IEmailService, EmailService>();
-            services.AddTransient<IPasswordService, PasswordService>();
-
+            app.UseFallbackForReact();
         }
     }
-    
+
+    public static class ApplicationBuilderExtensions
+    {
+        // Adds a fallback path for handling client-side routing in React
+        public static void UseFallbackForReact(this IApplicationBuilder app)
+        {
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404 &&
+                    !Path.HasExtension(context.Request.Path.Value) &&
+                    !context.Request.Path.Value.StartsWith("/api"))
+                {
+                    context.Request.Path = "/index.html";
+                    await next();
+                }
+            });
+        }
+    }
 }

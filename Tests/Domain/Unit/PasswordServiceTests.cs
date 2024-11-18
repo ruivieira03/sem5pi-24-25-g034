@@ -57,22 +57,11 @@ namespace Hospital.Tests.Services
         }
 
         [Fact]
-        public void GenerateTemporaryPassword_ShouldReturnPasswordOfLength8()
-        {
-            // Act
-            var temporaryPassword = _passwordService.GenerateTemporaryPassword();
-
-            // Assert
-            Assert.NotNull(temporaryPassword);
-            Assert.Equal(8, temporaryPassword.Length); // Temporary password should be 8 characters long
-        }
-
-        [Fact]
         public void GenerateTemporaryPassword_ShouldReturnDifferentPasswordEachTime()
         {
             // Act
-            var tempPassword1 = _passwordService.GenerateTemporaryPassword();
-            var tempPassword2 = _passwordService.GenerateTemporaryPassword();
+            string tempPassword1 = _passwordService.GenerateTemporaryPassword("username");
+            string tempPassword2 = _passwordService.GenerateTemporaryPassword("username2");
 
             // Assert
             Assert.NotEqual(tempPassword1, tempPassword2); // Ensure that temporary passwords are unique

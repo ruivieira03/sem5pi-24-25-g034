@@ -55,8 +55,8 @@ public class SystemUserServiceIntegrationTests
             .ReturnsAsync((SystemUser)null); // Username is not taken
 
         _mockPasswordService
-            .Setup(service => service.GenerateTemporaryPassword())
-            .Returns("temporaryPassword");
+            .Setup(service => service.GenerateTemporaryPassword(model.Username))
+            .Returns("newuser1234");
 
         _mockPasswordService
             .Setup(service => service.HashPassword(It.IsAny<string>()))

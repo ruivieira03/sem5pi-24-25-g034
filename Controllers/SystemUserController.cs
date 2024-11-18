@@ -16,8 +16,8 @@ public class SystemUserController : ControllerBase
         _systemUserService = systemUserService;
     }
 
-    // POST api/SystemUser/register
-    [HttpPost("register")]
+    // POST api/SystemUser
+    [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserViewModel model)
     {

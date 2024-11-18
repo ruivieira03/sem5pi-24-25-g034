@@ -62,7 +62,7 @@ namespace Hospital.Tests.Domain.Unit
                 Role = Enum.Parse<Roles>("Admin", true)
             };
             _mockSystemUserRepository.Setup(repo => repo.GetUserByUsernameAsync(It.IsAny<string>())).ReturnsAsync((SystemUser)null);
-            _mockPasswordService.Setup(ps => ps.GenerateTemporaryPassword()).Returns("temporaryPassword");
+            _mockPasswordService.Setup(ps => ps.GenerateTemporaryPassword(model.Username)).Returns("newUser1234");
             _mockPasswordService.Setup(ps => ps.HashPassword(It.IsAny<string>())).Returns("hashedPassword");
             _mockEmailService.Setup(es => es.GenerateSetupLink(It.IsAny<string>(), It.IsAny<string>())).Returns("setupLink");
             _mockEmailService.Setup(es => es.SendRegistrationEmailAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.CompletedTask);
@@ -104,9 +104,10 @@ namespace Hospital.Tests.Domain.Unit
             // Arrange
             string email = "nonexistent@example.com";
             _mockSystemUserRepository.Setup(repo => repo.GetUserByEmailAsync(email)).ReturnsAsync((SystemUser)null);
+            string token = "token";
 
             // Act & Assert
-            await Assert.ThrowsAsync<Exception>(() => _systemUserService.ResetPasswordAsync(email, "newPassword"));
+            await Assert.ThrowsAsync<Exception>(() => _systemUserService.ResetPasswordAsync(email, "newPassword", token));
         }
 
         [Fact]

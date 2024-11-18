@@ -28,12 +28,18 @@ namespace Hospital.Services
             return HashPassword(password) == hashedPassword;
         }
 
-        public string GenerateTemporaryPassword()
+        public string GenerateTemporaryPassword(string username)
         {
-            // Generate a temporary password (random 8-character string) 
-            // #TODO: since this password is hashed, users need to know it.
-            var password = Guid.NewGuid().ToString().Substring(0, 8);
-            return password;
+            // Ensure the username is not null or empty
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ArgumentException("Username cannot be null or empty.", nameof(username));
+            }
+
+            // Generate the temporary password by concatenating the username with "1234"
+            var temporaryPassword = username + "1234";
+
+            return temporaryPassword;
         }
 
     }

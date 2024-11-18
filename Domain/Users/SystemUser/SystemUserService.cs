@@ -33,8 +33,13 @@ namespace Hospital.Domain.Users.SystemUser
                 throw new Exception("Username already taken.");
             }
 
+            if (await _systemUserRepository.GetUserByEmailAsync(model.Email) != null)
+            {
+                throw new Exception("Email already taken.");
+            }
+
             // Generate a temporary password
-            string temporaryPassword = _passwordService.GenerateTemporaryPassword();
+            string temporaryPassword = _passwordService.GenerateTemporaryPassword(model.Username);
 
             // Hash the temporary password before saving it
             string hashedPassword = _passwordService.HashPassword(temporaryPassword);
@@ -184,7 +189,7 @@ namespace Hospital.Domain.Users.SystemUser
 
         // Reset password using the reset token
 
-        public async Task<SystemUserDto> ResetPasswordAsync(string email, string newPassword)
+        public async Task<SystemUserDto> ResetPasswordAsync(string email, string newPassword, string token)
         {
             var user = await _systemUserRepository.GetUserByEmailAsync(email);
             if (user == null)
@@ -193,7 +198,7 @@ namespace Hospital.Domain.Users.SystemUser
             }
             
             // Check if the token is valid
-            bool isValidToken = await ValidateTokenForUser(email, user.ResetToken);
+            bool isValidToken = await ValidateTokenForUser(email, token);
             if (!isValidToken)
             {
                 throw new Exception("Invalid or expired reset token.");

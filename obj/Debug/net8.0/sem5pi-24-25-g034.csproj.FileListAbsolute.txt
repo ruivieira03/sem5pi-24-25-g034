@@ -1038,3 +1038,9 @@ C:/Users/User/Desktop/sem5pi-24-25-g034/bin/Debug/net8.0/Microsoft.Extensions.Co
 =======
 /Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/bin/Debug/net8.0/FluentAssertions.dll
 >>>>>>> Stashed changes
+/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/bin/Debug/net8.0/clientapp/package-lock.json
+/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/bin/Debug/net8.0/clientapp/package.json
+/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/bin/Debug/net8.0/clientapp/public/manifest.json
+/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/bin/Debug/net8.0/clientapp/build/asset-manifest.json
+/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/bin/Debug/net8.0/clientapp/build/manifest.json
+/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
