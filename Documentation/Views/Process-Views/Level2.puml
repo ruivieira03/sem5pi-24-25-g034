@@ -1,11 +1,19 @@
 @startuml
-actor User
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
 
-boundary "«Container (C4)»\nMastersData" as MastersData
-activate User
-User -> MastersData: ◯ POST (/api/patients)
+title Process View Level 2
+actor Admin
+
+participant "«Container (C4)»\nMastersData" as MastersData
+
+activate Admin
+Admin -> MastersData: ◯ POST (/api/patient)
 activate MastersData
-MastersData -> MastersData: receive request body info,\ncreates patient profile\nand saves in DB
-MastersData --> User: response
+MastersData -> MastersData: receive request body info
+MastersData -> MastersData: creates patient profile\n 
+MastersData -> MastersData:  saves in DB
+MastersData --> Admin: sends status response
 
 @enduml
