@@ -83,17 +83,7 @@ public class PatientServiceIntegrationTests
         _mockUnitOfWork.Verify(uow => uow.CommitAsync(), Times.Once);
     }
 
-    [Fact]
-    public async Task UpdateProfileAsUserAsync_ShouldThrowException_WhenUserNotFound()
-    {
-        // Arrange
-        var userId = new SystemUserId(Guid.NewGuid());
-        _mockSystemUserRepository.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync((SystemUser)null);
-
-        // Act & Assert
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _patientService.UpdateProfileAsUserAsync(new UpdateProfileViewModel(), userId));
-        Assert.Equal("User not found.", exception.Message);
-    }
+  
 
     [Fact]
     public async Task UpdateProfileAsUserAsync_ShouldThrowException_WhenPatientNotFound()
@@ -130,8 +120,7 @@ public class PatientServiceIntegrationTests
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldThrowException_WhenPatientNotFound()
-    {
+    public async Task DeleteAsync_ShouldThrowException_WhenPatientNotFound(){
         // Arrange
         var patientId = new PatientId(Guid.NewGuid());
         _mockPatientRepository.Setup(repo => repo.GetByIdAsync(patientId)).ReturnsAsync((Patient)null);

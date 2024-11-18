@@ -33,8 +33,7 @@ using Hospital.Domain.Patients;
 [ApiController]
 [AllowAnonymous]
 [Route("api/[controller]")]
-public class AccountController : Controller
-{
+public class AccountController : Controller{
     private readonly ISystemUserRepository _systemUserRepository;
 
     private readonly IPasswordService _passwordService;

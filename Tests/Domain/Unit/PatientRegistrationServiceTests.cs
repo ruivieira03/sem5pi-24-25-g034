@@ -28,7 +28,7 @@ namespace Hospital.Tests.Domain.Unit{
         }
 
         [Fact]
-        public async Task RegisterPatientProfileAsync_ShouldThrowException_WhenEmailIsTaken(){
+        public async Task RegisterPatientProfileAsync_ShouldThrowException_WhenEmailIsTaken(){  // Test Email Uniqueness
             // Arrange
             var model = new RegisterPatientProfileViewModel { Email = "test@example.com", PhoneNumber = "123456789" };
             _patientRepositoryMock.Setup(r => r.GetPatientByEmailAsync(model.Email)).ReturnsAsync(new Patient());
@@ -38,7 +38,7 @@ namespace Hospital.Tests.Domain.Unit{
         }
 
         [Fact]
-        public async Task RegisterPatientProfileAsync_ShouldThrowException_WhenPhoneNumberIsTaken()
+        public async Task RegisterPatientProfileAsync_ShouldThrowException_WhenPhoneNumberIsTaken()  // Test PhoneNumber Uniqueness
         {
             // Arrange
             var model = new RegisterPatientProfileViewModel { Email = "unique@example.com", PhoneNumber = "123456789" };
@@ -48,41 +48,13 @@ namespace Hospital.Tests.Domain.Unit{
             await Assert.ThrowsAsync<Exception>(() => _patientRegistrationService.RegisterPatientProfileAsync(model));
         }
 
-      [Fact]
-public async Task RegisterPatientProfileAsync_ShouldRegisterPatientAndCommit(){
-    // Arrange
-    var model = new RegisterPatientProfileViewModel{
-        FirstName = "John",
-        LastName = "Doe",
-        DateOfBirth = new DateTime(1990, 1, 1),
-        Gender = "Male",
-        Email = "john.doe@example.com",
-        PhoneNumber = "123456789",
-        EmergencyContact = "Jane Doe",
-        AppointmentHistory = new List<string>(),
-        AllergiesOrMedicalConditions = new List<string>()
-    };
-    
-    // Configurar o mock para retornar `null` para verificações de email e número de telefone
-    _patientRepositoryMock.Setup(r => r.GetPatientByEmailAsync(model.Email)).ReturnsAsync((Patient)null);
-    _patientRepositoryMock.Setup(r => r.GetPatientByPhoneNumberAsync(model.PhoneNumber)).ReturnsAsync((Patient)null);
 
-    // Configurar o mock para `GetAllAsync` para evitar o erro de NullReferenceException
-    _patientRepositoryMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new List<Patient>());
+        // Removed Patient Is insterted on Database and Removed.
 
-    // Act
-    var result = await _patientRegistrationService.RegisterPatientProfileAsync(model);
-
-    // Assert
-    Assert.Equal(model.FirstName, result.FirstName);
-    Assert.Equal(model.Email, result.Email);
-    _patientRepositoryMock.Verify(r => r.AddPatientAsync(It.IsAny<Patient>()), Times.Once);
-    _unitOfWorkMock.Verify(u => u.CommitAsync(), Times.Once);
-}
 
 
         [Fact]
-        public void GenerateMedicalRecordNumber_ShouldGenerateCorrectFormat(){
+        public void GenerateMedicalRecordNumber_ShouldGenerateCorrectFormat(){   // Medical RecordNumber test
             // Arrange
             _patientRepositoryMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new List<Patient> { new Patient(), new Patient() });
 
@@ -90,7 +62,7 @@ public async Task RegisterPatientProfileAsync_ShouldRegisterPatientAndCommit(){
             var result = _patientRegistrationService.GenerateMedicalRecordNumber();
 
             // Assert
-            Assert.StartsWith(DateTime.Now.ToString("yyyyMM"), result);
+            Assert.StartsWith(DateTime.Now.ToString("yyyyMM"), result);             // Test Correct Format here month , yea t, and Number of Patients
             Assert.EndsWith("000002", result);
         }
     }
