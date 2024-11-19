@@ -41,7 +41,7 @@ public class ServiceProviderFixture : IDisposable
 
     private class MockPasswordService : IPasswordService
     {
-        public string GenerateTemporaryPassword()
+        public string GenerateTemporaryPassword(string passwd)
         {
             return "temporaryPassword";
         }
