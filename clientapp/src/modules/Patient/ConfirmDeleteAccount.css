@@ -1,0 +1,44 @@
+/* ConfirmDeleteAccount.css */
+
+.confirm-delete-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    background-color: #f0f4f8; /* Light background color */
+    text-align: center; /* Center text */
+}
+
+.confirm-delete-buttons {
+    margin-top: 20px; /* Space between text and buttons */
+}
+
+.confirm-button {
+    background-color: #dc3545; /* Bootstrap danger color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px; /* Space between buttons */
+    transition: background-color 0.3s;
+}
+
+.confirm-button:hover {
+    background-color: #c82333; /* Darker shade on hover */
+}
+
+.cancel-button {
+    background-color: #6c757d; /* Bootstrap secondary color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cancel-button:hover {
+    background-color: #5a6268; /* Darker shade on hover */
+}

@@ -11,9 +11,10 @@ public class LoggingService : ILoggingService
     private readonly IUnitOfWork _unitOfWork;
 
     // Injecting the ILogRepository through the constructor
-    public LoggingService(IUnitOfWork unitOfWork)
+    public LoggingService(IUnitOfWork unitOfWork, ILogRepository logRepository)
     {
         _unitOfWork = unitOfWork;
+        _logRepository = logRepository;
     }
 
     public async Task LogProfileUpdateAsync(string userId, string changedFields, DateTime timestamp)

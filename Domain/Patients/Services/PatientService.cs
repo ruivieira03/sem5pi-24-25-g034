@@ -225,8 +225,34 @@ namespace Hospital.Domain.Patients{
             };
        
         }
-        
-        
+
+    public async Task<PatientDto> GetPatientProfileAsync(PatientId userId)
+    {
+        // Fetch the patient by user ID
+        var patient = await _patientRepository.GetByIdAsync(userId);
+        if (patient == null)
+        {
+            throw new InvalidOperationException("Patient not found."); // Throw exception if patient not found
+        }
+
+        // Map the patient entity to a DTO (Data Transfer Object)
+        var patientDto = new PatientDto
+        {
+            Id = patient.Id.AsGuid(),
+            FirstName = patient.FirstName,
+            LastName = patient.LastName,
+            DateOfBirth = patient.DateOfBirth,
+            Gender = patient.Gender,
+            Email = patient.Email,
+            PhoneNumber = patient.PhoneNumber,
+            EmergencyContact = patient.EmergencyContact,
+            AllergiesOrMedicalConditions = patient.AllergiesOrMedicalConditions,
+            AppointmentHistory = patient.AppointmentHistory
+        };
+
+        return patientDto; // Return the patient DTO
+    }
+
     }
 }
 

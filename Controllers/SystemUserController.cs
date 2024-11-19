@@ -5,6 +5,7 @@ using Hospital.Domain.Users.SystemUser;
 using Hospital.ViewModels;
 using Hospital.Domain.Shared;
 using Hospital.Services;
+using Mysqlx.Crud;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -17,8 +18,8 @@ public class SystemUserController : ControllerBase
         _systemUserService = systemUserService;
     }
 
-    // POST api/SystemUser/register
-    [HttpPost("register")]
+    // POST api/SystemUser
+    [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserViewModel model)
     {
@@ -99,16 +100,11 @@ public class SystemUserController : ControllerBase
     // PUT: api/SystemUser/5
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> Update(Guid id, SystemUserDto dto)
+    public async Task<ActionResult<SystemUserDto>> Update(Guid id, UpdateSystemUserViewModel model)
     {
-        if (id != dto.Id)
-        {
-            return BadRequest(); // Return 400 if ID in the route doesn't match the DTO
-        }
-
         try
         {
-            var updatedUser = await _systemUserService.UpdateAsync(dto);
+            var updatedUser = await _systemUserService.UpdateAsync(id, model);
 
             if (updatedUser == null)
             {

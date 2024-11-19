@@ -33,8 +33,13 @@ namespace Hospital.Domain.Users.SystemUser
                 throw new Exception("Username already taken.");
             }
 
+            if (await _systemUserRepository.GetUserByEmailAsync(model.Email) != null)
+            {
+                throw new Exception("Email already taken.");
+            }
+
             // Generate a temporary password
-            string temporaryPassword = _passwordService.GenerateTemporaryPassword();
+            string temporaryPassword = _passwordService.GenerateTemporaryPassword(model.Username);
 
             // Hash the temporary password before saving it
             string hashedPassword = _passwordService.HashPassword(temporaryPassword);
@@ -184,7 +189,7 @@ namespace Hospital.Domain.Users.SystemUser
 
         // Reset password using the reset token
 
-        public async Task<SystemUserDto> ResetPasswordAsync(string email, string newPassword)
+        public async Task<SystemUserDto> ResetPasswordAsync(string email, string newPassword, string token)
         {
             var user = await _systemUserRepository.GetUserByEmailAsync(email);
             if (user == null)
@@ -193,7 +198,7 @@ namespace Hospital.Domain.Users.SystemUser
             }
             
             // Check if the token is valid
-            bool isValidToken = await ValidateTokenForUser(email, user.ResetToken);
+            bool isValidToken = await ValidateTokenForUser(email, token);
             if (!isValidToken)
             {
                 throw new Exception("Invalid or expired reset token.");
@@ -270,21 +275,66 @@ namespace Hospital.Domain.Users.SystemUser
         }
 
         // Update user
-        public async Task<SystemUserDto> UpdateAsync(SystemUserDto dto)
+        public async Task<SystemUserDto> UpdateAsync(Guid id, UpdateSystemUserViewModel model)
         {
-            var user = await this._systemUserRepository.GetByIdAsync(new SystemUserId(dto.Id)); 
+            var user = await this._systemUserRepository.GetByIdAsync(new SystemUserId(id));
 
             if (user == null)
             {
                 throw new Exception("User not found.");
-            }  
+            }
+
+            // Check if the username is already taken by another user
+            if (model.Username != null && 
+                (await this._systemUserRepository.GetUserByUsernameAsync(model.Username)) is { } existingUserByUsername &&
+                        existingUserByUsername.Id.AsGuid() != id)
+            {
+                throw new Exception("Username is already in use by another user.");
+            }
+
+            // Check if the email is already taken by another user
+            if (model.Email != null && 
+                (await this._systemUserRepository.GetUserByEmailAsync(model.Email)) is { } existingUserByEmail &&
+                existingUserByEmail.Id.AsGuid() != id)
+            {
+                throw new Exception("Email is already in use by another user.");
+            }
+
+            string originalEmail = user.Email;
 
             // Update user details
-            user.Username = dto.Username;
-            user.Role = dto.Role;
-            user.Email = dto.Email;
-            user.PhoneNumber = dto.PhoneNumber;
-            user.IAMId = dto.IAMId;
+            if (model.Username != null)
+            {
+                user.Username = model.Username;
+            }
+
+            if (model.Role != null)
+            {
+                user.Role = (Roles)model.Role;
+            }
+
+            if (model.Email != null)
+            {
+                user.Email = model.Email;
+            }
+
+            if (model.PhoneNumber != null)
+            {
+                user.PhoneNumber = model.PhoneNumber;
+            }
+
+            // Handle email verification if the email has changed
+            if (originalEmail != model.Email && model.Email != null) 
+            {
+                // Generate and store the verification token
+                user.VerifyToken = Guid.NewGuid().ToString();
+                user.TokenExpiry = DateTime.UtcNow.AddHours(48); // Token valid for 48 hours
+                user.isVerified = false;
+
+                string setupLink = _emailService.GenerateEmailVerification(model.Email, user.VerifyToken);
+
+                await _emailService.SendEmailConfirmationEmailAsync(model.Email, setupLink);
+            }
 
             await this._unitOfWork.CommitAsync();
 
@@ -303,6 +353,7 @@ namespace Hospital.Domain.Users.SystemUser
                 DeleteToken = user.DeleteToken
             };
         }
+
 
         // Inactivate user
         public async Task<SystemUserDto> InactivateAsync(SystemUserId id)
@@ -347,7 +398,13 @@ namespace Hospital.Domain.Users.SystemUser
 
             await this._systemUserRepository.Remove(user);
             
-            await this._loggingService.LogAccountDeletionAsync(user.Id.ToString(), DateTime.UtcNow);
+            if (user.Id != null)
+            {
+                if (user.Id != null)
+                {
+                    await this._loggingService.LogAccountDeletionAsync(user.Id.ToString(), DateTime.UtcNow);
+                }
+            }
 
             await this._unitOfWork.CommitAsync();
 
@@ -480,7 +537,7 @@ namespace Hospital.Domain.Users.SystemUser
 
             await this._systemUserRepository.Remove(user);
             
-            await this._loggingService.LogAccountDeletionAsync(user.Id.ToString(), DateTime.UtcNow);
+            await this._loggingService.LogAccountDeletionAsync(id.AsString(), DateTime.UtcNow);
 
             await this._unitOfWork.CommitAsync();
 

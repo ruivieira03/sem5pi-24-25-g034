@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
 
 namespace Hospital.Services
 {
@@ -105,7 +104,7 @@ namespace Hospital.Services
         {
             // Construct the delete link using application's base URL
             string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
-            return $"{baseUrl}/confirm-delete-account?email={email}&token={token}";
+            return $"{baseUrl}/redirect-delete-account?email={email}&token={token}";
         }
 
         public string GenerateSetupLink(string email, string token)
@@ -126,7 +125,7 @@ namespace Hospital.Services
         {
             // Construct the setup link using application's base URL
             string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/api/account";
-            return $"{baseUrl}/confirm-email?email={email}&token={token}";
+            return $"{baseUrl}/redirect-confirm-email?email={email}&token={token}";
         }
         
     }
