@@ -15,7 +15,7 @@ namespace Hospital.Domain.OperationRequest
         {
         }
 
-        private OperationRequestId() : base(Guid.Empty)
+        public OperationRequestId() : base(Guid.Empty)
         {
         }
 
