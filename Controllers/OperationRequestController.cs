@@ -118,9 +118,12 @@ public class OperationRequestController : ControllerBase
     // PUT: api/OperationRequest/5
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin, Doctor")]
-    public async Task<ActionResult<OperationRequestDto>> Update([FromRoute] OperationRequestId id, [FromBody] OperationRequestDto dto)
+    public async Task<ActionResult<OperationRequestDto>> Update([FromRoute] Guid id, [FromBody] OperationRequestDto dto)
     {
-        if (id.AsGuid() != dto.Id)
+        Console.WriteLine("\n\nATE AQUI TUDO BEM\n\n");
+        Console.WriteLine("\n\n" + id + "\n\n");
+        Console.WriteLine("\n\n" + dto.Id + "\n\n");
+        if (id != dto.Id)
         {
             return BadRequest(); // Return 400 if ID in the route doesn't match the DTO
         }
