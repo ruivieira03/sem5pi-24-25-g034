@@ -174,7 +174,7 @@ namespace Hospital.Tests.Domain.Integration
 
         private class MockPasswordService : IPasswordService
         {
-            public string GenerateTemporaryPassword()
+            public string GenerateTemporaryPassword(string passwd)
             {
                 return "temporaryPassword";
             }

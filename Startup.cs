@@ -8,6 +8,8 @@ using Hospital.Services;
 using Hospital.Infrastructure.Patients;
 using Hospital.Domain.Patients;
 using Hospital.Infrastructure.Logs;
+using Hospital.Domain.OperationRequest;
+using Hospital.Infrastructure.operationrequestmanagement;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -103,6 +105,8 @@ namespace Hospital
             services.AddTransient<IPatientRepository, PatientRepository>();
             services.AddTransient<PatientRegistrationService>();
             services.AddTransient<PatientService>();
+            services.AddTransient<IOperationRequestRepository, OperationRequestRepository>();
+            services.AddTransient<OperationRequestService>();
             services.AddTransient<ILogRepository, LogRepository>();
             services.AddTransient<ILoggingService, LoggingService>();
             services.AddTransient<IEmailService, EmailService>();
