@@ -1,25 +1,26 @@
 // App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LandingPage from './components/LandingPage'; // Import Landing Page
-import Login from './modules/Auth/Login';
-import Logout from './modules/Auth/Logout';
-import AdminMenu from './components/AdminMenu'; // Admin Menu
+import LandingPage from './components/LandingPage/LandingPage'; // Import Landing Page
+import About from './components/About/About'; // Import About Page
+import Login from './modules/Auth/Login/Login'; // Import Login
+import Logout from './modules/Auth/Logout/Logout'; // Import Logout
+import AdminMenu from './components/AdminMenu/AdminMenu'; // Admin Menu
 import DoctorMenu from './components/DoctorMenu'; // Doctor Menu
-import PatientMenu from './components/PatientMenu'; // Patient Menu
-import Profile from './modules/Auth/Profile'; // Import Profile
+import PatientMenu from './components/PatientMenu/PatientMenu'; // Patient Menu
+import Profile from './modules/Auth/Profile/Profile'; // Import Profile
 import PrivateRoute from './components/PrivateRoute'; // Protected Routes
-import CommonMenu from './components/CommonMenu'; // Common Menu
-import PatientRegister from './modules/SystemUser/PatientRegister'; // Patient Register
-import RequestPasswordReset from './modules/Auth/RequestPasswordRequest'; // Request Password Reset
-import ResetPassword from './modules/Auth/ResetPassword'; // Reset Password
-import UserList from './modules/Admin/UserList'; // User List
-import UpdateUser from './modules/Admin/UpdateUser'; // Update User
-import RegisterUser from './modules/Admin/RegisterUser'; // Register User
-import RequestDeleteAccount from './modules/Patient/RequestDeleteAccount'; // Request Delete Account
-import ConfirmDeleteAccount from './modules/Patient/ConfirmDeleteAccount'; // Confirm Delete Account
-import PatientProfile from './modules/Patient/PatientProfile';
-import ConfirmEmail from './modules/SystemUser/ConfirmEmail';
+import CommonMenu from './components/CommonMenu/CommonMenu'; // Common Menu
+import PatientRegister from './modules/SystemUser/PatientRegister/PatientRegister'; // Patient Register
+import RequestPasswordReset from './modules/Auth/ResetPassword/RequestPasswordReset'; // Request Password Reset
+import ResetPassword from './modules/Auth/ResetPassword/ResetPassword'; // Reset Password
+import UserList from './modules/Admin/UserManagement/UserList/UserList'; // User List
+import UpdateUser from './modules/Admin/UserManagement/UpdateUser/UpdateUser'; // Update User
+import RegisterUser from './modules/Admin/UserManagement/RegisterUser/RegisterUser'; // Register User
+import RequestDeleteAccount from './modules/Patient/AccountManagement/DeleteAccount/RequestDeleteAccount/RequestDeleteAccount'; // Request Delete Account
+import ConfirmDeleteAccount from './modules/Patient/AccountManagement/DeleteAccount/ConfirmDeleteAccount/ConfirmDeleteAccount'; // Confirm Delete Account
+import PatientProfile from './modules/Patient/AccountManagement/PatientProfile/PatientProfile'; // Patient Profile
+import ConfirmEmail from './modules/SystemUser/ConfirmEmail/ConfirmEmail'; // Confirm Email
 
 function App() {
   return (

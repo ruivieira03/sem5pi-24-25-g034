@@ -1,0 +1,74 @@
+/* Patient Panel Container */
+.patient-container {
+    display: flex;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+/* Patient Menu */
+.patient-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 250px;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #ccc;
+}
+
+.patient-menu-header {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    text-align: center;
+    color: #333;
+}
+
+/* Menu List */
+.patient-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.patient-menu-link {
+    text-decoration: none;
+    color: #333;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    display: block;
+    font-size: 1em;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.patient-menu-link:hover {
+    background-color: #ddd;
+}
+
+/* Logout Button */
+.patient-menu-logout {
+    margin-top: auto;
+}
+
+/* Patient Content */
+.patient-content {
+    flex-grow: 1;
+    padding: 40px;
+    background-color: #fff;
+    overflow-y: auto;
+}
+
+/* Welcome Message */
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}

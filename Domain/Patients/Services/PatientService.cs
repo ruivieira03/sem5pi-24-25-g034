@@ -21,103 +21,124 @@ namespace Hospital.Domain.Patients
         }
 
 
-        public async Task<PatientDto> UpdateProfileAsUserAsync(UpdateProfileViewModel model, SystemUserId userId)
+    public async Task<PatientDto> UpdateProfileAsUserAsync(UpdateProfileViewModel model, SystemUserId userId)
+    {
+        if (model == null)
         {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
+            throw new ArgumentNullException(nameof(model), "Update model cannot be null.");
+        }
 
-            var existingUser = await _systemUserRepository.GetByIdAsync(userId);
+         // Fetch the existing user
+        var existingUser = await _systemUserRepository.GetByIdAsync(userId);
+        if (existingUser == null)
+        {
+            throw new InvalidOperationException("User not found.");
+        }
 
-            if (existingUser == null)
-            {
-                throw new InvalidOperationException("User not found.");
-            }
+        // Fetch the existing patient by user email
+        var existingPatient = await _patientRepository.GetPatientByEmailAsync(existingUser.Email);
+        if (existingPatient == null)
+        {
+            throw new InvalidOperationException("Patient not found.");
+        }
 
-            string originalEmail = existingUser.Email;
-            string originalPhoneNumber = existingUser.PhoneNumber;
+        // Log the start of the update process
+        Console.WriteLine($"Starting update for patient {existingPatient.Id}, user {existingUser.Id}");
 
-            var existingPatient = await _patientRepository.GetPatientByEmailAsync(originalEmail);
-            if (existingPatient == null)
-            {
-                throw new InvalidOperationException("Patient not found.");
-            }
+        // Store original data for comparison
+        var originalPatientDto = new PatientDto
+        {
+            Id = existingPatient.Id.AsGuid(),
+            FirstName = existingPatient.FirstName,
+            LastName = existingPatient.LastName,
+            Gender = existingPatient.Gender,
+            Email = existingPatient.Email,
+            PhoneNumber = existingPatient.PhoneNumber,
+            EmergencyContact = existingPatient.EmergencyContact,
+            AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
+            AppointmentHistory = existingPatient.AppointmentHistory
+        };
 
-            // Set the original patient to be able to set the changedFields in the log
+        // Update patient data only if the new data is non-null
+        existingPatient.FirstName = model.FirstName ?? existingPatient.FirstName;
+        existingPatient.LastName = model.LastName ?? existingPatient.LastName;
+        existingPatient.Gender = model.Gender ?? existingPatient.Gender;
 
-            var originalPatientDto = new PatientDto
-            {
-                Id = existingPatient.Id.AsGuid(),
-                FirstName = existingPatient.FirstName,
-                LastName = existingPatient.LastName,
-                DateOfBirth = existingPatient.DateOfBirth,
-                Gender = existingPatient.Gender,
-                Email = existingPatient.Email,
-                PhoneNumber = existingPatient.PhoneNumber,
-                EmergencyContact = existingPatient.EmergencyContact,
-                AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
-                AppointmentHistory = existingPatient.AppointmentHistory
-            };
+        if (!string.IsNullOrEmpty(model.Email))
+        {
+            existingPatient.Email = model.Email;
+            existingUser.Email = model.Email;
+        }
 
+        if (!string.IsNullOrEmpty(model.PhoneNumber))
+        {
+            existingPatient.PhoneNumber = model.PhoneNumber;
+            existingUser.PhoneNumber = model.PhoneNumber;
+        }
 
-            // Update only the non-null properties
-            
-            if (model.FirstName != null) existingPatient.FirstName = model.FirstName;
-            if (model.LastName != null) existingPatient.LastName = model.LastName;
-            if (model.Gender != null) existingPatient.Gender = model.Gender;
+        existingPatient.EmergencyContact = model.EmergencyContact ?? existingPatient.EmergencyContact;
 
-            if (model.Email != null) 
-            {
-                existingPatient.Email = model.Email;
-                existingUser.Email = model.Email;
-            }
+        // Create a DTO for the updated patient
+        var updatedPatientDto = new PatientDto
+        {
+             Id = existingPatient.Id.AsGuid(),
+            FirstName = existingPatient.FirstName,
+            LastName = existingPatient.LastName,
+            Gender = existingPatient.Gender,
+            Email = existingPatient.Email,
+            PhoneNumber = existingPatient.PhoneNumber,
+            EmergencyContact = existingPatient.EmergencyContact,
+            AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
+            AppointmentHistory = existingPatient.AppointmentHistory
+        };
 
-            if (model.PhoneNumber != null) 
-            { 
-                existingPatient.PhoneNumber = model.PhoneNumber;
-                existingUser.PhoneNumber = model.PhoneNumber;
-            }
-
-            if (model.EmergencyContact != null) existingPatient.EmergencyContact = model.EmergencyContact;
-
-            var newPatientDto = new PatientDto
-            {
-                Id = existingPatient.Id.AsGuid(),
-                FirstName = existingPatient.FirstName,
-                LastName = existingPatient.LastName,
-                DateOfBirth = existingPatient.DateOfBirth,
-                Gender = existingPatient.Gender,
-                Email = existingPatient.Email,
-                PhoneNumber = existingPatient.PhoneNumber,
-                EmergencyContact = existingPatient.EmergencyContact,
-                AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
-                AppointmentHistory = existingPatient.AppointmentHistory
-            };
-
-            string changedFields = _loggingService.GetChangedFields(originalPatientDto, newPatientDto);
-            
+        // Compare changes and log
+        try
+        {
+            string changedFields = _loggingService.GetChangedFields(originalPatientDto, updatedPatientDto);
             await _loggingService.LogProfileUpdateAsync(existingPatient.Id.ToString(), changedFields, DateTime.UtcNow);
-            
-            if (originalEmail != newPatientDto.Email || originalPhoneNumber != newPatientDto.PhoneNumber) {
-                // Generate and store the reset token
-                existingUser.VerifyToken = existingUser.VerifyToken = Guid.NewGuid().ToString();
+        }
+        catch (Exception logEx)
+        {
+            Console.WriteLine($"Logging failed: {logEx.Message}");
+        }
+
+        // If email or phone number changed, send verification
+        if (originalPatientDto.Email != updatedPatientDto.Email || originalPatientDto.PhoneNumber != updatedPatientDto.PhoneNumber)
+        {
+            try
+            {
+                existingUser.VerifyToken = Guid.NewGuid().ToString();
                 existingUser.TokenExpiry = DateTime.UtcNow.AddHours(48); // Token valid for 48 hours
                 existingUser.isVerified = false;
 
-                string setupLink = _emailService.GenerateEmailVerification(newPatientDto.Email, existingUser.VerifyToken);
-
-                await _emailService.SendEmailConfirmationEmailAsync(newPatientDto.Email, setupLink);
+                string setupLink = _emailService.GenerateEmailVerification(updatedPatientDto.Email, existingUser.VerifyToken);
+                await _emailService.SendEmailConfirmationEmailAsync(updatedPatientDto.Email, setupLink);
             }
-
-            await _patientRepository.UpdatePatientAsync(existingPatient);
-
-            await _systemUserRepository.UpdateUserAsync(existingUser);
-            
-            await _unitOfWork.CommitAsync();
-
-            return newPatientDto;
+            catch (Exception emailEx)
+            {
+                Console.WriteLine($"Email verification failed: {emailEx.Message}");
+                throw new InvalidOperationException("Failed to send email verification.");
+            }
         }
+
+        // Save updates to the repositories
+        try
+        {
+            await _patientRepository.UpdatePatientAsync(existingPatient);
+            await _systemUserRepository.UpdateUserAsync(existingUser);
+            await _unitOfWork.CommitAsync();
+        }
+        catch (Exception dbEx)
+        {
+            Console.WriteLine($"Database commit failed: {dbEx.Message}");
+            throw new InvalidOperationException("Failed to save updates.");
+        }
+
+        // Return the updated patient data
+        return updatedPatientDto;
+    }
+
 
 
         public async Task<PatientDto> UpdateProfileAsync(UpdateProfileViewModel model, Guid patientId)

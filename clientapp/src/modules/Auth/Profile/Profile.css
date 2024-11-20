@@ -1,0 +1,66 @@
+/* Profile Component Styles */
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    background-color: #f9f9f9; /* Light gray background */
+    font-family: Arial, sans-serif;
+    color: #333;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.profile-header {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #4caf50; /* Green accent color */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.profile-info {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #555;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    text-align: left;
+}
+
+.error-message {
+    color: #f44336; /* Red for error */
+    font-size: 1rem;
+    margin-bottom: 20px;
+    background-color: #ffe6e6;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.loading-message {
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+    .profile-container {
+        padding: 10px;
+    }
+
+    .profile-info {
+        font-size: 1rem;
+        padding: 8px 15px;
+    }
+
+    .profile-header {
+        font-size: 1.5rem;
+    }
+}
