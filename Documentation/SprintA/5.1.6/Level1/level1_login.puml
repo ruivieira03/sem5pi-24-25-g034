@@ -1,0 +1,19 @@
+
+@startuml
+actor User
+participant System
+
+User -> System: POST /login
+System -> System: Validate JWT Configuration
+alt Missing or Invalid Configuration
+    System -> User: 400 Bad Request
+else Configuration Valid
+    System -> System: Authenticate User
+    alt Invalid Username or Password
+        System -> User: 401 Unauthorized
+    else Valid Credentials
+        System -> System: Generate JWT Token
+        System -> User: 200 OK with JWT Token and Role
+    end
+end
+@enduml

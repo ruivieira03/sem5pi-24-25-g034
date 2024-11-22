@@ -1,0 +1,16 @@
+
+@startuml
+actor User
+participant Frontend
+
+User -> Frontend: Fill Registration Form
+Frontend -> Frontend: Validate Inputs
+Frontend -> Backend: POST /register-patient
+Backend -> Frontend: Response (Success or Error)
+alt Success
+    Frontend -> User: Show success message
+    Frontend -> Frontend: Redirect to Landing Page
+else Error
+    Frontend -> User: Show error message
+end
+@enduml

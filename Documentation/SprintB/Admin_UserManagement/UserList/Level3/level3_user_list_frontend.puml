@@ -1,0 +1,38 @@
+
+@startuml
+actor Admin
+participant UserList
+participant State_Management
+participant Axios
+participant DeleteUser
+participant UpdateUser
+participant Browser
+
+Admin -> UserList: Load page
+UserList -> Axios: GET /SystemUser
+Axios -> Backend: Send request with auth token
+Backend -> Axios: Response (User List or Error)
+alt Success
+    Axios -> State_Management: Update user list state
+    UserList -> Browser: Display user list
+    Admin -> UserList: Click "Delete"
+    UserList -> DeleteUser: Open modal
+    alt Deletion Success
+        DeleteUser -> State_Management: Remove deleted user from state
+        DeleteUser -> Browser: Notify success
+    else Deletion Error
+        DeleteUser -> Browser: Show error message
+    end
+    Admin -> UserList: Click "Update"
+    UserList -> UpdateUser: Open modal
+    alt Update Success
+        UpdateUser -> State_Management: Update user in state
+        UpdateUser -> Browser: Notify success
+    else Update Error
+        UpdateUser -> Browser: Show error message
+    end
+else Error
+    Axios -> State_Management: Update error state
+    UserList -> Browser: Show error message
+end
+@enduml

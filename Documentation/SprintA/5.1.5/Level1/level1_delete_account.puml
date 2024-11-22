@@ -1,0 +1,19 @@
+
+@startuml
+actor User
+participant System
+
+User -> System: GET /delete-account?email&token
+System -> System: Validate Email and Token
+alt Missing Email or Token
+    System -> User: 400 Bad Request
+else Valid Email and Token
+    System -> System: Validate Token
+    alt Invalid Token
+        System -> User: 400 Bad Request
+    else Valid Token
+        System -> System: Delete Account
+        System -> User: 200 OK with success message
+    end
+end
+@enduml

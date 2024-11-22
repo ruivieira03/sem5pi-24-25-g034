@@ -1,0 +1,16 @@
+
+@startuml
+actor User
+participant Frontend
+
+User -> Frontend: Enter username and password
+User -> Frontend: Click "Login"
+Frontend -> Backend: POST /login
+Backend -> Frontend: Response (JWT Token and Role)
+alt Success
+    Frontend -> Frontend: Store token and role in localStorage
+    Frontend -> User: Redirect to role-specific menu
+else Error
+    Frontend -> User: Show error message
+end
+@enduml

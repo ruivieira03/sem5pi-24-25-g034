@@ -1,0 +1,47 @@
+
+@startuml
+actor User
+participant API_Controller
+participant Service_Layer
+participant Repository
+participant Patient_Repository
+participant Password_Service
+participant Email_Service
+participant Unit_of_Work
+database Database
+
+User -> API_Controller: POST /register-patient
+API_Controller -> API_Controller: Validate Model
+alt Invalid Model
+    API_Controller -> User: 400 Bad Request
+else Valid Model
+    API_Controller -> Service_Layer: RegisterPatientUserAsync
+    Service_Layer -> Repository: GetUserByUsernameAsync
+    Repository -> Database: Query Username
+    alt Username Exists
+        Service_Layer -> API_Controller: Exception: "Username already taken"
+    else
+        Service_Layer -> Repository: GetUserByEmailAsync
+        Repository -> Database: Query Email
+        alt Email Exists
+            Service_Layer -> API_Controller: Exception: "Email already taken"
+        else
+            Service_Layer -> Patient_Repository: GetPatientByEmailAsync
+            Patient_Repository -> Database: Query Patient Profile
+            alt Patient Profile Not Found
+                Service_Layer -> API_Controller: Exception: "Patient profile for that email doesn't exist"
+            else
+                Service_Layer -> Password_Service: HashPassword
+                Password_Service -> Service_Layer: Hashed Password
+                Service_Layer -> Repository: AddUserAsync
+                Repository -> Database: Insert User
+                Service_Layer -> Email_Service: SendRegistrationEmail
+                Service_Layer -> Unit_of_Work: Commit
+                Unit_of_Work -> Database: Save Transaction
+                Service_Layer -> API_Controller: SystemUserDto
+            end
+        end
+    end
+    API_Controller -> User: 201 Created with new user details
+end
+@enduml

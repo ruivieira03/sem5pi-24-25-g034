@@ -1,0 +1,18 @@
+
+@startuml
+actor User
+participant Frontend
+
+User -> Frontend: View Profile Form
+Frontend -> Frontend: Populate Form with Current Data
+User -> Frontend: Edit Profile Details
+Frontend -> Backend: PUT /update-profile
+Backend -> Frontend: Response (Success or Error)
+alt Success
+    Frontend -> User: Show success message
+else Error
+    Frontend -> User: Show error message
+end
+User -> Frontend: Cancel
+Frontend -> Frontend: Redirect to Patient Page
+@enduml

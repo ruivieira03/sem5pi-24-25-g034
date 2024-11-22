@@ -36,7 +36,7 @@ public class AccountController : ControllerBase // Change to ControllerBase as i
 
     [HttpPost("login")]
     [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginRequestViewModel request)
+    public async Task<IActionResult> Login([FromBody] LoginRequestViewModel request)
     {
         // Log the configuration values
         var secretKey = _configuration["JwtSettings:SecretKey"];

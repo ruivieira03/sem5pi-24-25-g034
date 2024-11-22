@@ -1,0 +1,40 @@
+
+@startuml
+actor User
+participant API_Controller
+participant Service_Layer
+participant System_User_Repository
+participant Patient_Repository
+participant Logging_Service
+participant Email_Service
+participant Unit_of_Work
+
+User -> API_Controller: PUT /update-profile
+API_Controller -> API_Controller: Validate Model
+alt Invalid Model
+    API_Controller -> User: 400 Bad Request
+else Valid Model
+    API_Controller -> Service_Layer: UpdateProfileAsUserAsync
+    Service_Layer -> System_User_Repository: GetByIdAsync
+    alt User Not Found
+        Service_Layer -> API_Controller: Exception: "User not found"
+    else
+        Service_Layer -> Patient_Repository: GetPatientByEmailAsync
+        alt Patient Not Found
+            Service_Layer -> API_Controller: Exception: "Patient not found"
+        else
+            Service_Layer -> Logging_Service: Log Original Data
+            Service_Layer -> Service_Layer: Update Fields
+            Service_Layer -> Logging_Service: Log Changed Fields
+            alt Email or Phone Changed
+                Service_Layer -> Email_Service: Send Verification Email
+            end
+            Service_Layer -> Patient_Repository: UpdatePatientAsync
+            Service_Layer -> System_User_Repository: UpdateUserAsync
+            Service_Layer -> Unit_of_Work: Commit
+            Service_Layer -> API_Controller: Updated Patient DTO
+        end
+    end
+    API_Controller -> User: 200 OK with updated profile details
+end
+@enduml

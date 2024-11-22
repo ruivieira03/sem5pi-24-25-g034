@@ -1,0 +1,18 @@
+
+@startuml
+actor Admin
+participant Frontend
+
+Admin -> Frontend: View user details in form
+Admin -> Frontend: Edit form fields
+Admin -> Frontend: Submit form
+Frontend -> Backend: PUT /SystemUser/{user.id}
+Backend -> Frontend: Response (Success or Error)
+alt Success
+    Frontend -> Admin: Notify parent of successful update
+else Error
+    Frontend -> Admin: Show error message
+end
+Admin -> Frontend: Click Cancel
+Frontend -> Frontend: Redirect to /admin
+@enduml
