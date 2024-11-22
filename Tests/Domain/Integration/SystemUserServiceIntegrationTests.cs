@@ -252,6 +252,7 @@ public class SystemUserServiceIntegrationTests
 
         _mockSystemUserRepository
             .Setup(repo => repo.GetUserByEmailAsync(It.IsAny<string>()))
+            
             .ReturnsAsync((SystemUser)null); // User not found
 
         // Act & Assert

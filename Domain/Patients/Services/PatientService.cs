@@ -1,11 +1,10 @@
 using Hospital.Domain.Shared;
 using Hospital.Services;
 using Hospital.Domain.Users.SystemUser;
+using Hospital.ViewModels;
 
-namespace Hospital.Domain.Patients
-{
-    public class PatientService
-    {
+namespace Hospital.Domain.Patients{
+    public class PatientService{
         private readonly IPatientRepository _patientRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISystemUserRepository _systemUserRepository;
@@ -141,54 +140,88 @@ namespace Hospital.Domain.Patients
 
 
 
-        public async Task<PatientDto> UpdateProfileAsync(UpdateProfileViewModel model, Guid patientId)
-        {
-            if (model == null)
-            {
+
+        // 5.8.7
+
+
+        public async Task<PatientDto> UpdateProfileAsync(UpdatePatientProfileViewModel model, Guid patientId){
+            
+            if (model == null){
                 throw new ArgumentNullException(nameof(model));
             }
 
             var existingPatient = await _patientRepository.GetByIdAsync(new PatientId(patientId));
-            if (existingPatient == null)
-            {
+           
+            if (existingPatient == null){
                 throw new InvalidOperationException("Patient not found.");
             }
+            //update atributes
 
             existingPatient.FirstName = model.FirstName;
             existingPatient.LastName = model.LastName;
-            existingPatient.Gender = model.Gender;
             existingPatient.Email = model.Email;
             existingPatient.PhoneNumber = model.PhoneNumber;
             existingPatient.EmergencyContact = model.EmergencyContact;
 
-            await _patientRepository.UpdatePatientAsync(existingPatient);
-            await _unitOfWork.CommitAsync();
+            await _patientRepository.UpdatePatientAsync(existingPatient);   // Update Database
+            await _unitOfWork.CommitAsync();                                // Commit transaction on it
 
-            return new PatientDto
-            {
+            return new PatientDto{
+                Id = existingPatient.Id.AsGuid(),
                 FirstName = existingPatient.FirstName,
                 LastName = existingPatient.LastName,
                 DateOfBirth = existingPatient.DateOfBirth,
-                Gender = existingPatient.Gender,
                 Email = existingPatient.Email,
+                Gender = existingPatient.Gender,
+                MedicalRecordNumber = existingPatient.MedicalRecordNumber,
                 PhoneNumber = existingPatient.PhoneNumber,
                 EmergencyContact = existingPatient.EmergencyContact,
-                AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions
+                AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
+                AppointmentHistory = existingPatient.AppointmentHistory,
             };
         }
 
 
-       public async Task<List<PatientDto>> GetAllAsync()
-{
+           public async Task <PatientDto> DeleteAsync(PatientId patientId){
+
+            var existingPatient = await _patientRepository.GetByIdAsync(patientId);
+            
+            if (existingPatient == null){
+                throw new InvalidOperationException("Patient not found.");
+            }
+
+            await _patientRepository.Remove(existingPatient);
+            await _unitOfWork.CommitAsync();
+
+
+            return new PatientDto{
+                Id = existingPatient.Id.AsGuid(),
+                FirstName = existingPatient.FirstName,
+                LastName = existingPatient.LastName,
+                DateOfBirth = existingPatient.DateOfBirth,
+                Email = existingPatient.Email,
+                Gender = existingPatient.Gender,
+                MedicalRecordNumber = existingPatient.MedicalRecordNumber,
+                PhoneNumber = existingPatient.PhoneNumber,
+                EmergencyContact = existingPatient.EmergencyContact,
+                AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
+                AppointmentHistory = existingPatient.AppointmentHistory,
+            };
+        }
+    
+
+
+       public async Task<List<PatientDto>> GetAllAsync(){
     var patients = await _patientRepository.GetAllAsync();
             List<PatientDto> patientDto= patients.ConvertAll(patient => new PatientDto { 
-             Id = patient.Id.AsGuid(),
+
+            Id = patient.Id.AsGuid(),
             FirstName = patient.FirstName,
-             LastName = patient.LastName,
-             DateOfBirth = patient.DateOfBirth,
-             Gender = patient.Gender,
-              Email = patient.Email,
-              PhoneNumber = patient.PhoneNumber,
+            LastName = patient.LastName,
+            DateOfBirth = patient.DateOfBirth,
+            Gender = patient.Gender,
+            Email = patient.Email,
+            PhoneNumber = patient.PhoneNumber,
             EmergencyContact = patient.EmergencyContact,
             AllergiesOrMedicalConditions = patient.AllergiesOrMedicalConditions,            
              AppointmentHistory = patient.AppointmentHistory
@@ -196,18 +229,28 @@ namespace Hospital.Domain.Patients
             return patientDto;
     }
 
-
-        public async Task DeleteAsync(PatientId patientId)
-        {
-            var existingPatient = await _patientRepository.GetByIdAsync(patientId);
-            if (existingPatient == null)
-            {
-                throw new InvalidOperationException("Patient not found.");
+           public async Task<PatientDto> GetByIdAsync(PatientId id){
+            var patient = await this._patientRepository.GetByIdAsync(id);
+            
+            if (patient == null){
+                throw new Exception("User not found.");
             }
 
-            await _patientRepository.Remove(existingPatient);
-            await _unitOfWork.CommitAsync();
-    
+
+         return new PatientDto { 
+
+            Id = patient.Id.AsGuid(),
+            FirstName = patient.FirstName,
+            LastName = patient.LastName,
+            DateOfBirth = patient.DateOfBirth,
+            Gender = patient.Gender,
+            Email = patient.Email,
+            PhoneNumber = patient.PhoneNumber,
+            EmergencyContact = patient.EmergencyContact,
+            AllergiesOrMedicalConditions = patient.AllergiesOrMedicalConditions,            
+            AppointmentHistory = patient.AppointmentHistory
+            };
+       
         }
 
     public async Task<PatientDto> GetPatientProfileAsync(PatientId userId)
@@ -239,4 +282,5 @@ namespace Hospital.Domain.Patients
 
     }
 }
+
     

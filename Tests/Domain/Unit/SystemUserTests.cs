@@ -1,13 +1,10 @@
 using Xunit;
 using Hospital.Domain.Users.SystemUser;
 
-namespace Hospital.Tests.Domain.Unit
-{
-    public class SystemUserTests
-    {
+namespace Hospital.Tests.Domain.Unit{
+    public class SystemUserTests{
         [Fact]
-        public void AdminConstructor_ShouldInitializePropertiesCorrectly()
-        {
+        public void AdminConstructor_ShouldInitializePropertiesCorrectly(){
             // Arrange
             var username = "adminUser";
             var role = Roles.Admin;
@@ -50,8 +47,7 @@ namespace Hospital.Tests.Domain.Unit
         }
 
         [Fact]
-        public void Authenticate_ShouldReturnFalse_ForInvalidCredentials()
-        {
+        public void Authenticate_ShouldReturnFalse_ForInvalidCredentials(){
             // Arrange
             var user = new SystemUser("testUser", Roles.Admin, "test@example.com", "12345", "password123", "IAM456");
 

@@ -9,6 +9,6 @@ namespace Hospital.Services
         Task LogProfileUpdateAsync(string userId, string changedFields, DateTime timestamp);
         Task LogAccountDeletionAsync(string userId, DateTime timestamp);
         string GetChangedFields(PatientDto existingPatient, PatientDto updatedPatient);
-
+        string GetChangedFields(Patient existingPatient, PatientDto editedPatient);
     }
 }

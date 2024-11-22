@@ -4,8 +4,7 @@ using Hospital.Domain.Logs;
 using Hospital.Domain.Patients;
 
 
-namespace Hospital.Services
-{
+namespace Hospital.Services{
 public class LoggingService : ILoggingService
 {
     private readonly ILogRepository _logRepository;
@@ -68,7 +67,11 @@ public class LoggingService : ILoggingService
         return string.Join(", ", changedFields);
     }
 
-}
+        public string GetChangedFields(Patient existingPatient, PatientDto editedPatient)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
 }
 
