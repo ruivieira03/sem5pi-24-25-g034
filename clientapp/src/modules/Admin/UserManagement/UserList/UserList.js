@@ -59,11 +59,25 @@ function UserList() {
                 {users.length > 0 ? (
                     users.map((user) => (
                         <li key={user.id} className="user-item">
-                            <span>
-                                {user.username} - {user.role}
-                            </span>
-                            <button onClick={() => setDeletingUser(user)}>Delete</button>
-                            <button onClick={() => setUpdatingUser(user)}>Update</button>
+                            <div className="user-details">
+                                <p><strong>ID:</strong> {user.id}</p>
+                                <p><strong>Username:</strong> {user.username}</p>
+                                <p><strong>Role:</strong> {user.role}</p>
+                            </div>
+                            <div className="user-actions">
+                                <button
+                                    className="action-button delete"
+                                    onClick={() => setDeletingUser(user)}
+                                >
+                                    Delete
+                                </button>
+                                <button
+                                    className="action-button update"
+                                    onClick={() => setUpdatingUser(user)}
+                                >
+                                    Update
+                                </button>
+                            </div>
                         </li>
                     ))
                 ) : (
@@ -99,3 +113,4 @@ function UserList() {
 }
 
 export default UserList;
+

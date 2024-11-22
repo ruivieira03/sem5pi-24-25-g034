@@ -21,6 +21,7 @@ import RequestDeleteAccount from './modules/Patient/AccountManagement/DeleteAcco
 import ConfirmDeleteAccount from './modules/Patient/AccountManagement/DeleteAccount/ConfirmDeleteAccount/ConfirmDeleteAccount'; // Confirm Delete Account
 import PatientProfile from './modules/Patient/AccountManagement/PatientProfile/PatientProfile'; // Patient Profile
 import ConfirmEmail from './modules/SystemUser/ConfirmEmail/ConfirmEmail'; // Confirm Email
+import UserDetails from './modules/Admin/UserManagement/UserDetails/UserDetails';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
 
         {/* Nested Routes for Admin */}
         <Route path="user-list" element={<UserList />} />
+        <Route path="user-details/:id" element={<UserDetails />} />
           <Route path="update-user/:id" element={<UpdateUser />} />
         <Route path="register-user" element={<RegisterUser />} />
 

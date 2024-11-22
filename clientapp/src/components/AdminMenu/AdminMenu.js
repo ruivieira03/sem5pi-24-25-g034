@@ -4,6 +4,7 @@ import CommonMenu from '../CommonMenu/CommonMenu';
 import UserList from '../../modules/Admin/UserManagement/UserList/UserList';
 import RegisterUser from '../../modules/Admin/UserManagement/RegisterUser/RegisterUser';
 import Profile from '../../modules/Auth/Profile/Profile';
+import UserDetails from '../../modules/Admin/UserManagement/UserDetails/UserDetails';
 import './AdminMenu.css'; // Import new CSS file for styling
 
 function AdminMenu() {
@@ -25,6 +26,9 @@ function AdminMenu() {
                         <Link className="admin-menu-link" to="user-list">User List</Link>
                     </li>
                     <li>
+                        <Link className="admin-menu-link" to="user-details/:id">User Information</Link>
+                    </li>
+                    <li>
                         <Link className="admin-menu-link" to="profile">Profile</Link>
                     </li>
                 </ul>
@@ -37,6 +41,7 @@ function AdminMenu() {
             <div className="admin-content">
                 <Routes>
                     <Route path="user-list" element={<UserList />} />
+                    <Route path="user-details/:id" element={<UserDetails />} />
                     <Route path="register-user" element={<RegisterUser />} />
                     <Route path="profile" element={<Profile />} />
                     <Route

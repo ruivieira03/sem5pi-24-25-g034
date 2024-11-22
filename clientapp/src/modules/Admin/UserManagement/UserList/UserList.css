@@ -1,91 +1,104 @@
-/* Container for the user list */
+/* General container styling */
 .user-list-container {
-    max-width: 800px; /* Restrict width for better readability */
-    margin: 50px auto; /* Center the container */
+    max-width: 900px;
+    margin: 40px auto;
     padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for the container */
-    font-family: Arial, sans-serif; /* Clean font */
-    text-align: center;
+    background-color: #fdfdfd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    text-align: left;
 }
 
 /* Header */
 .user-list-container h2 {
+    font-size: 2rem;
+    text-align: center;
     margin-bottom: 20px;
-    font-size: 1.8em;
     color: #333;
 }
 
-/* User list styling */
+/* User list */
 .user-list {
-    list-style: none; /* Remove bullets */
-    padding: 0;
+    list-style: none;
     margin: 0;
+    padding: 0;
 }
 
-/* Individual user item */
+/* User item */
 .user-item {
     display: flex;
-    justify-content: space-between; /* Space out content */
-    align-items: center; /* Align vertically */
-    padding: 10px 15px;
-    border-bottom: 1px solid #ddd; /* Add a divider between items */
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
     transition: background-color 0.3s ease;
-}
-
-.user-item:last-child {
-    border-bottom: none; /* Remove border for the last item */
 }
 
 .user-item:hover {
-    background-color: #f1f1f1; /* Highlight on hover */
+    background-color: #f9f9f9;
 }
 
 /* User details */
-.user-item span {
-    font-size: 1em;
+.user-details p {
+    margin: 5px 0;
+    font-size: 1rem;
     color: #555;
-    flex-grow: 1; /* Allow text to take up available space */
 }
 
-/* Buttons */
-.user-item button {
-    padding: 8px 12px;
+.user-details p strong {
+    color: #333;
+}
+
+/* Action buttons */
+.user-actions {
+    display: flex;
+    gap: 10px; /* Space between buttons */
+}
+
+.action-button {
+    padding: 10px 15px;
+    font-size: 1rem;
     border: none;
-    border-radius: 4px;
-    background-color: #007bff; /* Primary color for buttons */
-    color: white;
-    font-size: 0.9em;
+    border-radius: 5px;
     cursor: pointer;
-    margin-left: 10px; /* Add spacing between buttons */
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.user-item button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+.action-button.delete {
+    background-color: #dc3545;
+    color: white;
 }
 
-.user-item button:disabled {
-    background-color: #ccc; /* Gray for disabled buttons */
-    cursor: not-allowed;
+.action-button.delete:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
 }
 
-/* Modal container */
+.action-button.update {
+    background-color: #007bff;
+    color: white;
+}
+
+.action-button.update:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Modal styling remains the same */
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 
-/* Modal content */
 .modal-content {
     background-color: white;
     padding: 20px;
@@ -94,41 +107,4 @@
     max-width: 500px;
     width: 100%;
     text-align: center;
-}
-
-/* Modal header */
-.modal-content h3 {
-    margin-bottom: 15px;
-    font-size: 1.5em;
-    color: #333;
-}
-
-/* Modal buttons */
-.modal-content button {
-    margin-top: 10px;
-    padding: 10px 15px;
-    font-size: 1em;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.modal-content button.confirm {
-    background-color: #28a745; /* Green for confirmation */
-    color: white;
-}
-
-.modal-content button.confirm:hover {
-    background-color: #218838; /* Darker green on hover */
-}
-
-.modal-content button.cancel {
-    background-color: #dc3545; /* Red for cancellation */
-    color: white;
-    margin-left: 10px;
-}
-
-.modal-content button.cancel:hover {
-    background-color: #c82333; /* Darker red on hover */
 }
