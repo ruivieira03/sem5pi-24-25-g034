@@ -2,7 +2,6 @@ import React from 'react';
 import './Logout.css';
 
 function Logout() {
-
     const handleLogout = () => {
         // Remove the JWT token from localStorage
         localStorage.removeItem('authToken');
@@ -19,7 +18,7 @@ function Logout() {
 
     return (
         <div className="logout-container">
-            <div className="logout-spinner"></div>
+            <div className="logout-spinner" role="progressbar" aria-label="Loading"></div>
             <p className="logout-message">Logging out, please wait...</p>
         </div>
     );

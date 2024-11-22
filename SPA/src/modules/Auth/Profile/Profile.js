@@ -26,8 +26,9 @@ function Profile() {
                 setProfile(response.data);
             } catch (error) {
                 console.error('Error fetching profile:', error);
-                setError('Error fetching profile: ' + error.response?.data || error.message);
-            }
+                const errorMessage = error.response?.data || error.message || 'An unknown error occurred.';
+                setError('Error fetching profile: ' + errorMessage);
+            }            
         };
 
         fetchProfile();
