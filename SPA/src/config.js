@@ -1,1 +1,1 @@
-export const API_BASE_URL = "http://vsgate-ssh.dei.isep.ipp.pt:5001";
+export const API_BASE_URL = "https://10.9.22.94:5001";

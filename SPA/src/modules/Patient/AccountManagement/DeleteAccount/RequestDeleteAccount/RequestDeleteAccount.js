@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../../../config'; // Import API_BASE_URL
 import './RequestDeleteAccount.css';
 
 function RequestDeleteAccount() {
@@ -15,11 +16,14 @@ function RequestDeleteAccount() {
         }
 
         try {
-            const response = await axios.get('https://localhost:5001/api/account/request-delete-account', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const response = await axios.get(
+                `${API_BASE_URL}/api/account/request-delete-account`, // Use API_BASE_URL here
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
             setMessage(response.data.message);
             setError(null);
         } catch (error) {

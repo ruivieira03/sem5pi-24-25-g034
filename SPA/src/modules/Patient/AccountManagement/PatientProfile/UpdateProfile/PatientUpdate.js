@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../../../../config'; // Import API_BASE_URL
 import './PatientUpdate.css'; // Updated styles file
 
 const PatientUpdate = ({ profileData, authToken, setProfileData, setError, setSuccess }) => {
@@ -32,7 +33,7 @@ const PatientUpdate = ({ profileData, authToken, setProfileData, setError, setSu
         try {
             setLoading(true);
             const response = await axios.put(
-                'https://localhost:5001/api/account/update-profile',
+                `${API_BASE_URL}/api/account/update-profile`, // Use API_BASE_URL here
                 formData,
                 {
                     headers: { Authorization: `Bearer ${token}` },

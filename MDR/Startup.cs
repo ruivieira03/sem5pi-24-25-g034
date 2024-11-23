@@ -44,11 +44,13 @@ namespace Hospital
                 options.Cookie.IsEssential = true;
             });
 
-            // CORS for React client
+            // CORS for React client; change between the localhost and the deployed client
+            // http://localhost:3000
+            // http://vs606.dei.isep.ipp.pt
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowReactApp", builder =>
-                    builder.WithOrigins("http://localhost:3000")
+                    builder.WithOrigins("http://vs606.dei.isep.ipp.pt")
                            .AllowAnyHeader()
                            .AllowAnyMethod()
                            .AllowCredentials());
