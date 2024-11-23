@@ -24,15 +24,12 @@ jobs:
         npm install
         CI=false npm run build
 
-    - name: Deploy to Server with Public SSH
-      uses: appleboy/ssh-action@v0.1.7
+    - name: Deploy to Server
+      uses: appleboy/scp-action@v0.1.2
       with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        port: 10606
+        host: vsgate-ssh.dei.isep.ipp.pt
+        username: root
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          mkdir -p /var/www/html/spa/
-          rm -rf /var/www/html/spa/*
-          cp -r SPA/build/* /var/www/html/spa/
-          sudo systemctl reload apache2
+        port: 10606
+        source: SPA/build/*
+        target: /var/www/html/spa/
