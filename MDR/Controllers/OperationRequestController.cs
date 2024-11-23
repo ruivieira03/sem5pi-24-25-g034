@@ -74,6 +74,12 @@ public class OperationRequestController : ControllerBase
     public async Task<ActionResult<OperationRequestDto>> GetById(Guid id)
     {
         var request = await _operationRequestService.GetByIdAsync(new OperationRequestId(id));
+
+        if (request == null)
+        {
+            return NotFound(); // Return 404 if request not found
+        }
+
         return Ok(request); // Return OK status with the request details
     }
 
@@ -83,6 +89,12 @@ public class OperationRequestController : ControllerBase
     public async Task<ActionResult<OperationRequestDto>> GetByPatient(Guid patientId)
     {
         var request = await _operationRequestService.GetOperationRequestsByPatientAsync(patientId);
+
+        if (request == null)
+        {
+            return NotFound(); // Return 404 if request not found
+        }
+
         return Ok(request); // Return OK status with the request details
     }
 
@@ -92,6 +104,12 @@ public class OperationRequestController : ControllerBase
     public async Task<ActionResult<OperationRequestDto>> GetByType(string operationTypeId)
     {
         var request = await _operationRequestService.GetOperationRequestsByTypeAsync(operationTypeId);
+
+        if (request == null)
+        {
+            return NotFound(); // Return 404 if request not found
+        }
+
         return Ok(request); // Return OK status with the request details
     }
 
@@ -101,6 +119,12 @@ public class OperationRequestController : ControllerBase
     public async Task<ActionResult<OperationRequestDto>> GetByPriority(int priority)
     {
         var request = await _operationRequestService.GetOperationRequestsByPriorityAsync(priority);
+
+        if (request == null)
+        {
+            return NotFound(); // Return 404 if request not found
+        }
+
         return Ok(request); // Return OK status with the request details
     }
 
@@ -111,6 +135,12 @@ public class OperationRequestController : ControllerBase
     public async Task<ActionResult<OperationRequestDto>> GetByStatus(string status)
     {
         var request = await _operationRequestService.GetOperationRequestsByStatusAsync(status);
+
+        if (request == null)
+        {
+            return NotFound(); // Return 404 if request not found
+        }
+
         return Ok(request); // Return OK status with the request details
     }
     */
