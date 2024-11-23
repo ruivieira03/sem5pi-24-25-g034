@@ -24,6 +24,12 @@ jobs:
         npm install
         CI=false npm run build
 
+    - name: Debug Environment
+      run: |
+        echo "SSH_HOST: $SSH_HOST"
+        echo "SSH_USERNAME: $SSH_USERNAME"
+        echo "SSH_PRIVATE_KEY length: ${#SSH_PRIVATE_KEY}"
+
     - name: Deploy to Server
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
