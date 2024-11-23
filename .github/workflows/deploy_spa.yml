@@ -41,6 +41,9 @@ jobs:
         SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
       run: |
         ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "echo Connection Successful"
+        
+    - name: Test DNS Resolution
+      run: nslookup ${{ secrets.SSH_HOST }}
 
     - name: Deploy to Server
       env:
