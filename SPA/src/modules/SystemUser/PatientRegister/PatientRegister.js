@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../../config'; // Import API_BASE_URL
 import './PatientRegister.css'; // Updated styles file
 
 function PatientRegister() {
@@ -30,7 +31,7 @@ function PatientRegister() {
         try {
             const payload = { ...formData, role: "Patient" };
             const response = await axios.post(
-                'https://localhost:5001/api/SystemUser/register-patient',
+                `${API_BASE_URL}/api/SystemUser/register-patient`, // Use API_BASE_URL here
                 payload
             );
 

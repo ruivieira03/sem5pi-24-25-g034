@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../../config';
 import './DeleteUser.css'; // Import CSS file for styling
 
 function DeleteUser({ user, authToken, onDeleteSuccess }) {
@@ -10,7 +11,7 @@ function DeleteUser({ user, authToken, onDeleteSuccess }) {
         setLoading(true);
         try {
             const response = await axios.delete(
-                `https://localhost:5001/api/SystemUser/${user.id}/hard`,
+                `${API_BASE_URL}/api/SystemUser/${user.id}/hard`, // Use API_BASE_URL here
                 {
                     headers: {
                         Authorization: `Bearer ${authToken}`,

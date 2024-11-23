@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './RegisterUser.css'; 
+import { API_BASE_URL } from '../../../../config'; // Import API_BASE_URL
+import './RegisterUser.css';
 
 function RegisterUser() {
     const [formData, setFormData] = useState({
@@ -28,7 +29,7 @@ function RegisterUser() {
         try {
             const payload = { ...formData };
             const response = await axios.post(
-                'https://localhost:5001/api/SystemUser',
+                `${API_BASE_URL}/api/SystemUser`, // Use API_BASE_URL here
                 payload,
                 {
                     headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }

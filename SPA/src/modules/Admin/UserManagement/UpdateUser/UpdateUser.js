@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../../../config'; // Import API_BASE_URL
 import './UpdateUser.css';
 
 const UpdateUser = ({ user, authToken, onUpdateSuccess }) => {
@@ -23,7 +24,7 @@ const UpdateUser = ({ user, authToken, onUpdateSuccess }) => {
         try {
             setLoading(true);
             const response = await axios.put(
-                `https://localhost:5001/api/SystemUser/${user.id}`,
+                `${API_BASE_URL}/api/SystemUser/${user.id}`, // Use API_BASE_URL here
                 formData,
                 {
                     headers: { Authorization: `Bearer ${authToken}` },

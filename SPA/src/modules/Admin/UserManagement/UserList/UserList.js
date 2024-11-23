@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DeleteUser from '../DeleteUser/DeleteUser';
 import UpdateUser from '../UpdateUser/UpdateUser';
+import { API_BASE_URL } from '../../../../config';
 import './UserList.css';
 
 function UserList() {
@@ -15,7 +16,7 @@ function UserList() {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('https://localhost:5001/api/SystemUser', {
+                const response = await axios.get(`${API_BASE_URL}/api/SystemUser`, {
                     headers: { Authorization: `Bearer ${authToken}` },
                 });
                 setUsers(response.data);
@@ -113,4 +114,3 @@ function UserList() {
 }
 
 export default UserList;
-
