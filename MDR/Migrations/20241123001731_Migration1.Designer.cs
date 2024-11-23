@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace sem5pi_24_25_g202.Migrations
+namespace sem5pi_24_25_g034.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    [Migration("20241106123302_DbUpdate7")]
-    partial class DbUpdate7
+    [Migration("20241123001731_Migration1")]
+    partial class Migration1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,6 +67,61 @@ namespace sem5pi_24_25_g202.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProfileUpdateLogs", (string)null);
+                });
+
+            modelBuilder.Entity("Hospital.Domain.OperationRequest.OperationRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("DeadlineDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("DoctorID")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("OperationTypeID")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("PatientID")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OperationRequest", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("d2739ced-14f0-4176-969b-6b68d78a9e16"),
+                            DeadlineDate = new DateTime(2022, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DoctorID = new Guid("719e5a15-e611-4ada-8a0e-c74aba732b85"),
+                            OperationTypeID = "1",
+                            PatientID = new Guid("bec063b5-cc8c-424d-a6f8-7a96c63d3db2"),
+                            Priority = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("f60c21dc-08ac-4391-bd0b-cb79414c2aeb"),
+                            DeadlineDate = new DateTime(2022, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DoctorID = new Guid("3e6813df-ed69-4c60-a396-6033ae4a5533"),
+                            OperationTypeID = "2",
+                            PatientID = new Guid("79e01a30-f4cc-41c3-bfc7-d4b950b74140"),
+                            Priority = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("991a8ef3-c8e9-4e76-ab93-e14948c8b2c7"),
+                            DeadlineDate = new DateTime(2022, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DoctorID = new Guid("6209c907-2977-45a1-b583-aa539eb426fc"),
+                            OperationTypeID = "3",
+                            PatientID = new Guid("60796f2a-1313-41c0-ae5a-f6e08bb7925b"),
+                            Priority = 3
+                        });
                 });
 
             modelBuilder.Entity("Hospital.Domain.Patients.Patient", b =>
@@ -128,7 +183,7 @@ namespace sem5pi_24_25_g202.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("49dec36c-458c-4a7c-a65f-cb3ba6abf126"),
+                            Id = new Guid("d3e7d836-26b4-4dfb-bbdc-d3fd68bdb148"),
                             AllergiesOrMedicalConditions = "[\"Penicillin allergy\"]",
                             AppointmentHistory = "[\"Checkup on 2024-01-20\"]",
                             DateOfBirth = new DateTime(1985, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -142,7 +197,7 @@ namespace sem5pi_24_25_g202.Migrations
                         },
                         new
                         {
-                            Id = new Guid("f86bd938-3afd-4cb9-a4c3-b1c55b7d9e5c"),
+                            Id = new Guid("ecee7034-ec21-456e-b67f-83029c1d3983"),
                             AllergiesOrMedicalConditions = "[\"Nut allergy\"]",
                             AppointmentHistory = "[\"Vaccination on 2023-05-15\"]",
                             DateOfBirth = new DateTime(1999, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -213,7 +268,7 @@ namespace sem5pi_24_25_g202.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("43763415-39dc-40e0-8bf0-a5d72cdb63af"),
+                            Id = new Guid("c5b02e09-6fd6-4abb-8b08-66639bb90d3e"),
                             Email = "ruimdv13@gmail.com",
                             IAMId = "1",
                             Password = "bf32388f0f958a12428ebc237a8d0863265e795ceb5c5f3d013b062f75bfad9e",
@@ -224,7 +279,7 @@ namespace sem5pi_24_25_g202.Migrations
                         },
                         new
                         {
-                            Id = new Guid("885f0e46-7815-4861-8c2a-597bb406abb6"),
+                            Id = new Guid("c59b6105-1b75-466c-9b73-dbce16afe9ec"),
                             Email = "doctor@hospital.com",
                             IAMId = "2",
                             Password = "bf32388f0f958a12428ebc237a8d0863265e795ceb5c5f3d013b062f75bfad9e",
@@ -235,7 +290,7 @@ namespace sem5pi_24_25_g202.Migrations
                         },
                         new
                         {
-                            Id = new Guid("949e3921-11f8-418e-9aba-dcf00ff3d875"),
+                            Id = new Guid("0ef57135-1af2-4773-b135-2c24eedad910"),
                             Email = "nurse@hospital.com",
                             IAMId = "3",
                             Password = "bf32388f0f958a12428ebc237a8d0863265e795ceb5c5f3d013b062f75bfad9e",
