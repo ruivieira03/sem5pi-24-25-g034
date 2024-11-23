@@ -6,6 +6,7 @@ function DeleteUser({ user, authToken, onDeleteSuccess }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    // Function to handle the deletion of a user
     const handleDelete = async () => {
         setLoading(true);
         try {

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/MDR/sem5pi-24-25-g034.csproj": {}
+    "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\MDR\\sem5pi-24-25-g034.csproj": {}
   },
   "projects": {
-    "/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/MDR/sem5pi-24-25-g034.csproj": {
+    "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\MDR\\sem5pi-24-25-g034.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/MDR/sem5pi-24-25-g034.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\MDR\\sem5pi-24-25-g034.csproj",
         "projectName": "sem5pi-24-25-g034",
-        "projectPath": "/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/MDR/sem5pi-24-25-g034.csproj",
-        "packagesPath": "/Users/martim/.nuget/packages/",
-        "outputPath": "/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/MDR/obj/",
+        "projectPath": "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\MDR\\sem5pi-24-25-g034.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\MDR\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/martim/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -175,7 +175,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
