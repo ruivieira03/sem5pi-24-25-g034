@@ -24,29 +24,15 @@ jobs:
         npm install
         CI=false npm run build
 
-    - name: Debug Environment
-      env:
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      run: |
-        echo "SSH_HOST: $SSH_HOST"
-        echo "SSH_USERNAME: $SSH_USERNAME"
-        echo "SSH_PRIVATE_KEY length: ${#SSH_PRIVATE_KEY}"
-
-    - name: Test SSH Connection
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-      run: |
-        ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "echo Connection Successful"
-
-    - name: Deploy to Server
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-      run: |
-        scp -r SPA/build/* $SSH_USERNAME@$SSH_HOST:/var/www/html/spa/
-        ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "sudo systemctl reload apache2"
+    - name: Deploy to Server with Public SSH
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: vsgate-ssh.dei.isep.ipp.pt
+        username: ${{ secrets.SSH_USERNAME }}
+        port: 10606
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          mkdir -p /var/www/html/spa/
+          rm -rf /var/www/html/spa/*
+          cp -r SPA/build/* /var/www/html/spa/
+          sudo systemctl reload apache2
