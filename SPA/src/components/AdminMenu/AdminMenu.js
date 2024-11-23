@@ -7,6 +7,7 @@ import Profile from '../../modules/Auth/Profile/Profile';
 import UserDetails from '../../modules/Admin/UserManagement/UserDetails/UserDetails';
 import OperationRequestList from '../../modules/OperationRequest/OperationRequestList/OperationRequestList';
 import OperationRequestCreate from '../../modules/OperationRequest/OperationRequestCreate/OperationRequestCreate';
+import OperationRequestById from '../../modules/OperationRequest/OperationRequestById/OperationRequestById';
 import './AdminMenu.css'; // Import new CSS file for styling
 
 function AdminMenu() {
@@ -34,7 +35,10 @@ function AdminMenu() {
                         <Link className="admin-menu-link" to="profile">Profile</Link>
                     </li>
                     <li>
-                        <Link className="admin-menu-link" to="/admin/operation-requests">Operation Requests</Link>
+                        <Link className="admin-menu-link" to="/admin/operation-requests">All Operation Requests</Link>
+                    </li>
+                    <li>
+                        <Link className="admin-menu-link" to="/admin/operation-request-by-id">Operation Request by ID</Link>
                     </li>
                     <li>
                         <Link className="admin-menu-link" to="/admin/operation-request-create">Create Operation Request</Link>
@@ -53,6 +57,7 @@ function AdminMenu() {
                     <Route path="register-user" element={<RegisterUser />} />
                     <Route path="profile" element={<Profile />} />
                     <Route path="operation-requests" element={<OperationRequestList />} />
+                    <Route path="operation-request-by-id" element={<OperationRequestById />} />
                     <Route path="operation-request-create" element={<OperationRequestCreate />} />
                     <Route
                         path="*"

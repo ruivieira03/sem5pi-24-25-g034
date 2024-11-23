@@ -4,6 +4,7 @@ import { Link, Route, Routes } from 'react-router-dom';
 import CommonMenu from '../CommonMenu/CommonMenu';
 import OperationRequestList from '../../modules/OperationRequest/OperationRequestList/OperationRequestList';
 import OperationRequestCreate from '../../modules/OperationRequest/OperationRequestCreate/OperationRequestCreate';
+import OperationRequestById from '../../modules/OperationRequest/OperationRequestById/OperationRequestById';
 import './DoctorMenu.css'; // Import new CSS file for styling
 
 function DoctorMenu() {
@@ -31,6 +32,9 @@ function DoctorMenu() {
                     <li>
                         <Link className="doctor-menu-link" to="/doctor/operation-request-create">Create Operation Request</Link>
                     </li>
+                    <li>
+                        <Link className="doctor-menu-link" to="/doctor/operation-request-create">Create Operation Request</Link>
+                    </li>
                 </ul>
                 <div className="doctor-menu-logout">
                     <Link to="/logout" className="doctor-menu-link">Logout</Link>
@@ -43,6 +47,7 @@ function DoctorMenu() {
                     {/* <Route path="patient-list" element={<PatientList />} /> */}
                     {/* <Route path="appointments" element={<Appointments />} /> */}
                     <Route path="operation-requests" element={<OperationRequestList />} />
+                    <Route path="operation-request-by-id" element={<OperationRequestById />} />
                     <Route path="operation-request-create" element={<OperationRequestCreate />} />
                     <Route
                         path="*"
