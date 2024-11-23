@@ -1,0 +1,26 @@
+
+@startuml
+actor User
+participant ConfirmDeleteAccount
+participant Axios
+participant useLocation
+participant useNavigate
+
+User -> ConfirmDeleteAccount: Navigate to Page with Query Params
+ConfirmDeleteAccount -> useLocation: Parse Query Params
+alt Missing Email or Token
+    ConfirmDeleteAccount -> User: Show error and redirect to Home
+else Valid Email and Token
+    User -> ConfirmDeleteAccount: Confirm Account Deletion
+    ConfirmDeleteAccount -> Axios: GET /delete-account?email&token
+    Axios -> Backend: Send request
+    Backend -> Axios: Response (Success or Error)
+    alt Success
+        Axios -> ConfirmDeleteAccount: Update success state
+        ConfirmDeleteAccount -> useNavigate: Redirect to Home
+    else Error
+        Axios -> ConfirmDeleteAccount: Update error state
+        ConfirmDeleteAccount -> useNavigate: Redirect to Home
+    end
+end
+@enduml

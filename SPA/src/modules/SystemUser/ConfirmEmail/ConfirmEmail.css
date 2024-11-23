@@ -1,0 +1,92 @@
+/* General container styling */
+.confirm-email-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+/* Header */
+.confirm-email-container h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.8em;
+}
+
+/* Paragraph styling */
+.confirm-email-container p {
+    color: #555;
+    font-size: 1em;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* Success and error messages */
+.success-message {
+    color: #28a745;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.error-message {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+/* Button container */
+.confirm-email-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Confirm button */
+.confirm-button {
+    flex: 1;
+    padding: 10px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-button:hover {
+    background-color: #0056b3;
+}
+
+/* Cancel button */
+.cancel-button {
+    flex: 1;
+    padding: 10px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #dc3545;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-button:hover {
+    background-color: #c82333;
+}
+
+/* Add spacing between buttons */
+.confirm-email-buttons button {
+    margin: 0;
+}

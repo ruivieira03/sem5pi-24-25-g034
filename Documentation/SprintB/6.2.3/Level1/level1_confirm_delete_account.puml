@@ -1,0 +1,20 @@
+
+@startuml
+actor User
+participant Frontend
+
+User -> Frontend: Navigate to Confirm Delete Page with Email and Token
+Frontend -> Frontend: Validate Email and Token
+alt Missing Email or Token
+    Frontend -> User: Show error and redirect to Home
+else Valid Email and Token
+    User -> Frontend: Confirm Account Deletion
+    Frontend -> Backend: GET /delete-account?email&token
+    Backend -> Frontend: Response (Success or Error)
+    alt Success
+        Frontend -> User: Show success message and redirect to Home
+    else Error
+        Frontend -> User: Show error message and redirect to Home
+    end
+end
+@enduml

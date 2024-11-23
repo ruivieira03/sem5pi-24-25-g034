@@ -1,0 +1,26 @@
+
+@startuml
+actor User
+participant PatientUpdate
+participant State_Management
+participant Axios
+participant Browser
+
+User -> PatientUpdate: View Profile Form
+PatientUpdate -> State_Management: Populate formData (useEffect)
+User -> PatientUpdate: Edit Profile Fields
+PatientUpdate -> State_Management: Update formData state (onChange)
+User -> PatientUpdate: Submit Update
+PatientUpdate -> Axios: PUT /update-profile
+Axios -> Backend: Send request
+Backend -> Axios: Response (Success or Error)
+alt Success
+    Axios -> State_Management: Update profileData
+    PatientUpdate -> Browser: Show success message
+else Error
+    Axios -> State_Management: Update error state
+    PatientUpdate -> Browser: Show error message
+end
+User -> PatientUpdate: Cancel Update
+PatientUpdate -> Browser: Redirect to Patient Page
+@enduml

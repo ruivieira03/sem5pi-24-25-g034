@@ -1,0 +1,49 @@
+/* Common Menu Styles */
+.common-menu {
+    background-color: #ffffff; /* White background for contrast */
+    padding: 15px 20px; /* Padding around the menu */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    max-width: 800px; /* Increase max-width for better layout */
+    margin: 20px auto; /* Center the menu */
+    position: relative; /* Position relative for stacking context */
+    z-index: 1000; /* Ensure it stays above other content */
+}
+
+/* Menu List */
+.common-menu ul {
+    list-style: none; /* Remove default list styling */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
+    display: flex; /* Use flexbox for horizontal layout */
+    justify-content: center; /* Center menu items */
+}
+
+/* Menu Item Style */
+.common-menu li {
+    margin: 0 15px; /* Space between menu items */
+}
+
+/* Menu Link Style */
+.common-menu a {
+    display: block; /* Make links block elements */
+    padding: 10px 15px; /* Padding for links */
+    text-decoration: none; /* Remove underline */
+    color: #007bff; /* Link color */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+/* Link Hover Effect */
+.common-menu a:hover {
+    background-color: #007bff; /* Change background on hover */
+    color: white; /* Change text color on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .common-menu {
+        max-width: 100%; /* Full width on small screens */
+        padding: 10px; /* Reduce padding */
+    }
+}

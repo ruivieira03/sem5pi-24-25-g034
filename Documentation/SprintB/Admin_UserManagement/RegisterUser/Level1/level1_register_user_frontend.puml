@@ -1,0 +1,16 @@
+
+@startuml
+actor Admin
+participant Frontend
+
+Admin -> Frontend: Fill registration form
+Admin -> Frontend: Submit form
+Frontend -> Backend: POST /SystemUser
+Backend -> Frontend: Response (Success or Error)
+alt Success
+    Frontend -> Admin: Show success message
+    Frontend -> Frontend: Reset form fields
+else Error
+    Frontend -> Admin: Show error message
+end
+@enduml

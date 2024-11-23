@@ -1,0 +1,21 @@
+
+@startuml
+actor Admin
+participant DeleteUser
+participant State_Management
+participant Axios
+participant Parent_Component
+
+Admin -> DeleteUser: Click "Delete User"
+DeleteUser -> State_Management: Update loading state (true)
+DeleteUser -> Axios: DELETE /SystemUser/{user.id}/hard
+Axios -> Backend: Send request
+Backend -> Axios: Response (Success or Error)
+alt Success
+    Axios -> State_Management: Reset loading state
+    DeleteUser -> Parent_Component: Notify success and remove user from UI
+else Error
+    Axios -> State_Management: Reset loading and update error state
+    DeleteUser -> Admin: Show error message
+end
+@enduml

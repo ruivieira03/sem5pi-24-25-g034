@@ -1,0 +1,14 @@
+
+@startuml
+actor Admin
+participant System
+
+Admin -> System: POST /api/SystemUser
+System -> System: Validate Model
+alt Invalid Model
+    System -> Admin: 400 Bad Request
+else Valid Model
+    System -> System: Call Service Layer
+    System -> Admin: 201 Created with user details
+end
+@enduml

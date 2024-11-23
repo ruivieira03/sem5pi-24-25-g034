@@ -1,0 +1,26 @@
+
+@startuml
+actor User
+participant ConfirmDeleteAccount
+participant State_Management
+participant Axios
+participant Browser
+
+User -> ConfirmDeleteAccount: Navigate to Page with Query Params
+ConfirmDeleteAccount -> State_Management: Parse and Update Email and Token States
+alt Missing Email or Token
+    ConfirmDeleteAccount -> Browser: Show error and redirect to Home
+else Valid Email and Token
+    User -> ConfirmDeleteAccount: Confirm Account Deletion
+    ConfirmDeleteAccount -> Axios: GET /delete-account?email&token
+    Axios -> Backend: Send request
+    Backend -> Axios: Response (Success or Error)
+    alt Success
+        Axios -> State_Management: Update success state
+        ConfirmDeleteAccount -> Browser: Show success message and redirect to Home
+    else Error
+        Axios -> State_Management: Update error state
+        ConfirmDeleteAccount -> Browser: Show error message and redirect to Home
+    end
+end
+@enduml

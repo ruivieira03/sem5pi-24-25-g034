@@ -1,0 +1,25 @@
+
+@startuml
+actor Admin
+participant UpdateUser
+participant Axios
+participant useNavigate
+
+Admin -> UpdateUser: View user details in form
+UpdateUser -> UpdateUser: Populate form fields with user data
+Admin -> UpdateUser: Edit form fields
+UpdateUser -> UpdateUser: Update state (onChange)
+Admin -> UpdateUser: Click Update
+UpdateUser -> Axios: PUT /SystemUser/{user.id}
+Axios -> Backend: Send request with updated data
+Backend -> Axios: Response (Success or Error)
+alt Success
+    Axios -> UpdateUser: Response status 200
+    UpdateUser -> Parent_Component: Notify successful update
+else Error
+    Axios -> UpdateUser: Update error state
+    UpdateUser -> Admin: Show error message
+end
+Admin -> UpdateUser: Click Cancel
+UpdateUser -> useNavigate: Redirect to /admin
+@enduml
