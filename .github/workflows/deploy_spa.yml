@@ -1,0 +1,44 @@
+name: Deploy React SPA
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'SPA/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install Dependencies and Build
+      run: |
+        cd SPA
+        npm install
+        npm run build
+
+    - name: Deploy to Server via SCP
+      uses: appleboy/scp-action@v0.1.2
+      with:
+        host: vs606.dei.isep.ipp.pt
+        username: root
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: 'SPA/build/*'
+        target: '/var/www/html/spa/'
+
+    - name: Reload Apache
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: vs606.dei.isep.ipp.pt
+        username: root
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: sudo systemctl reload apache2

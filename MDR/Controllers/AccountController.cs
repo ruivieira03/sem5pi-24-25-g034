@@ -92,6 +92,7 @@ public class AccountController : ControllerBase // Change to ControllerBase as i
         });
     }
 
+    // Profile endpoint to return user details
     [Authorize]
     [HttpGet("profile")]
     public IActionResult Profile()
