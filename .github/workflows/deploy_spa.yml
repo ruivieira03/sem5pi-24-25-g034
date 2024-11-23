@@ -25,6 +25,10 @@ jobs:
         CI=false npm run build
 
     - name: Debug Environment
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: |
         echo "SSH_HOST: $SSH_HOST"
         echo "SSH_USERNAME: $SSH_USERNAME"
