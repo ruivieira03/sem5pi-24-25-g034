@@ -116,8 +116,8 @@ public class OperationRequestController : ControllerBase
     */
 
     // PUT: api/OperationRequest/5
-    //[HttpPut("{id}")]
-    [Authorize(Roles = "Admin, Doctor")]
+    //[Authorize(Roles = "Admin, Doctor")]
+    [HttpPut("{id}")]
     public async Task<ActionResult<OperationRequestDto>> Update([FromRoute] Guid id, [FromBody] OperationRequestDto dto)
     {
         Console.WriteLine("\n\nATE AQUI TUDO BEM\n\n");
