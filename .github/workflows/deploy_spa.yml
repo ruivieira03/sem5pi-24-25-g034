@@ -33,14 +33,6 @@ jobs:
         echo "SSH_HOST: $SSH_HOST"
         echo "SSH_USERNAME: $SSH_USERNAME"
         echo "SSH_PRIVATE_KEY length: ${#SSH_PRIVATE_KEY}"
-
-    - name: Test SSH Connection
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-      run: |
-        ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "echo Connection Successful"
         
     - name: Test DNS Resolution
       run: nslookup ${{ secrets.SSH_HOST }}
