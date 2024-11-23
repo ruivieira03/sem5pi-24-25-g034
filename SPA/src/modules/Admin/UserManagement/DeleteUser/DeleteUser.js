@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './DeleteUser.css'; // Import CSS file for styling
 
+
 function DeleteUser({ user, authToken, onDeleteSuccess }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
