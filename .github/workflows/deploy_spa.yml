@@ -27,7 +27,7 @@ jobs:
     - name: Deploy to Server with Public SSH
       uses: appleboy/ssh-action@v0.1.7
       with:
-        host: vsgate-ssh.dei.isep.ipp.pt
+        host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         port: 10606
         key: ${{ secrets.SSH_PRIVATE_KEY }}
