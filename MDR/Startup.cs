@@ -50,7 +50,7 @@ namespace Hospital
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowReactApp", builder =>
-                    builder.WithOrigins("http://vs606.dei.isep.ipp.pt")
+                    builder.WithOrigins("http://localhost:3000")
                            .AllowAnyHeader()
                            .AllowAnyMethod()
                            .AllowCredentials());
