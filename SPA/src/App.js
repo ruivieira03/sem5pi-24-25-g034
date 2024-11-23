@@ -22,6 +22,7 @@ import ConfirmDeleteAccount from './modules/Patient/AccountManagement/DeleteAcco
 import PatientProfile from './modules/Patient/AccountManagement/PatientProfile/PatientProfile'; // Patient Profile
 import ConfirmEmail from './modules/SystemUser/ConfirmEmail/ConfirmEmail'; // Confirm Email
 import UserDetails from './modules/Admin/UserManagement/UserDetails/UserDetails';
+import OperationRequestList from './modules/OperationRequest/OperationRequestList/OperationRequestList';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path="user-details/:id" element={<UserDetails />} />
           <Route path="update-user/:id" element={<UpdateUser />} />
         <Route path="register-user" element={<RegisterUser />} />
+        <Route path="operation-requests" element={<OperationRequestList />} />
 
         {/*Patient Routes*/}
         <Route path="/patient/*" element={<PrivateRoute role="Patient" element={<PatientMenu />} />} />
