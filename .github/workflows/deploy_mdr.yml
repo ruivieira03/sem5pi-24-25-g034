@@ -22,7 +22,8 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd /var/www/project/MDR
-          git pull
+          git reset --hard
+          git pull         
           dotnet build
           pm2 stop backend || true
           pm2 delete backend || true
