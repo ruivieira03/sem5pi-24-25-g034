@@ -1,0 +1,25 @@
+name: Deploy C# Backend
+
+on:
+  push:
+    paths:
+      - 'MDR/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Deploy and Restart Backend
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      run: |
+        ssh root@vs606.dei.isep.ipp.pt "
+          cd /var/www/project/MDR &&
+          git pull &&
+          dotnet build &&
+          pm2 restart backend || pm2 start 'dotnet run --urls=https://0.0.0.0:5001' --name backend
+        "
