@@ -24,4 +24,7 @@ jobs:
           cd /var/www/project/MDR
           git pull
           dotnet build
-          pm2 restart backend || pm2 start 'dotnet run --urls=http://0.0.0.0:5001' --name backend
+          pm2 stop backend || true
+          pm2 delete backend || true
+          pm2 start "dotnet run --project /var/www/project/MDR/sem5pi-24-25-g034.csproj" --name backend
+          pm2 save
