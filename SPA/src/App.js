@@ -6,7 +6,7 @@ import About from './components/About/About'; // Import About Page
 import Login from './modules/Auth/Login/Login'; // Import Login
 import Logout from './modules/Auth/Logout/Logout'; // Import Logout
 import AdminMenu from './components/AdminMenu/AdminMenu'; // Admin Menu
-import DoctorMenu from './components/DoctorMenu'; // Doctor Menu
+import DoctorMenu from './components/DoctorMenu/DoctorMenu'; // Doctor Menu
 import PatientMenu from './components/PatientMenu/PatientMenu'; // Patient Menu
 import Profile from './modules/Auth/Profile/Profile'; // Import Profile
 import PrivateRoute from './components/PrivateRoute'; // Protected Routes
