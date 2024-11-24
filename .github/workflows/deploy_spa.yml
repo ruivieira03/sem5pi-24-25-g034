@@ -20,11 +20,15 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Install Dependencies and Build Locally
+    - name: Install Dependencies
       run: |
         cd SPA
         npm install
-        CI=false npm run build
+
+    - name: Build with Increased Memory
+      run: |
+        cd SPA
+        node --max-old-space-size=4096 node_modules/react-scripts/scripts/build.js
 
     - name: Deploy Build to Server
       uses: appleboy/ssh-action@v0.1.7
@@ -33,3 +37,9 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 10606
+        script: |
+          sudo rm -rf /var/www/html/spa/*
+          sudo mkdir -p /var/www/html/spa
+          sudo cp -r /var/www/project/SPA/build/* /var/www/html/spa/
+          sudo systemctl restart apache2
+        timeout: 1800
