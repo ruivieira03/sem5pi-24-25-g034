@@ -13,6 +13,7 @@ using Hospital.Infrastructure.operationrequestmanagement;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+
 namespace Hospital
 {
     public class Startup
