@@ -4,7 +4,7 @@ import { API_BASE_URL } from '../../../../config';
 import './UserDetails.css'; // Import CSS file for styling
 
 function UserDetails() {
-    const [userId, setUserId] = useState(''); // State for user ID input
+    const [userUsername, setUserId] = useState(''); // State for user ID input
     const [userData, setUserData] = useState(null); // State for fetched user data
     const [error, setError] = useState(''); // State for error messages
 
@@ -12,13 +12,13 @@ function UserDetails() {
         setError(''); // Clear any previous error
         setUserData(null); // Clear previous user data
 
-        if (!userId) {
-            setError('Please provide a valid user ID.');
+        if (!userUsername) {
+            setError('Please provide a valid username.');
             return;
         }
 
         try {
-            const response = await axios.get(`${API_BASE_URL}/api/SystemUser/${userId}`, {
+            const response = await axios.get(`${API_BASE_URL}/api/SystemUser/username/${userUsername}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`, // Add token for authentication
                 },
@@ -38,13 +38,13 @@ function UserDetails() {
             <h2>Get User Details</h2>
 
             <div className="input-section">
-                <label htmlFor="userId">User ID:</label>
+                <label htmlFor="userUsername">Username:</label>
                 <input
                     type="text"
-                    id="userId"
-                    value={userId}
+                    id="userUsername"
+                    value={userUsername}
                     onChange={(e) => setUserId(e.target.value)}
-                    placeholder="Enter User ID"
+                    placeholder="Enter Username"
                 />
                 <button onClick={fetchUser}>Fetch User</button>
             </div>
@@ -54,7 +54,6 @@ function UserDetails() {
             {userData && (
                 <div className="user-details">
                     <h3>User Details</h3>
-                    <p><strong>ID:</strong> {userData.id}</p>
                     <p><strong>Username:</strong> {userData.username}</p>
                     <p><strong>Email:</strong> {userData.email}</p>
                     <p><strong>Role:</strong> {userData.role}</p>

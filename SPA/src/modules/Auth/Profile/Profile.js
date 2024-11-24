@@ -45,7 +45,6 @@ function Profile() {
                     <p className="profile-info">Username: {profile.username}</p>
                     <p className="profile-info">Email: {profile.email}</p>
                     <p className="profile-info">Role: {profile.role}</p>
-                    <p className="profile-info">User Id: {profile.userId}</p>
                 </div>
             ) : (
                 <p className="loading-message">Loading...</p>

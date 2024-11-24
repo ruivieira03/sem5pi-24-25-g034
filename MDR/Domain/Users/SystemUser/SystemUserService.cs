@@ -274,6 +274,32 @@ namespace Hospital.Domain.Users.SystemUser
             };
         }
 
+        // Fetch user by Id
+        public async Task<SystemUserDto> GetByUsernameAsync(string username)
+        {
+            var user = await this._systemUserRepository.GetUserByUsernameAsync(username);
+
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
+
+            return new SystemUserDto
+            {
+                Id = user.Id.AsGuid(),
+                Username = user.Username,
+                Role = user.Role,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                IAMId = user.IAMId,
+                isVerified = user.isVerified,
+                VerifyToken = user.VerifyToken,
+                ResetToken = user.ResetToken,
+                TokenExpiry = user.TokenExpiry,
+                DeleteToken = user.DeleteToken
+            };
+        }
+
         // Update user
         public async Task<SystemUserDto> UpdateAsync(Guid id, UpdateSystemUserViewModel model)
         {

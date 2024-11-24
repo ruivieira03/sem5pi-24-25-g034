@@ -29,7 +29,7 @@ function AdminMenu() {
                         <Link className="admin-menu-link" to="user-list">User List</Link>
                     </li>
                     <li>
-                        <Link className="admin-menu-link" to="user-details/:id">User Information</Link>
+                        <Link className="admin-menu-link" to="user-details/:username">User Information</Link>
                     </li>
                     <li>
                         <Link className="admin-menu-link" to="profile">Profile</Link>
