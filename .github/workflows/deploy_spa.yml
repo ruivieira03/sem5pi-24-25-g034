@@ -18,20 +18,16 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Install Dependencies
+    - name: Install Dependencies and Build Locally
       run: |
         cd SPA
         npm install
+        CI=false npm run build
 
-    - name: Deploy Build to Server and Restart Apache
+    - name: Deploy Build to Server
       uses: appleboy/ssh-action@v0.1.7
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 10606
-        script: |
-          cd /var/www/project/SPA
-          CI=false npm run build
-          sudo cp -r /var/www/project/SPA/build/* /var/www/html/spa/
-          sudo systemctl restart apache2
