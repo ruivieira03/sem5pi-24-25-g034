@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../config'; // Import API_BASE_URL
 import './ConfirmEmail.css';
 
 function ConfirmEmail() {
@@ -30,7 +31,7 @@ function ConfirmEmail() {
     const handleConfirmEmail = async () => {
         try {
             const response = await axios.get(
-                `https://localhost:5001/api/account/confirm-email?email=${email}&token=${token}`
+                `${API_BASE_URL}/api/account/confirm-email?email=${email}&token=${token}` // Use API_BASE_URL here
             );
             setMessage(response.data.message || 'Email confirmed successfully.');
             setTimeout(() => {

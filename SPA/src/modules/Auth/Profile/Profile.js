@@ -1,7 +1,6 @@
-// src/modules/Auth/Profile.js
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../config'; // Import API_BASE_URL
 import './Profile.css'; // Import the CSS file
 
 function Profile() {
@@ -11,7 +10,7 @@ function Profile() {
     useEffect(() => {
         const fetchProfile = async () => {
             const token = localStorage.getItem('authToken');
-            console.log('Token:', token);  // Debugging log
+            console.log('Token:', token); // Debugging log
 
             if (!token) {
                 setError('No token found. Please log in.');
@@ -19,16 +18,19 @@ function Profile() {
             }
 
             try {
-                const response = await axios.get('https://localhost:5001/api/account/profile', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                console.log('Profile Response:', response.data);  // Check the data returned by the API
+                const response = await axios.get(
+                    `${API_BASE_URL}/api/account/profile`, // Use API_BASE_URL here
+                    {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }
+                );
+                console.log('Profile Response:', response.data); // Check the data returned by the API
                 setProfile(response.data);
             } catch (error) {
                 console.error('Error fetching profile:', error);
                 const errorMessage = error.response?.data || error.message || 'An unknown error occurred.';
                 setError('Error fetching profile: ' + errorMessage);
-            }            
+            }
         };
 
         fetchProfile();

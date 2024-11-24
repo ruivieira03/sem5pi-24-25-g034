@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../config';
 import './RequestPasswordReset.css';
 
 function RequestPasswordReset() {
@@ -15,7 +16,10 @@ function RequestPasswordReset() {
         }
 
         try {
-            const response = await axios.post('https://localhost:5001/api/account/request-password-reset', { email });
+            const response = await axios.post(
+                `${API_BASE_URL}/api/account/request-password-reset`, // Use API_BASE_URL here
+                { email }
+            );
             setMessage(response.data.message || 'Password reset link sent!');
             setError(null);
         } catch (error) {

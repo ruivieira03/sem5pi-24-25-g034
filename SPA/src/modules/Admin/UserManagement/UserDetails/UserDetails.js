@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../../config';
 import './UserDetails.css'; // Import CSS file for styling
 
 function UserDetails() {
@@ -17,7 +18,7 @@ function UserDetails() {
         }
 
         try {
-            const response = await axios.get(`https://localhost:5001/api/SystemUser/${userId}`, {
+            const response = await axios.get(`${API_BASE_URL}/api/SystemUser/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`, // Add token for authentication
                 },

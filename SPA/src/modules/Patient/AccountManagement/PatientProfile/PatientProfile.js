@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PatientInfo from './PatientInfo';
 import PatientUpdate from './UpdateProfile/PatientUpdate';
+import { API_BASE_URL } from '../../../../config'; // Import API_BASE_URL
 import './PatientProfile.css';
 
 const PatientProfile = () => {
@@ -25,9 +26,12 @@ const PatientProfile = () => {
     useEffect(() => {
         const fetchProfileData = async () => {
             try {
-                const response = await axios.get('https://localhost:5001/api/account/patient-profile', {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                const response = await axios.get(
+                    `${API_BASE_URL}/api/account/patient-profile`, // Use API_BASE_URL here
+                    {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }
+                );
                 setProfileData(response.data);
             } catch (err) {
                 setError('Failed to fetch profile data.');

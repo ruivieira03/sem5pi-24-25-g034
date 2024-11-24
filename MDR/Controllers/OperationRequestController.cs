@@ -17,7 +17,7 @@ public class OperationRequestController : ControllerBase
     }
 
     // POST api/OperationRequest/create
-    [Authorize(Roles = "Admin, Doctor")]
+    //[Authorize(Roles = "Admin, Doctor")]
     [HttpPost("create")]
     public async Task<IActionResult> CreateOperationRequest([FromBody] OperationRequestViewModel model)
     {
@@ -61,7 +61,7 @@ public class OperationRequestController : ControllerBase
     }
 
     // GET: api/OperationRequest
-    [Authorize(Roles = "Admin, Doctor")]
+    //[Authorize(Roles = "Admin, Doctor")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<OperationRequestDto>>> GetAll()
     {
@@ -78,7 +78,7 @@ public class OperationRequestController : ControllerBase
     }
 
     // GET: api/OperationRequest/patient/{patientId}
-    [Authorize(Roles = "Admin, Doctor")]
+    //[Authorize(Roles = "Admin, Doctor")]
     [HttpGet("patient/{patientId}")]
     public async Task<ActionResult<OperationRequestDto>> GetByPatient(Guid patientId)
     {
@@ -87,7 +87,7 @@ public class OperationRequestController : ControllerBase
     }
 
     // GET: api/OperationRequest/type/{operationTypeId}
-    [Authorize(Roles = "Admin, Doctor")]
+    //[Authorize(Roles = "Admin, Doctor")]
     [HttpGet("type/{operationTypeId}")]
     public async Task<ActionResult<OperationRequestDto>> GetByType(string operationTypeId)
     {
@@ -96,7 +96,7 @@ public class OperationRequestController : ControllerBase
     }
 
     // GET: api/OperationRequest/priority/{priority}
-    [Authorize(Roles = "Admin, Doctor")]
+    //[Authorize(Roles = "Admin, Doctor")]
     [HttpGet("priority/{priority}")]
     public async Task<ActionResult<OperationRequestDto>> GetByPriority(int priority)
     {
@@ -116,8 +116,8 @@ public class OperationRequestController : ControllerBase
     */
 
     // PUT: api/OperationRequest/5
+    //[Authorize(Roles = "Admin, Doctor")]
     [HttpPut("{id}")]
-    [Authorize(Roles = "Admin, Doctor")]
     public async Task<ActionResult<OperationRequestDto>> Update([FromRoute] Guid id, [FromBody] OperationRequestDto dto)
     {
         Console.WriteLine("\n\nATE AQUI TUDO BEM\n\n");
@@ -146,7 +146,7 @@ public class OperationRequestController : ControllerBase
     }
 
     // DELETE: api/OperationRequest/5
-    [Authorize(Roles = "Admin, Doctor")]
+    //[Authorize(Roles = "Admin, Doctor")]
     [HttpDelete("{id}")]
     public async Task<ActionResult<OperationRequestDto>> Delete(Guid id)
     {
