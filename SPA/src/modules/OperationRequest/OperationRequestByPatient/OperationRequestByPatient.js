@@ -24,11 +24,15 @@ function OperationRequestByPatient() {
                 },
             });
             setRequestData(response.data); // Set the fetched request data
+            // if empty, set 404 error
+            if (response.data.length === 0) {
+                setError('Operation request not found.');
+            }
         } catch (err) {
             if (err.response && err.response.status === 404) {
                 setError('Operation request not found.');
             } else {
-                setError('An error occurred while fetching operation request details.');
+                setError('Operation request not found.');
             }
         }
     };

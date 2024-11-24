@@ -28,7 +28,7 @@ function OperationRequestById() {
             if (err.response && err.response.status === 404) {
                 setError('Operation request not found.');
             } else {
-                setError('An error occurred while fetching operation request details.');
+                setError('Operation request not found.');
             }
         }
     };

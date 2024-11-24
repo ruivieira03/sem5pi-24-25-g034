@@ -7,6 +7,7 @@ import OperationRequestCreate from '../../modules/OperationRequest/OperationRequ
 import OperationRequestById from '../../modules/OperationRequest/OperationRequestById/OperationRequestById';
 import OperationRequestByPatient from '../../modules/OperationRequest/OperationRequestByPatient/OperationRequestByPatient';
 import OperationRequestByType from '../../modules/OperationRequest/OperationRequestByType/OperationRequestByType';
+import OperationRequestByPriority from '../../modules/OperationRequest/OperationRequestByPriority/OperationRequestByPriority';
 import './DoctorMenu.css'; // Import new CSS file for styling
 
 function DoctorMenu() {
@@ -41,6 +42,9 @@ function DoctorMenu() {
                         <Link className="doctor-menu-link" to="/doctor/operation-request-by-type">Operation Request by Type</Link>
                     </li>
                     <li>
+                        <Link className="doctor-menu-link" to="/doctor/operation-request-by-priority">Operation Request by Priority</Link>
+                    </li>
+                    <li>
                         <Link className="doctor-menu-link" to="/doctor/operation-request-create">Create Operation Request</Link>
                     </li>
                 </ul>
@@ -58,6 +62,7 @@ function DoctorMenu() {
                     <Route path="operation-request-by-id" element={<OperationRequestById />} />
                     <Route path="operation-request-by-patient" element={<OperationRequestByPatient />} />
                     <Route path="operation-request-by-type" element={<OperationRequestByType />} />
+                    <Route path="operation-request-by-priority" element={<OperationRequestByPriority />} />
                     <Route path="operation-request-create" element={<OperationRequestCreate />} />
                     <Route
                         path="*"

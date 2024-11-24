@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../config'; // Import API_BASE_URL
-import './OperationRequestByType.css'; // Import CSS file for styling
+import './OperationRequestByPriority.css'; // Import CSS file for styling
 
-function OperationRequestByType() {
-    const [operationTypeId, setOperationTypeId] = useState(''); // State for operation type ID input
+function OperationRequestByPriority() {
+    const [priority, setPriority] = useState(''); // State for priority input
     const [requestData, setRequestData] = useState([]); // State for fetched operation request data
     const [error, setError] = useState(''); // State for error messages
 
@@ -12,13 +12,13 @@ function OperationRequestByType() {
         setError(''); // Clear any previous error
         setRequestData([]); // Clear previous request data
 
-        if (!operationTypeId) {
-            setError('Please provide a valid operation type ID.');
+        if (!priority || priority < 1) {
+            setError('Please provide a valid priority.');
             return;
         }
 
         try {
-            const response = await axios.get(`${API_BASE_URL}/api/OperationRequest/type/${operationTypeId}`, {
+            const response = await axios.get(`${API_BASE_URL}/api/OperationRequest/priority/${priority}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`, // Add token for authentication
                 },
@@ -39,16 +39,16 @@ function OperationRequestByType() {
 
     return (
         <div className="operation-request-container">
-            <h2>Get Operation Request Details by Type ID</h2>
+            <h2>Get Operation Request Details by Priority</h2>
 
             <div className="input-section">
-                <label htmlFor="operationTypeId">Operation Type ID:</label>
+                <label htmlFor="priority">Priority:</label>
                 <input
-                    type="text"
-                    id="operationTypeId"
-                    value={operationTypeId}
-                    onChange={(e) => setOperationTypeId(e.target.value)}
-                    placeholder="Enter Operation Type ID"
+                    type="number"
+                    id="priority"
+                    value={priority}
+                    onChange={(e) => setPriority(e.target.value)}
+                    placeholder="Enter Priority"
                 />
                 <button onClick={fetchRequest}>Fetch Request</button>
             </div>
@@ -74,4 +74,4 @@ function OperationRequestByType() {
     );
 }
 
-export default OperationRequestByType;
+export default OperationRequestByPriority;
