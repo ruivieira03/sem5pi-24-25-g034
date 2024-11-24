@@ -8,6 +8,7 @@ import UserDetails from '../../modules/Admin/UserManagement/UserDetails/UserDeta
 import OperationRequestList from '../../modules/OperationRequest/OperationRequestList/OperationRequestList';
 import OperationRequestCreate from '../../modules/OperationRequest/OperationRequestCreate/OperationRequestCreate';
 import OperationRequestById from '../../modules/OperationRequest/OperationRequestById/OperationRequestById';
+import OperationRequestByPatient from '../../modules/OperationRequest/OperationRequestByPatient/OperationRequestByPatient';
 import './AdminMenu.css'; // Import new CSS file for styling
 
 function AdminMenu() {
@@ -41,6 +42,9 @@ function AdminMenu() {
                         <Link className="admin-menu-link" to="/admin/operation-request-by-id">Operation Request by ID</Link>
                     </li>
                     <li>
+                        <Link className="admin-menu-link" to="/admin/operation-request-by-patient">Operation Request by Patient</Link>
+                    </li>
+                    <li>
                         <Link className="admin-menu-link" to="/admin/operation-request-create">Create Operation Request</Link>
                     </li>
                 </ul>
@@ -58,6 +62,7 @@ function AdminMenu() {
                     <Route path="profile" element={<Profile />} />
                     <Route path="operation-requests" element={<OperationRequestList />} />
                     <Route path="operation-request-by-id" element={<OperationRequestById />} />
+                    <Route path="operation-request-by-patient" element={<OperationRequestByPatient />} />
                     <Route path="operation-request-create" element={<OperationRequestCreate />} />
                     <Route
                         path="*"

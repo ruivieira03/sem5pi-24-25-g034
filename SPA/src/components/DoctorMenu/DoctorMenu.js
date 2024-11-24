@@ -5,6 +5,7 @@ import CommonMenu from '../CommonMenu/CommonMenu';
 import OperationRequestList from '../../modules/OperationRequest/OperationRequestList/OperationRequestList';
 import OperationRequestCreate from '../../modules/OperationRequest/OperationRequestCreate/OperationRequestCreate';
 import OperationRequestById from '../../modules/OperationRequest/OperationRequestById/OperationRequestById';
+import OperationRequestByPatient from '../../modules/OperationRequest/OperationRequestByPatient/OperationRequestByPatient';
 import './DoctorMenu.css'; // Import new CSS file for styling
 
 function DoctorMenu() {
@@ -30,7 +31,10 @@ function DoctorMenu() {
                         <Link className="doctor-menu-link" to="/doctor/operation-requests">All Operation Requests</Link>
                     </li>
                     <li>
-                        <Link className="doctor-menu-link" to="/doctor/operation-request-create">Create Operation Request</Link>
+                        <Link className="doctor-menu-link" to="/doctor/operation-request-by-id">Operation Request by ID</Link>
+                    </li>
+                    <li>
+                        <Link className="doctor-menu-link" to="/doctor/operation-request-by-patient">Operation Request by Patient</Link>
                     </li>
                     <li>
                         <Link className="doctor-menu-link" to="/doctor/operation-request-create">Create Operation Request</Link>
@@ -48,6 +52,7 @@ function DoctorMenu() {
                     {/* <Route path="appointments" element={<Appointments />} /> */}
                     <Route path="operation-requests" element={<OperationRequestList />} />
                     <Route path="operation-request-by-id" element={<OperationRequestById />} />
+                    <Route path="operation-request-by-patient" element={<OperationRequestByPatient />} />
                     <Route path="operation-request-create" element={<OperationRequestCreate />} />
                     <Route
                         path="*"

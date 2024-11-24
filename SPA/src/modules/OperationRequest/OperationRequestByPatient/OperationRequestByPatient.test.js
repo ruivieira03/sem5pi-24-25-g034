@@ -29,14 +29,24 @@ describe('OperationRequestByPatient Component', () => {
     });
 
     test('displays operation request details when a valid patient ID is provided', async () => {
-        const mockRequestData = {
-            id: '123',
-            patientID: 'patient123',
-            doctorID: 'doctor123',
-            operationTypeID: 'type123',
-            deadlineDate: '2023-12-31T00:00:00Z',
-            priority: 1,
-        };
+        const mockRequestData = [
+            {
+                id: '123',
+                patientID: 'patient123',
+                doctorID: 'doctor123',
+                operationTypeID: 'type123',
+                deadlineDate: '2023-12-31T00:00:00Z',
+                priority: 1,
+            },
+            {
+                id: '124',
+                patientID: 'patient123',
+                doctorID: 'doctor124',
+                operationTypeID: 'type124',
+                deadlineDate: '2023-11-30T00:00:00Z',
+                priority: 2,
+            },
+        ];
 
         axios.get.mockResolvedValueOnce({ data: mockRequestData });
 
@@ -50,18 +60,19 @@ describe('OperationRequestByPatient Component', () => {
 
         await waitFor(() => {
             expect(screen.getByText('Operation Request Details')).toBeInTheDocument();
-            expect(screen.getByText('ID:')).toBeInTheDocument();
+            expect(screen.getAllByText('ID:').length).toBe(2);
             expect(screen.getByText('123')).toBeInTheDocument();
-            expect(screen.getByText('Patient ID:')).toBeInTheDocument();
-            expect(screen.getByText('patient123')).toBeInTheDocument();
-            expect(screen.getByText('Doctor ID:')).toBeInTheDocument();
+            expect(screen.getByText('124')).toBeInTheDocument();
+            expect(screen.getAllByText('Patient ID:').length).toBe(2);
+            expect(screen.getAllByText('patient123').length).toBe(2);
             expect(screen.getByText('doctor123')).toBeInTheDocument();
-            expect(screen.getByText('Operation Type ID:')).toBeInTheDocument();
+            expect(screen.getByText('doctor124')).toBeInTheDocument();
             expect(screen.getByText('type123')).toBeInTheDocument();
-            expect(screen.getByText('Deadline Date:')).toBeInTheDocument();
+            expect(screen.getByText('type124')).toBeInTheDocument();
             expect(screen.getByText('12/31/2023')).toBeInTheDocument();
-            expect(screen.getByText('Priority:')).toBeInTheDocument();
+            expect(screen.getByText('11/30/2023')).toBeInTheDocument();
             expect(screen.getByText('1')).toBeInTheDocument();
+            expect(screen.getByText('2')).toBeInTheDocument();
         });
 
         expect(axios.get).toHaveBeenCalledWith(
