@@ -31,8 +31,3 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 10606
-        script: |
-          cd /var/www/project/SPA
-          npm run build
-          sudo cp -r build/* /var/www/html/spa/
-          sudo systemctl restart apache2
