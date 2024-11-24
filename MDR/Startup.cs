@@ -50,13 +50,12 @@ namespace Hospital
             // http://vs606.dei.isep.ipp.pt
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAnyOrigin", builder =>
-                    builder.AllowAnyOrigin() // Allow requests from any origin
-                    .AllowAnyHeader() // Allow any headers
-                    .AllowAnyMethod() // Allow any HTTP methods
-                );
+                options.AddPolicy("AllowReactApp", builder =>
+                    builder.WithOrigins("http://localhost:3000", "http://vs606.dei.isep.ipp.pt")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials());
             });
-
 
             // JWT Authentication
             ConfigureJwtAuthentication(services);
