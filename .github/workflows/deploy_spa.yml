@@ -24,11 +24,12 @@ jobs:
       run: |
         cd SPA
         npm install
+        npm install --save-dev @babel/plugin-proposal-private-property-in-object
 
-    - name: Build with Increased Memory
+    - name: Build with Memory Increase and No CI
       run: |
         cd SPA
-        node --max-old-space-size=4096 node_modules/react-scripts/scripts/build.js
+        CI=false node --max-old-space-size=4096 node_modules/react-scripts/scripts/build.js
 
     - name: Deploy Build to Server
       uses: appleboy/ssh-action@v0.1.7
