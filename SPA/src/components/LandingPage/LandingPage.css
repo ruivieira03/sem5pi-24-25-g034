@@ -51,6 +51,11 @@ button {
     color: white;
 }
 
+.btn-3d-module {
+    background-color: #2196f3; /* Blue */
+    color: white;
+}
+
 button:hover {
     transform: translateY(-3px);
     box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
