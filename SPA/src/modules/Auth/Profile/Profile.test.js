@@ -10,7 +10,6 @@ describe('Profile Component', () => {
         username: 'testuser',
         email: 'testuser@example.com',
         role: 'Admin',
-        userId: '12345',
     };
 
     let originalConsoleLog;
@@ -50,7 +49,6 @@ describe('Profile Component', () => {
         expect(screen.getByText('Username: testuser')).toBeInTheDocument();
         expect(screen.getByText('Email: testuser@example.com')).toBeInTheDocument();
         expect(screen.getByText('Role: Admin')).toBeInTheDocument();
-        expect(screen.getByText('User Id: 12345')).toBeInTheDocument();
     });
 
     test('displays error message if no token is found in localStorage', async () => {
