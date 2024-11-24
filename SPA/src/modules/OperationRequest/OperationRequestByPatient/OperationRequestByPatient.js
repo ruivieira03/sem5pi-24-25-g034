@@ -51,7 +51,7 @@ function OperationRequestByPatient() {
 
             {error && <div className="error-message">{error}</div>}
 
-            {requestData.length > 0 ? (
+            {requestData.length > 0 && (
                 <div className="operation-request-details">
                     <h3>Operation Request Details</h3>
                     {requestData.map((request) => (
@@ -65,8 +65,6 @@ function OperationRequestByPatient() {
                         </div>
                     ))}
                 </div>
-            ) : (
-                !error && <div className="no-requests-message">No operation requests found.</div>
             )}
         </div>
     );
