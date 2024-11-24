@@ -20,7 +20,7 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        cd /var/www/project/SPA
+        cd SPA
         npm install
 
     - name: Deploy Build to Server and Restart Apache
