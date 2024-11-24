@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import OperationRequestDelete from '../OperationRequestDelete/OperationRequestDelete';
 import OperationRequestUpdate from '../OperationRequestUpdate/OperationRequestUpdate';
+import { API_BASE_URL } from '../../../config'; // Import API_BASE_URL
 import './OperationRequestList.css';
 
 function OperationRequestList() {
@@ -15,7 +16,7 @@ function OperationRequestList() {
     useEffect(() => {
         const fetchOperationRequests = async () => {
             try {
-                const response = await axios.get('https://localhost:5001/api/OperationRequest/', {
+                const response = await axios.get(`${API_BASE_URL}/api/OperationRequest/`, {
                     headers: { Authorization: `Bearer ${authToken}` },
                 });
                 setOperationRequests(response.data);
@@ -62,6 +63,7 @@ function OperationRequestList() {
                     operationRequests.map((request) => (
                         <li key={request.id} className="operation-request-item">
                             <div className="operation-request-details">
+                                <p><strong>ID:</strong> {request.id}</p>
                                 <p><strong>Patient ID:</strong> {request.patientID}</p>
                                 <p><strong>Doctor ID:</strong> {request.doctorID}</p>
                                 <p><strong>Operation Type:</strong> {request.operationTypeID}</p>

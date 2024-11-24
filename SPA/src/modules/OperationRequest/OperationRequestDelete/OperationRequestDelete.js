@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../config'; // Import API_BASE_URL
 import './OperationRequestDelete.css'; // Import CSS file for styling
 
 function OperationRequestDelete({ operationRequest, authToken, onDeleteSuccess }) {
@@ -10,7 +11,7 @@ function OperationRequestDelete({ operationRequest, authToken, onDeleteSuccess }
         setLoading(true);
         try {
             const response = await axios.delete(
-                `https://localhost:5001/api/OperationRequest/${operationRequest.id}`,
+                `${API_BASE_URL}/api/OperationRequest/${operationRequest.id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${authToken}`,
