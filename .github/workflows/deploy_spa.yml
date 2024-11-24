@@ -24,12 +24,6 @@ jobs:
       run: |
         cd SPA
         npm install
-        npm install --save-dev @babel/plugin-proposal-private-property-in-object
-
-    - name: Build with Memory Increase and No CI
-      run: |
-        cd SPA
-        CI=false node --max-old-space-size=4096 node_modules/react-scripts/scripts/build.js
 
     - name: Deploy Build to Server
       uses: appleboy/ssh-action@v0.1.7
@@ -39,8 +33,8 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 10606
         timeout: 1800s
-        script: |
-          sudo rm -rf /var/www/html/spa/*
-          sudo mkdir -p /var/www/html/spa
+        script: |         
+          cd /var/www/project/SPA
+          CI=false node --max-old-space-size=4096 node_modules/react-scripts/scripts/build.js
           sudo cp -r /var/www/project/SPA/build/* /var/www/html/spa/
           sudo systemctl restart apache2
