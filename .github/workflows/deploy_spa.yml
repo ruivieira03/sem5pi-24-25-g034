@@ -38,9 +38,9 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 10606
+        timeout: 1800s
         script: |
           sudo rm -rf /var/www/html/spa/*
           sudo mkdir -p /var/www/html/spa
           sudo cp -r /var/www/project/SPA/build/* /var/www/html/spa/
           sudo systemctl restart apache2
-        timeout: 1800
