@@ -32,7 +32,7 @@ function OperationRequestByType() {
             if (err.response && err.response.status === 404) {
                 setError('Operation request not found.');
             } else {
-                setError('Operation request not found.');
+                setError('An error occurred while fetching operation request details.');
             }
         }
     };

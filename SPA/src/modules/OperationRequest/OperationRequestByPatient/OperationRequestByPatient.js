@@ -24,15 +24,11 @@ function OperationRequestByPatient() {
                 },
             });
             setRequestData(response.data); // Set the fetched request data
-            // if empty, set 404 error
-            if (response.data.length === 0) {
-                setError('Operation request not found.');
-            }
         } catch (err) {
             if (err.response && err.response.status === 404) {
                 setError('Operation request not found.');
             } else {
-                setError('Operation request not found.');
+                setError('An error occurred while fetching operation request details.');
             }
         }
     };
@@ -55,7 +51,7 @@ function OperationRequestByPatient() {
 
             {error && <div className="error-message">{error}</div>}
 
-            {requestData.length > 0 && (
+            {requestData.length > 0 ? (
                 <div className="operation-request-details">
                     <h3>Operation Request Details</h3>
                     {requestData.map((request) => (
@@ -69,6 +65,8 @@ function OperationRequestByPatient() {
                         </div>
                     ))}
                 </div>
+            ) : (
+                !error && <div className="no-requests-message">No operation requests found.</div>
             )}
         </div>
     );

@@ -63,7 +63,7 @@ describe('OperationRequestByPatient Component', () => {
             expect(screen.getAllByText('ID:').length).toBe(2);
             expect(screen.getByText('123')).toBeInTheDocument();
             expect(screen.getByText('124')).toBeInTheDocument();
-            expect(screen.getAllByText('Patient ID:').length).toBe(2);
+            expect(screen.getAllByText('Patient ID:').length).toBe(3);
             expect(screen.getAllByText('patient123').length).toBe(2);
             expect(screen.getByText('doctor123')).toBeInTheDocument();
             expect(screen.getByText('doctor124')).toBeInTheDocument();
