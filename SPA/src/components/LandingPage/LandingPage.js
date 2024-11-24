@@ -14,6 +14,9 @@ function LandingPage() {
                 <Link to="/register-patient">
                     <button className="btn-register">Register as Patient</button>
                 </Link>
+                <Link to="/3d-module">
+                    <button className="btn-3d-module">View 3D Module</button>
+                </Link>
             </div>
         </div>
     );
