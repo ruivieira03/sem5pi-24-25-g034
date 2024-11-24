@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../config'; // Import API_BASE_URL
 import './OperationRequestCreate.css';
 
 function OperationRequestCreate() {
@@ -28,7 +29,7 @@ function OperationRequestCreate() {
 
         try {
             const response = await axios.post(
-                'https://localhost:5001/api/OperationRequest/create',
+                `${API_BASE_URL}/api/OperationRequest/create`,
                 formData,
                 {
                     headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../../config'; // Import API_BASE_URL
 import './OperationRequestUpdate.css';
 
 const OperationRequestUpdate = ({ operationRequest, authToken, onUpdateSuccess }) => {
@@ -25,7 +26,7 @@ const OperationRequestUpdate = ({ operationRequest, authToken, onUpdateSuccess }
         try {
             setLoading(true);
             const response = await axios.put(
-                `https://localhost:5001/api/OperationRequest/${operationRequest.id}`,
+                `${API_BASE_URL}/api/OperationRequest/${operationRequest.id}`,
                 formData,
                 {
                     headers: { Authorization: `Bearer ${authToken}` },

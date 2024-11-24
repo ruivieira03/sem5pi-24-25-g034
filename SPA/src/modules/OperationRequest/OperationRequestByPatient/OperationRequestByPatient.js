@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../config'; // Import API_BASE_URL
 import './OperationRequestByPatient.css'; // Import CSS file for styling
 
 function OperationRequestByPatient() {
@@ -17,7 +18,7 @@ function OperationRequestByPatient() {
         }
 
         try {
-            const response = await axios.get(`https://localhost:5001/api/OperationRequest/patient/${patientId}`, {
+            const response = await axios.get(`${API_BASE_URL}/api/OperationRequest/patient/${patientId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`, // Add token for authentication
                 },
