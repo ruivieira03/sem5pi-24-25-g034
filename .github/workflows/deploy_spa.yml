@@ -2,6 +2,8 @@ name: Deploy React SPA
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'SPA/**'
 
@@ -18,11 +20,10 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Install Dependencies and Build Locally
+    - name: Install Dependencies
       run: |
         cd SPA
         npm install
-        CI=false npm run build
 
     - name: Deploy Build to Server
       uses: appleboy/ssh-action@v0.1.7
@@ -31,3 +32,9 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 10606
+        timeout: 1800s
+        script: |         
+          cd /var/www/project/SPA
+          CI=false node --max-old-space-size=4096 node_modules/react-scripts/scripts/build.js
+          sudo cp -r /var/www/project/SPA/build/* /var/www/html/spa/
+          sudo systemctl restart apache2

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import axios from 'axios';
 import UserDetails from './UserDetails';
 
@@ -15,22 +15,11 @@ describe('UserDetails Component', () => {
         render(<UserDetails />);
 
         expect(screen.getByText('Get User Details')).toBeInTheDocument();
-        expect(screen.getByLabelText('User ID:')).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Fetch User' })).toBeInTheDocument();
     });
 
-    test('displays an error message when no user ID is entered', () => {
-        render(<UserDetails />);
-
-        const fetchButton = screen.getByText('Fetch User');
-        fireEvent.click(fetchButton);
-
-        expect(screen.getByText('Please provide a valid user ID.')).toBeInTheDocument();
-    });
-
-    test('displays user details when a valid user ID is provided', async () => {
+    test('displays user details when a valid username is provided', async () => {
         const mockUserData = {
-            id: '123',
             username: 'testuser',
             email: 'testuser@example.com',
             role: 'Admin',
@@ -41,47 +30,51 @@ describe('UserDetails Component', () => {
     
         render(<UserDetails />);
     
-        const userIdInput = screen.getByLabelText('User ID:');
-        fireEvent.change(userIdInput, { target: { value: '123' } });
+        // Target the input field using the placeholder
+        const usernameInput = screen.getByPlaceholderText('Enter Username');
+        fireEvent.change(usernameInput, { target: { value: 'testuser' } });
     
-        const fetchButton = screen.getByText('Fetch User');
+        const fetchButton = screen.getByRole('button', { name: 'Fetch User' });
         fireEvent.click(fetchButton);
     
         await waitFor(() => {
-            // Ensure the user details section is rendered
-            expect(screen.getByText('User Details')).toBeInTheDocument();
+            // Check that user details are displayed
+            const userDetailsSection = screen.getByText('User Details').closest('div');
     
-            // Match partial text for each detail
-            expect(screen.getByText('ID:')).toBeInTheDocument();
-            expect(screen.getByText('123')).toBeInTheDocument();
+            const { getByText } = within(userDetailsSection);
     
-            expect(screen.getByText('Username:')).toBeInTheDocument();
-            expect(screen.getByText('testuser')).toBeInTheDocument();
+            expect(getByText('Username:')).toBeInTheDocument();
+            expect(getByText(mockUserData.username)).toBeInTheDocument();
     
-            expect(screen.getByText('Email:')).toBeInTheDocument();
-            expect(screen.getByText('testuser@example.com')).toBeInTheDocument();
+            expect(getByText('Email:')).toBeInTheDocument();
+            expect(getByText(mockUserData.email)).toBeInTheDocument();
     
-            expect(screen.getByText('Role:')).toBeInTheDocument();
-            expect(screen.getByText('Admin')).toBeInTheDocument();
+            expect(getByText('Role:')).toBeInTheDocument();
+            expect(getByText(mockUserData.role)).toBeInTheDocument();
     
-            expect(screen.getByText('Phone Number:')).toBeInTheDocument();
-            expect(screen.getByText('1234567890')).toBeInTheDocument();
+            expect(getByText('Phone Number:')).toBeInTheDocument();
+            expect(getByText(mockUserData.phoneNumber)).toBeInTheDocument();
         });
     
         expect(axios.get).toHaveBeenCalledWith(
-            'https://localhost:5001/api/SystemUser/123',
+            'https://localhost:5001/api/SystemUser/username/testuser',
+            { headers: { Authorization: 'Bearer mockAuthToken' } }
+        );
+    
+    
+        expect(axios.get).toHaveBeenCalledWith(
+            'https://localhost:5001/api/SystemUser/username/testuser',
             { headers: { Authorization: 'Bearer mockAuthToken' } }
         );
     });
-    
 
     test('displays an error message when the user is not found', async () => {
         axios.get.mockRejectedValueOnce({ response: { status: 404 } });
 
         render(<UserDetails />);
 
-        const userIdInput = screen.getByLabelText('User ID:');
-        fireEvent.change(userIdInput, { target: { value: 'invalid-id' } });
+        const usernameInput = screen.getByLabelText('Username:');
+        fireEvent.change(usernameInput, { target: { value: 'invalid-username' } });
 
         const fetchButton = screen.getByText('Fetch User');
         fireEvent.click(fetchButton);
@@ -96,8 +89,8 @@ describe('UserDetails Component', () => {
 
         render(<UserDetails />);
 
-        const userIdInput = screen.getByLabelText('User ID:');
-        fireEvent.change(userIdInput, { target: { value: '123' } });
+        const usernameInput = screen.getByLabelText('Username:');
+        fireEvent.change(usernameInput, { target: { value: 'testuser' } });
 
         const fetchButton = screen.getByText('Fetch User');
         fireEvent.click(fetchButton);
@@ -108,4 +101,5 @@ describe('UserDetails Component', () => {
             ).toBeInTheDocument();
         });
     });
+
 });
