@@ -2,8 +2,7 @@ using Hospital.Domain.Users.SystemUser;
 
 namespace Hospital.Domain.Patients
 {
-    public class PatientDto
-    {
+    public class PatientDto{
         public Guid Id { get; set; }                                 // Unique identifier for the patient
         public string FirstName { get; set; }                        // First name of the patient
         public string LastName { get; set; }                         // Last name of the patient
