@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< Updated upstream:obj/sem5pi-24-25-g034.csproj.nuget.dgspec.json
     "/Users/admin/Desktop/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj": {}
   },
   "projects": {
@@ -12,6 +13,19 @@
         "projectPath": "/Users/admin/Desktop/sem5pi-24-25-g034/sem5pi-24-25-g034.csproj",
         "packagesPath": "/Users/admin/.nuget/packages/",
         "outputPath": "/Users/admin/Desktop/sem5pi-24-25-g034/obj/",
+=======
+    "/Users/admin/Desktop/sem5pi-24-25-g034/MDR/sem5pi-24-25-g034.csproj": {}
+  },
+  "projects": {
+    "/Users/admin/Desktop/sem5pi-24-25-g034/MDR/sem5pi-24-25-g034.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/admin/Desktop/sem5pi-24-25-g034/MDR/sem5pi-24-25-g034.csproj",
+        "projectName": "sem5pi-24-25-g034",
+        "projectPath": "/Users/admin/Desktop/sem5pi-24-25-g034/MDR/sem5pi-24-25-g034.csproj",
+        "packagesPath": "/Users/admin/.nuget/packages/",
+        "outputPath": "/Users/admin/Desktop/sem5pi-24-25-g034/MDR/obj/",
+>>>>>>> Stashed changes:MDR/obj/sem5pi-24-25-g034.csproj.nuget.dgspec.json
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/admin/.nuget/NuGet/NuGet.Config"
