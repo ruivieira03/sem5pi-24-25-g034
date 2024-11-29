@@ -48,10 +48,6 @@ namespace Hospital.Controllers{
 
         }
 
-  
-
-
-
         
 
         // PUT: api/Patient/5/update-profile Update the patient's profile details
@@ -63,7 +59,7 @@ namespace Hospital.Controllers{
                 return BadRequest(ModelState);
             }
 
-             if (id != new PatientId(model.PatientId).AsGuid()){
+             if (id != new PatientId(model.Id).AsGuid()){
                 return BadRequest();                                        // Return 400 if ID in the route doesn't match the current user's ID
             }
 
@@ -80,7 +76,7 @@ namespace Hospital.Controllers{
 
               
  // DELETE: api/Patient/5/Delete-Profilea 
-    [HttpDelete("{id}/Delete-Profile")]
+    [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<SystemUserDto>> DeletePatientProfile(Guid id){
 
@@ -97,6 +93,7 @@ namespace Hospital.Controllers{
         }catch (Exception ex){
             return BadRequest(new { Message = ex.Message }); // Return 400 if any business rule fails
         }
+         
     }
 
         

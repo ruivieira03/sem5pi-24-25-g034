@@ -20,24 +20,20 @@ namespace Hospital.Domain.Patients{
         }
 
 
-    public async Task<PatientDto> UpdateProfileAsUserAsync(UpdateProfileViewModel model, SystemUserId userId)
-    {
-        if (model == null)
-        {
+    public async Task<PatientDto> UpdateProfileAsUserAsync(UpdateProfileViewModel model, SystemUserId userId){
+        if (model == null){
             throw new ArgumentNullException(nameof(model), "Update model cannot be null.");
         }
 
          // Fetch the existing user
         var existingUser = await _systemUserRepository.GetByIdAsync(userId);
-        if (existingUser == null)
-        {
+        if (existingUser == null){
             throw new InvalidOperationException("User not found.");
         }
 
         // Fetch the existing patient by user email
         var existingPatient = await _patientRepository.GetPatientByEmailAsync(existingUser.Email);
-        if (existingPatient == null)
-        {
+        if (existingPatient == null){
             throw new InvalidOperationException("Patient not found.");
         }
 
@@ -45,8 +41,7 @@ namespace Hospital.Domain.Patients{
         Console.WriteLine($"Starting update for patient {existingPatient.Id}, user {existingUser.Id}");
 
         // Store original data for comparison
-        var originalPatientDto = new PatientDto
-        {
+        var originalPatientDto = new PatientDto{
             Id = existingPatient.Id.AsGuid(),
             FirstName = existingPatient.FirstName,
             LastName = existingPatient.LastName,
@@ -155,13 +150,15 @@ namespace Hospital.Domain.Patients{
             if (existingPatient == null){
                 throw new InvalidOperationException("Patient not found.");
             }
-            //update atributes
+            //editable atributes
 
             existingPatient.FirstName = model.FirstName;
             existingPatient.LastName = model.LastName;
             existingPatient.Email = model.Email;
             existingPatient.PhoneNumber = model.PhoneNumber;
             existingPatient.EmergencyContact = model.EmergencyContact;
+            existingPatient.AllergiesOrMedicalConditions = model.AllergiesOrMedicalConditions;
+            existingPatient.AppointmentHistory = model.AppointmentHistory;
 
             await _patientRepository.UpdatePatientAsync(existingPatient);   // Update Database
             await _unitOfWork.CommitAsync();                                // Commit transaction on it
@@ -192,9 +189,11 @@ namespace Hospital.Domain.Patients{
 
             await _patientRepository.Remove(existingPatient);
             await _unitOfWork.CommitAsync();
-
+             
 
             return new PatientDto{
+           
+           
                 Id = existingPatient.Id.AsGuid(),
                 FirstName = existingPatient.FirstName,
                 LastName = existingPatient.LastName,
@@ -206,6 +205,8 @@ namespace Hospital.Domain.Patients{
                 EmergencyContact = existingPatient.EmergencyContact,
                 AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
                 AppointmentHistory = existingPatient.AppointmentHistory,
+
+                
             };
         }
     
@@ -220,12 +221,15 @@ namespace Hospital.Domain.Patients{
             LastName = patient.LastName,
             DateOfBirth = patient.DateOfBirth,
             Gender = patient.Gender,
+            MedicalRecordNumber = patient.MedicalRecordNumber,
             Email = patient.Email,
             PhoneNumber = patient.PhoneNumber,
             EmergencyContact = patient.EmergencyContact,
             AllergiesOrMedicalConditions = patient.AllergiesOrMedicalConditions,            
-             AppointmentHistory = patient.AppointmentHistory
+            AppointmentHistory = patient.AppointmentHistory
             });
+
+            
             return patientDto;
     }
 
@@ -233,7 +237,7 @@ namespace Hospital.Domain.Patients{
             var patient = await this._patientRepository.GetByIdAsync(id);
             
             if (patient == null){
-                throw new Exception("User not found.");
+                throw new Exception("Patient not found.");
             }
 
 
@@ -244,6 +248,7 @@ namespace Hospital.Domain.Patients{
             LastName = patient.LastName,
             DateOfBirth = patient.DateOfBirth,
             Gender = patient.Gender,
+            MedicalRecordNumber = patient.MedicalRecordNumber,
             Email = patient.Email,
             PhoneNumber = patient.PhoneNumber,
             EmergencyContact = patient.EmergencyContact,
@@ -253,32 +258,7 @@ namespace Hospital.Domain.Patients{
        
         }
 
-    public async Task<PatientDto> GetPatientProfileAsync(PatientId userId)
-    {
-        // Fetch the patient by user ID
-        var patient = await _patientRepository.GetByIdAsync(userId);
-        if (patient == null)
-        {
-            throw new InvalidOperationException("Patient not found."); // Throw exception if patient not found
-        }
-
-        // Map the patient entity to a DTO (Data Transfer Object)
-        var patientDto = new PatientDto
-        {
-            Id = patient.Id.AsGuid(),
-            FirstName = patient.FirstName,
-            LastName = patient.LastName,
-            DateOfBirth = patient.DateOfBirth,
-            Gender = patient.Gender,
-            Email = patient.Email,
-            PhoneNumber = patient.PhoneNumber,
-            EmergencyContact = patient.EmergencyContact,
-            AllergiesOrMedicalConditions = patient.AllergiesOrMedicalConditions,
-            AppointmentHistory = patient.AppointmentHistory
-        };
-
-        return patientDto; // Return the patient DTO
-    }
+  
 
     }
 }

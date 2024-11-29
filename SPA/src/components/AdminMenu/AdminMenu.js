@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
 import CommonMenu from '../CommonMenu/CommonMenu';
 import UserList from '../../modules/Admin/UserManagement/UserList/UserList';
-import RegisterUser from '../../modules/Admin/UserManagement/RegisterUser/RegisterUser';
+import RegisterUser from '../../modules/Admin/UserManagement/DeleteUser/UserManagement/RegisterUser/RegisterUser';
 import Profile from '../../modules/Auth/Profile/Profile';
 import UserDetails from '../../modules/Admin/UserManagement/UserDetails/UserDetails';
 import OperationRequestList from '../../modules/OperationRequest/OperationRequestList/OperationRequestList';
@@ -28,8 +28,16 @@ function AdminMenu() {
                     <li>
                         <Link className="admin-menu-link" to="register-user">Register User</Link>
                     </li>
+
+                    <li>
+                        <Link className="admin-menu-link" to="register-Patient-Profile">Register Patient Profile</Link>
+                    </li>
+
                     <li>
                         <Link className="admin-menu-link" to="user-list">User List</Link>
+                    </li>
+                    <li>
+                        <Link className="admin-menu-link" to="Patient-Profiles-list">Patient Profiles List</Link>
                     </li>
                     <li>
                         <Link className="admin-menu-link" to="user-details/:username">User Information</Link>
@@ -67,6 +75,8 @@ function AdminMenu() {
                     <Route path="user-list" element={<UserList />} />
                     <Route path="user-details/:id" element={<UserDetails />} />
                     <Route path="register-user" element={<RegisterUser />} />
+                    <Route path="register-Patient-Profile" element={<RegisterPatientProfile />} />
+                    <Route path="Patient-Profile-list" element={<PatientProfileList />} />
                     <Route path="profile" element={<Profile />} />
                     <Route path="operation-requests" element={<OperationRequestList />} />
                     <Route path="operation-request-by-id" element={<OperationRequestById />} />
