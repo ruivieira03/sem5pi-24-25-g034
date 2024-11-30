@@ -167,14 +167,11 @@ public async Task<ActionResult<IEnumerable<PatientDto>>> GetByFirstName(string f
     try{
         var patients = await _patientService.GetByFirstNameAsync(firstName);
         return Ok(patients);
-    }
-    catch (Exception ex){
+    }catch (Exception ex){
         return BadRequest(new { message = ex.Message });
     }
 }
 
-   
-    }
-
+}    
 }
 
