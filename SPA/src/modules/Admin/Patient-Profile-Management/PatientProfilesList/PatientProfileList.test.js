@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom'; // Import MemoryRouter for Router context
 import axios from 'axios';
-import UserList from './UserList';
+import UserList from './PatientProfileList';
 
 jest.mock('axios');
 

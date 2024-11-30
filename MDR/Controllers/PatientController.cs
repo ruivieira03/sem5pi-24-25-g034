@@ -120,6 +120,59 @@ namespace Hospital.Controllers{
 
         return Ok(user); // Return OK status with the user data
     }
+
+
+// GET: api/Patient/{email}
+    [HttpGet("email/{email}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<SystemUserDto>> GetByEmail(string email){
+
+        var user = await _patientService.GetByEmailAsync(email);
+
+        if (user == null){
+            return NotFound(); // Return 404 if user not found
+        }
+
+        return Ok(user); // Return OK status with the user data
+    }
+
+    // GET: api/Patient/{email}
+    [HttpGet("phoneNumber/{phoneNumber}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<SystemUserDto>> GetByPhoneNumberAsync(string phoneNumber){
+
+        var user = await _patientService.GetByPhoneNumberAsync(phoneNumber);
+
+        if (user == null){
+            return NotFound(); // Return 404 if user not found
+        }
+
+        return Ok(user); // Return OK status with the user data
+    }
+
+
+
+
+
+
+
+    [HttpGet("firstName/{firstname}")]
+    [Authorize(Roles = "Admin")]
+public async Task<ActionResult<IEnumerable<PatientDto>>> GetByFirstName(string firstName){
+    
+    if (string.IsNullOrEmpty(firstName)){
+        return BadRequest("First name is required.");
+    }
+
+    try{
+        var patients = await _patientService.GetByFirstNameAsync(firstName);
+        return Ok(patients);
+    }
+    catch (Exception ex){
+        return BadRequest(new { message = ex.Message });
+    }
+}
+
    
     }
 

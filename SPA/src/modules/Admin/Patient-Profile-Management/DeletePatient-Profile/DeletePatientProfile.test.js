@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import DeleteUser from './DeleteUser';
+import DeletePatientProfile from './DeletePatientProfile';
 import axios from 'axios';
 
 jest.mock('axios'); // Mock axios globally
@@ -15,7 +15,7 @@ describe('DeleteUser Component', () => {
     });
 
     test('renders the delete confirmation modal', () => {
-        render(<DeleteUser user={mockUser} authToken={mockAuthToken} onDeleteSuccess={mockOnDeleteSuccess} />);
+        render(<DeletePatientProfile user={mockUser} authToken={mockAuthToken} onDeleteSuccess={mockOnDeleteSuccess} />);
 
         expect(screen.getByText('Delete User')).toBeInTheDocument();
         expect(screen.getByText(/Are you sure you want to delete/i)).toBeInTheDocument();
@@ -28,7 +28,7 @@ describe('DeleteUser Component', () => {
         // Mock the API call to simulate success
         axios.delete.mockResolvedValueOnce({ status: 200 });
 
-        render(<DeleteUser user={mockUser} authToken={mockAuthToken} onDeleteSuccess={mockOnDeleteSuccess} />);
+        render(<DeletePatientProfile user={mockUser} authToken={mockAuthToken} onDeleteSuccess={mockOnDeleteSuccess} />);
 
         const confirmButton = screen.getByText('Confirm Delete');
         fireEvent.click(confirmButton);
@@ -45,7 +45,7 @@ describe('DeleteUser Component', () => {
             response: { data: { Message: 'Failed to delete user.' } },
         });
 
-        render(<DeleteUser user={mockUser} authToken={mockAuthToken} onDeleteSuccess={mockOnDeleteSuccess} />);
+        render(<DeletePatientProfile user={mockUser} authToken={mockAuthToken} onDeleteSuccess={mockOnDeleteSuccess} />);
 
         const confirmButton = screen.getByText('Confirm Delete');
         fireEvent.click(confirmButton);
@@ -55,7 +55,7 @@ describe('DeleteUser Component', () => {
     });
 
     test('triggers onDeleteSuccess with null when cancel is clicked', () => {
-        render(<DeleteUser user={mockUser} authToken={mockAuthToken} onDeleteSuccess={mockOnDeleteSuccess} />);
+        render(<DeletePatientProfile user={mockUser} authToken={mockAuthToken} onDeleteSuccess={mockOnDeleteSuccess} />);
 
         const cancelButton = screen.getByText('Cancel');
         fireEvent.click(cancelButton);

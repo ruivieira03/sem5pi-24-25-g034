@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../../config';
-import './UserDetails.css'; // Import CSS file for styling
+import './PatientProfileDetails.css'; // Import CSS file for styling
 
-function UserDetails() {
+function PatientProfileDetails() {
     const [userUsername, setUserId] = useState(''); // State for user ID input
-    const [userData, setUserData] = useState(null); // State for fetched user data
+    const [PatientProfileData, setUserData] = useState(null); // State for fetched user data
     const [error, setError] = useState(''); // State for error messages
 
-    const fetchUser = async () => {
+    const fetchPatient = async () => {
         setError(''); // Clear any previous error
         setUserData(null); // Clear previous user data
 
@@ -34,8 +34,8 @@ function UserDetails() {
     };
 
     return (
-        <div className="user-details-container">
-            <h2>Get User Details</h2>
+        <div className="patient-profile-details-container">
+            <h2>Get Patient Profile Details</h2>
 
             <div className="input-section">
                 <label htmlFor="userUsername">Username:</label>
@@ -44,24 +44,24 @@ function UserDetails() {
                     id="userUsername"
                     value={userUsername}
                     onChange={(e) => setUserId(e.target.value)}
-                    placeholder="Enter Username"
+                    placeholder="Enter Email or Phone Number"
                 />
-                <button onClick={fetchUser}>Fetch User</button>
+                <button onClick={fetchPatient}>Fetch Patient Profile</button>
             </div>
 
             {error && <div className="error-message">{error}</div>}
 
-            {userData && (
+            {PatientProfileData && (
                 <div className="user-details">
                     <h3>User Details</h3>
-                    <p><strong>Username:</strong> {userData.username}</p>
-                    <p><strong>Email:</strong> {userData.email}</p>
-                    <p><strong>Role:</strong> {userData.role}</p>
-                    <p><strong>Phone Number:</strong> {userData.phoneNumber}</p>
+                    <p><strong>Username:</strong> {PatientProfileData.username}</p>
+                    <p><strong>Email:</strong> {PatientProfileData.email}</p>
+                    <p><strong>Role:</strong> {PatientProfileData.role}</p>
+                    <p><strong>Phone Number:</strong> {PatientProfileData.phoneNumber}</p>
                 </div>
             )}
         </div>
     );
 }
 
-export default UserDetails;
+export default PatientProfileDetails;

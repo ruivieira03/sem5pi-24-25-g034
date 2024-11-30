@@ -49,6 +49,7 @@ namespace Hospital.Domain.Patients{
             Email = existingPatient.Email,
             PhoneNumber = existingPatient.PhoneNumber,
             EmergencyContact = existingPatient.EmergencyContact,
+        
             AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
             AppointmentHistory = existingPatient.AppointmentHistory
         };
@@ -258,9 +259,86 @@ namespace Hospital.Domain.Patients{
        
         }
 
-  
+          public async Task<PatientDto> GetByEmailAsync(string email){
+        var patient = await this._patientRepository.GetPatientByEmailAsync(email);
+            
+            if (patient == null){
+                throw new Exception("Patient not found.");
+            }
 
-    }
+
+         return new PatientDto { 
+
+            Id = patient.Id.AsGuid(),
+            FirstName = patient.FirstName,
+            LastName = patient.LastName,
+            DateOfBirth = patient.DateOfBirth,
+            Gender = patient.Gender,
+            MedicalRecordNumber = patient.MedicalRecordNumber,
+            Email = patient.Email,
+            PhoneNumber = patient.PhoneNumber,
+            EmergencyContact = patient.EmergencyContact,
+            AllergiesOrMedicalConditions = patient.AllergiesOrMedicalConditions,            
+            AppointmentHistory = patient.AppointmentHistory
+            };
+       
+        }
+
+
+        public async Task<PatientDto> GetByPhoneNumberAsync(string phoneNumber){
+        var patient = await this._patientRepository.GetPatientByPhoneNumberAsync(phoneNumber);
+            
+            if (patient == null){
+                throw new Exception("Patient not found.");
+            }
+
+
+         return new PatientDto { 
+
+            Id = patient.Id.AsGuid(),
+            FirstName = patient.FirstName,
+            LastName = patient.LastName,
+            DateOfBirth = patient.DateOfBirth,
+            Gender = patient.Gender,
+            MedicalRecordNumber = patient.MedicalRecordNumber,
+            Email = patient.Email,
+            PhoneNumber = patient.PhoneNumber,
+            EmergencyContact = patient.EmergencyContact,
+            AllergiesOrMedicalConditions = patient.AllergiesOrMedicalConditions,            
+            AppointmentHistory = patient.AppointmentHistory
+            };
+       
+        }
+    
+         
+
+      public async Task<PatientDto> GetByFirstNameAsync(String firstName){
+            var patient = await this._patientRepository.GetByFirstNameAsync(firstName);
+            
+            if (patient == null){
+                throw new Exception("Patient not found.");
+            }
+
+
+         return new PatientDto { 
+
+            Id = patient.Id.AsGuid(),
+            FirstName = patient.FirstName,
+            LastName = patient.LastName,
+            DateOfBirth = patient.DateOfBirth,
+            Gender = patient.Gender,
+            MedicalRecordNumber = patient.MedicalRecordNumber,
+            Email = patient.Email,
+            PhoneNumber = patient.PhoneNumber,
+            EmergencyContact = patient.EmergencyContact,
+            AllergiesOrMedicalConditions = patient.AllergiesOrMedicalConditions,            
+            AppointmentHistory = patient.AppointmentHistory
+            };
+       
+        }
+
+      
+}
 }
 
     

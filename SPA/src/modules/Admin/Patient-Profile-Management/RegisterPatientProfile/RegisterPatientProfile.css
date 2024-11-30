@@ -1,5 +1,5 @@
 /* Container for the register form */
-.register-user-container {
+.register-Patient-Profile-container {
     max-width: 500px; /* Restrict the width for better readability */
     margin: 50px auto; /* Center the container vertically and horizontally */
     padding: 20px;
@@ -11,7 +11,7 @@
 }
 
 /* Header */
-.register-user-container h2 {
+.register-Patient-Profile-container h2 {
     margin-bottom: 20px;
     font-size: 1.8em;
     color: #333;
