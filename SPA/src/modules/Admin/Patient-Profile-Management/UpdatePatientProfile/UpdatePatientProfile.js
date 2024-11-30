@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../../../../config'; // Import API_BASE_URL
 import './UpdatePatientProfile.css';
 
-const UpdateUser = ({ Patient, authToken, onUpdateSuccess }) => {
+const UpdatePatientProfile = ({ Patient, authToken, onUpdateSuccess }) => {
     const [formData, setFormData] = useState({
         FirstName: '',
         LastName: '',
@@ -29,7 +29,7 @@ const UpdateUser = ({ Patient, authToken, onUpdateSuccess }) => {
         try {
             setLoading(true);
             const response = await axios.put(
-                `${API_BASE_URL}/api/Patient/${Patient.id}`, // Use API_BASE_URL here
+                `${API_BASE_URL}/api/Patient/update-profile/${Patient.id}`, // Use API_BASE_URL here
                 formData,
                 {
                     headers: { Authorization: `Bearer ${authToken}` },
@@ -139,4 +139,4 @@ const UpdateUser = ({ Patient, authToken, onUpdateSuccess }) => {
     );
 };
 
-export default UpdateUser;
+export default UpdatePatientProfile;

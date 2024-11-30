@@ -11,7 +11,7 @@ function DeletePatientProfile({ Patient, authToken, onDeleteSuccess }) {
         setLoading(true);
         try {
             const response = await axios.delete(
-                `${API_BASE_URL}/api/Patient/${Patient.id}/`, // Use API_BASE_URL here
+                `${API_BASE_URL}/api/Patient/delete/${Patient.id}`, // Use optional chaining
                 {
                     headers: {
                         Authorization: `Bearer ${authToken}`,
@@ -20,22 +20,23 @@ function DeletePatientProfile({ Patient, authToken, onDeleteSuccess }) {
             );
             setLoading(false);
             if (response.status === 200) {
-                onDeleteSuccess(Patient.id); // Notify parent to remove Patient Profile from UI
+                onDeleteSuccess(Patient?.id); // Use optional chaining para evitar erros
             } else {
-                setError('Failed to delete Profile.');
+                setError('Failed to delete the profile.');
             }
         } catch (err) {
             setLoading(false);
-            setError(err.response?.data?.Message || 'An error occurred.');
+            setError('An error occurred while deleting the profile.');
         }
     };
 
     return (
         <div className="delete-Patient-overlay">
             <div className="delete-Patient-modal">
-                <h2 className="delete-Patient-title">Delete User</h2>
+                <h2 className="delete-Patient-title">Delete Patient</h2>
                 <p className="delete-Patient-message">
-                    Are you sure you want to delete <strong>{Patient.username}</strong>?
+                    Are you sure you want to delete{' '}
+                    <strong>{Patient?.MedicalRecordNumber || 'Unknown Patient'}</strong>?
                 </p>
                 {error && <p className="delete-Patient-error">{error}</p>}
                 <div className="delete-Patient-actions">
@@ -47,7 +48,7 @@ function DeletePatientProfile({ Patient, authToken, onDeleteSuccess }) {
                         {loading ? 'Deleting...' : 'Confirm Delete'}
                     </button>
                     <button
-                        className="delete-Patient-btn delete-Patient Profile-cancel"
+                        className="delete-Patient-btn delete-Patient-cancel"
                         onClick={() => onDeleteSuccess(null)}
                     >
                         Cancel

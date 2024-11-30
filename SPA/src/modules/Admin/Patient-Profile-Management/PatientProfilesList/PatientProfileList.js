@@ -6,7 +6,7 @@ import { API_BASE_URL } from '../../../../config';
 import './PatientProfileList.css';
 
 function PatientProfileList() {
-    const [Patients, setPatients] = useState([]);
+    const [patient, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [authToken] = useState(localStorage.getItem('authToken'));
@@ -14,9 +14,9 @@ function PatientProfileList() {
     const [updatingPatientProfile, setUpdatingPatientProfile] = useState(null);
 
     useEffect(() => {
-        const fetchUsers = async () => {
+        const fetchPatientProfiles = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/api/Patient`, {
+                const response = await axios.get(`${API_BASE_URL}/api/Patient/getAll`, {
                     headers: { Authorization: `Bearer ${authToken}` },
                 });
                 setPatients(response.data);
@@ -27,7 +27,7 @@ function PatientProfileList() {
             }
         };
 
-        fetchUsers();
+        fetchPatientProfiles();
     }, [authToken]);
 
     const handleDeleteSuccess = (PatientId) => {
@@ -38,11 +38,11 @@ function PatientProfileList() {
         setDeletingPatientProfile(null);
     };
 
-    const handleUpdateSuccess = (updatedUser) => {
-        if (updatedUser) {
+    const handleUpdateSuccess = (updatedPatientProfiles) => {
+        if (updatedPatientProfiles) {
             setPatients((prevPatients) =>
                 prevPatients.map((Patient) =>
-                    Patient.id === updatedUser.id ? { ...Patient, ...updatedUser } : Patient
+                    Patient.id === updatedPatientProfiles.id ? { ...Patient, ...updatedPatientProfiles } : Patient
                 )
             );
             alert('Profile updated successfully.');
@@ -57,12 +57,24 @@ function PatientProfileList() {
         <div className="patient-profile-list-container">
             <h2>System Users</h2>
             <ul className="Patient Profiles-list">
-                {Patients.length > 0 ? (
-                    Patients.map((Patient) => (
+                {patient.length > 0 ? (
+                    patient.map((Patient) => (
                         <li key={Patient.id} className="Patient-item">
-                            <div className="Patient-details">
-                                <p><strong>Username:</strong> {Patient.username}</p>
-                            </div>
+                            
+                           
+                <div className="patient-details">
+                    <h3>Patient Profile Details:</h3>
+
+                    <p><strong>First Name:</strong> {Patient.firstName}</p>
+                    <p><strong>Last Name:</strong> {Patient.lastName}</p>
+                    <p><strong>Email:</strong> {Patient.email}</p>
+                    <p><strong>Phone Number:</strong> {Patient.phoneNumber}</p>
+                    <p><strong>Emergency Contact:</strong> {Patient.emergencyContact}</p>
+                    <p><strong>Allergies:</strong> {Patient.allergies}</p>
+                    <p><strong>Medical History:</strong> {Patient.AppointmentHistory}</p>
+
+                    </div>
+
                             <div className="Patient-actions">
                                 <button
                                     className="action-button delete"

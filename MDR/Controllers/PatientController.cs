@@ -51,7 +51,7 @@ namespace Hospital.Controllers{
         
 
         // PUT: api/Patient/5/update-profile Update the patient's profile details
-        [HttpPut("{id}/update-profile")]
+        [HttpPut("update-profile/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProfile(Guid id, UpdatePatientProfileViewModel model){
             
@@ -76,7 +76,7 @@ namespace Hospital.Controllers{
 
               
  // DELETE: api/Patient/5/Delete-Profilea 
-    [HttpDelete("{id}")]
+    [HttpDelete("delete/{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<SystemUserDto>> DeletePatientProfile(Guid id){
 
