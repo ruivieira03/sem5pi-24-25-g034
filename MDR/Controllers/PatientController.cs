@@ -78,7 +78,7 @@ namespace Hospital.Controllers{
  // DELETE: api/Patient/5/Delete-Profilea 
     [HttpDelete("delete/{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> DeletePatientProfile(Guid id){
+    public async Task<ActionResult<PatientDto>> DeletePatientProfile(Guid id){
 
         try{
            var patient =  await _patientService.DeleteAsync(new PatientId(id));

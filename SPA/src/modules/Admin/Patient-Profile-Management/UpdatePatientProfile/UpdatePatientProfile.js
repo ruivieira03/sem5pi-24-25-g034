@@ -44,7 +44,7 @@ const UpdatePatientProfile = ({ Patient, authToken, onUpdateSuccess }) => {
     };
 
     const handleCancel = () => {
-        navigate('/admin'); // Redirect to /admin
+        navigate('Admin'); // Redirect to /admin
     };
 
     return (

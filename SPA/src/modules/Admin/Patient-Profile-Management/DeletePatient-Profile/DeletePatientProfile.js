@@ -9,6 +9,8 @@ function DeletePatientProfile({ Patient, authToken, onDeleteSuccess }) {
 
     const handleDelete = async () => {
         setLoading(true);
+        console.log('Patient Id delete :', Patient.Id); // Debugging log
+
         try {
             const response = await axios.delete(
                 `${API_BASE_URL}/api/Patient/delete/${Patient.id}`, // Use optional chaining
@@ -20,7 +22,7 @@ function DeletePatientProfile({ Patient, authToken, onDeleteSuccess }) {
             );
             setLoading(false);
             if (response.status === 200) {
-                onDeleteSuccess(Patient?.id); // Use optional chaining para evitar erros
+                onDeleteSuccess(Patient.id); // Use optional chaining para evitar erros
             } else {
                 setError('Failed to delete the profile.');
             }
@@ -34,10 +36,7 @@ function DeletePatientProfile({ Patient, authToken, onDeleteSuccess }) {
         <div className="delete-Patient-overlay">
             <div className="delete-Patient-modal">
                 <h2 className="delete-Patient-title">Delete Patient</h2>
-                <p className="delete-Patient-message">
-                    Are you sure you want to delete{' '}
-                    <strong>{Patient?.MedicalRecordNumber || 'Unknown Patient'}</strong>?
-                </p>
+               
                 {error && <p className="delete-Patient-error">{error}</p>}
                 <div className="delete-Patient-actions">
                     <button

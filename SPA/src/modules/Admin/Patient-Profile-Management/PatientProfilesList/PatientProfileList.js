@@ -7,6 +7,8 @@ import './PatientProfileList.css';
 
 function PatientProfileList() {
     const [patient, setPatients] = useState([]);
+    const [User, setUser] = useState([]);
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [authToken] = useState(localStorage.getItem('authToken'));
@@ -16,6 +18,9 @@ function PatientProfileList() {
     useEffect(() => {
         const fetchPatientProfiles = async () => {
             try {
+                console.log('PatientId:', patient.Id); // Debugging log
+                console.log('User:', User.Id); // Debugging log
+
                 const response = await axios.get(`${API_BASE_URL}/api/Patient/getAll`, {
                     headers: { Authorization: `Bearer ${authToken}` },
                 });
@@ -118,6 +123,7 @@ function PatientProfileList() {
                             onUpdateSuccess={handleUpdateSuccess}
                         />
                     </div>
+                    
                 </div>
             )}
 

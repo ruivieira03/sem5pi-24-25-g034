@@ -4,8 +4,7 @@ using Newtonsoft.Json;
 
 namespace Hospital.Domain.OperationRequest
 {
-    public class OperationRequestId : EntityId
-    {
+    public class OperationRequestId : EntityId{
         [JsonConstructor]
         public OperationRequestId(Guid value) : base(value)
         {
