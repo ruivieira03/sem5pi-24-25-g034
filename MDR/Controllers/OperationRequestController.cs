@@ -7,8 +7,7 @@ using Hospital.Domain.Shared;
 
 [ApiController]
 [Route("api/[controller]")]
-public class OperationRequestController : ControllerBase
-{
+public class OperationRequestController : ControllerBase{
     private readonly OperationRequestService _operationRequestService;
 
     public OperationRequestController(OperationRequestService operationRequestService)

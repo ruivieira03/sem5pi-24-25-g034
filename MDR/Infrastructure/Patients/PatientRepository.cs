@@ -37,6 +37,47 @@ namespace Hospital.Infrastructure.Patients
                 .FirstOrDefaultAsync(p => p.PhoneNumber == phoneNumber);
         }
 
+
+         public async Task<Patient> GetByFirstNameAsync(string firstName)
+        {
+            return await _context.Patients
+                .FirstOrDefaultAsync(p => p.FirstName == firstName);
+        }
+          public async Task<Patient> GetByLastNameAsync(string lastName)
+        {
+            return await _context.Patients
+                .FirstOrDefaultAsync(p => p.LastName == lastName);
+        }
+         public async Task<IEnumerable<Patient>> GetByAllergiesAsync(string allergy)
+{
+    return await _context.Patients
+        .Where(p => p.AllergiesOrMedicalConditions.Any(a => a == allergy))
+        .ToListAsync();
+}
+
+
+          public async Task<IEnumerable<Patient>> GetByAppointmentHistoryAsync(string appointment){
+    return await _context.Patients
+        .Where(p => p.AppointmentHistory.Any(a => a == appointment))
+        .ToListAsync();
+}
+
+         
+            public async Task<Patient> GetByGenderAsync(string gender){
+            return await _context.Patients
+                .FirstOrDefaultAsync(p => p.Gender == gender);
+        }
+          public async Task<Patient> GetByEmergencyContactAsync(string emergencyContact){
+            return await _context.Patients
+                .FirstOrDefaultAsync(p => p.EmergencyContact == emergencyContact);
+        }
+         public async Task<Patient> DateOfBirthAsync(DateTime dateOfBirth){
+            return await _context.Patients
+                .FirstOrDefaultAsync(p => p.DateOfBirth == dateOfBirth);
+        }
+
+       
+
         public async Task AddPatientAsync(Patient patient)
         {
             await _context.Patients.AddAsync(patient);
@@ -56,5 +97,22 @@ namespace Hospital.Infrastructure.Patients
         {
             return await _context.Patients.ToListAsync();
         }
+
+        public Task<Patient> GetDateOfBirthAsync(string dateOfBirth){
+            throw new NotImplementedException();
+        }
+
+        Task<Patient> IPatientRepository.GetByAllergiesAsync(string allergies){
+            throw new NotImplementedException();
+        }
+
+        Task<Patient> IPatientRepository.GetByAppointmentHistoryAsync(string AppointmentHistory){
+            throw new NotImplementedException();
+        }
+
+        public Task<Patient> GetByEmergencyContact(string EmergencyContact){
+            throw new NotImplementedException();
+        }
     }
 }
+

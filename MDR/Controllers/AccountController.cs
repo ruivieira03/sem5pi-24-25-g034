@@ -351,7 +351,7 @@ public class AccountController : ControllerBase // Change to ControllerBase as i
 
         try
         {
-            var patientProfile = await _patientService.GetPatientProfileAsync(patientId); // Fetch the patient profile
+            var patientProfile = await _patientService.GetByIdAsync(patientId); // Fetch the patient profile
             if (patientProfile == null)
             {
                 return NotFound(new { message = "Patient not found." }); // Return 404 if patient not found

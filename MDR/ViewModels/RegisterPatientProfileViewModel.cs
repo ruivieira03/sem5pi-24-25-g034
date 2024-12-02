@@ -20,7 +20,7 @@ namespace Hospital.ViewModels{   // Al us , regarding Patient Profile Here.
 
         [Required(ErrorMessage = "Gender is required.")]
         public string Gender { get; set; } // Added Gender
-
+        
         [Required(ErrorMessage = "Email is required.")]             //Todo Verfiy Email tructure  format.
         [EmailAddress(ErrorMessage = "Invalid email format.")]  //update : Email format verified:         
         public string Email { get; set; } // Existing property

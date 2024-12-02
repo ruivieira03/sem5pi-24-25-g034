@@ -3,6 +3,9 @@ import { Link, Route, Routes } from 'react-router-dom';
 import CommonMenu from '../CommonMenu/CommonMenu';
 import UserList from '../../modules/Admin/UserManagement/UserList/UserList';
 import RegisterUser from '../../modules/Admin/UserManagement/RegisterUser/RegisterUser';
+import RegisterPatientProfile from '../../modules/Admin/Patient-Profile-Management/RegisterPatientProfile/RegisterPatientProfile';
+import PatientProfileList from '../../modules/Admin/Patient-Profile-Management/PatientProfilesList/PatientProfileList';
+import PatientProfileDetails from '../../modules/Admin/Patient-Profile-Management/PatientProfileDetails/PatientProfileDetails';
 import Profile from '../../modules/Auth/Profile/Profile';
 import UserDetails from '../../modules/Admin/UserManagement/UserDetails/UserDetails';
 import OperationRequestList from '../../modules/OperationRequest/OperationRequestList/OperationRequestList';
@@ -27,8 +30,20 @@ function AdminMenu() {
                     <li>
                         <Link className="admin-menu-link" to="register-user">Register User</Link>
                     </li>
+
+                    <li>
+                        <Link className="admin-menu-link" to="register-Patient-Profile">Register Patient Profile</Link>
+                    </li>
+
                     <li>
                         <Link className="admin-menu-link" to="user-list">User List</Link>
+                    </li>
+                    <li>
+                        <Link className="admin-menu-link" to="Patient-Profile-list">All Patient Profiles</Link>
+                        
+                    </li>
+                    <li>
+                        <Link className="admin-menu-link" to="patient-profile-details">Patient Profile Information</Link>
                     </li>
                     <li>
                         <Link className="admin-menu-link" to="user-details/:username">User Information</Link>
@@ -39,6 +54,7 @@ function AdminMenu() {
                     <li>
                         <Link className="admin-menu-link" to="/admin/operation-requests">All Operation Requests</Link>
                     </li>
+
                     <li>
                         <Link className="admin-menu-link" to="/admin/operation-request-by-patient">Operation Request by Patient</Link>
                     </li>
@@ -63,6 +79,9 @@ function AdminMenu() {
                     <Route path="user-list" element={<UserList />} />
                     <Route path="user-details/:id" element={<UserDetails />} />
                     <Route path="register-user" element={<RegisterUser />} />
+                    <Route path="register-Patient-Profile" element={<RegisterPatientProfile />} />
+                    <Route path="Patient-Profile-list" element={<PatientProfileList />} />
+                    <Route path="Patient-Profile-details" element={<PatientProfileDetails />} />
                     <Route path="profile" element={<Profile />} />
                     <Route path="operation-requests" element={<OperationRequestList />} />
                     <Route path="operation-request-by-patient" element={<OperationRequestByPatient />} />
