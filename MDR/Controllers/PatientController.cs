@@ -110,7 +110,7 @@ namespace Hospital.Controllers{
 // GET: api/Patient/{id}
     [HttpGet("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> GetById(Guid id){
+    public async Task<ActionResult<PatientDto>> GetById(Guid id){
 
         var user = await _patientService.GetByIdAsync(new PatientId(id));
 
@@ -125,29 +125,29 @@ namespace Hospital.Controllers{
 // GET: api/Patient/{email}
     [HttpGet("email/{email}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> GetByEmail(string email){
+    public async Task<ActionResult<PatientDto>> GetByEmail(string email){
 
-        var user = await _patientService.GetByEmailAsync(email);
+        var patient = await _patientService.GetByEmailAsync(email);
 
-        if (user == null){
+        if (patient == null){
             return NotFound(); // Return 404 if user not found
         }
 
-        return Ok(user); // Return OK status with the user data
+        return Ok(patient); // Return OK status with the user data
     }
 
     // GET: api/Patient/{email}
     [HttpGet("phoneNumber/{phoneNumber}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> GetByPhoneNumberAsync(string phoneNumber){
+    public async Task<ActionResult<PatientDto>> GetByPhoneNumberAsync(string phoneNumber){
 
-        var user = await _patientService.GetByPhoneNumberAsync(phoneNumber);
+        var Patient = await _patientService.GetByPhoneNumberAsync(phoneNumber);
 
-        if (user == null){
+        if (Patient == null){
             return NotFound(); // Return 404 if user not found
         }
 
-        return Ok(user); // Return OK status with the user data
+        return Ok(Patient); // Return OK status with the user data
     }
 
 
