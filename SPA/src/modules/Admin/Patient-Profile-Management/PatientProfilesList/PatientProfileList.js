@@ -6,9 +6,7 @@ import { API_BASE_URL } from '../../../../config';
 import './PatientProfileList.css';
 
 function PatientProfileList() {
-    const [patient, setPatients] = useState([]);
-    const [User, setUser] = useState([]);
-
+    const [patients, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [authToken] = useState(localStorage.getItem('authToken'));
@@ -18,15 +16,14 @@ function PatientProfileList() {
     useEffect(() => {
         const fetchPatientProfiles = async () => {
             try {
-                console.log('PatientId:', patient.Id); // Debugging log
-                console.log('User:', User.Id); // Debugging log
-
                 const response = await axios.get(`${API_BASE_URL}/api/Patient/getAll`, {
                     headers: { Authorization: `Bearer ${authToken}` },
                 });
+                console.log('Fetched patient data:', response.data); // Debugging log
                 setPatients(response.data);
                 setLoading(false);
             } catch (err) {
+                console.error('Error fetching Profiles:', err); // Debug log
                 setError('Error fetching Profiles.');
                 setLoading(false);
             }
@@ -35,19 +32,19 @@ function PatientProfileList() {
         fetchPatientProfiles();
     }, [authToken]);
 
-    const handleDeleteSuccess = (PatientId) => {
-        if (PatientId) {
-            setPatients((prevPatients) => prevPatients.filter((Patient) => Patient.id !== PatientId));
+    const handleDeleteSuccess = (patientId) => {
+        if (patientId) {
+            setPatients((prevPatients) => prevPatients.filter((patient) => patient.id !== patientId));
             alert('Profile deleted successfully.');
         }
         setDeletingPatientProfile(null);
     };
 
-    const handleUpdateSuccess = (updatedPatientProfiles) => {
-        if (updatedPatientProfiles) {
+    const handleUpdateSuccess = (updatedPatient) => {
+        if (updatedPatient) {
             setPatients((prevPatients) =>
-                prevPatients.map((Patient) =>
-                    Patient.id === updatedPatientProfiles.id ? { ...Patient, ...updatedPatientProfiles } : Patient
+                prevPatients.map((patient) =>
+                    patient.id === updatedPatient.id ? { ...patient, ...updatedPatient } : patient
                 )
             );
             alert('Profile updated successfully.');
@@ -62,34 +59,32 @@ function PatientProfileList() {
         <div className="patient-profile-list-container">
             <h2>System Users</h2>
             <ul className="Patient Profiles-list">
-                {patient.length > 0 ? (
-                    patient.map((Patient) => (
-                        <li key={Patient.id} className="Patient-item">
-                            
-                           
-                <div className="patient-details">
-                    <h3>Patient Profile Details:</h3>
-
-                    <p><strong>First Name:</strong> {Patient.firstName}</p>
-                    <p><strong>Last Name:</strong> {Patient.lastName}</p>
-                    <p><strong>Email:</strong> {Patient.email}</p>
-                    <p><strong>Phone Number:</strong> {Patient.phoneNumber}</p>
-                    <p><strong>Emergency Contact:</strong> {Patient.emergencyContact}</p>
-                    <p><strong>Allergies:</strong> {Patient.allergies}</p>
-                    <p><strong>Medical History:</strong> {Patient.AppointmentHistory}</p>
-
-                    </div>
-
+                {patients.length > 0 ? (
+                    patients.map((patient) => (
+                        <li key={patient.id} className="Patient-item">
+                            <div className="patient-details">
+                                <h3>Patient Profile Details:</h3>
+                                <p><strong>First Name:</strong> {patient.firstName}</p>
+                                <p><strong>Last Name:</strong> {patient.lastName}</p>
+                                <p><strong>Email:</strong> {patient.email}</p>
+                                <p><strong>Phone Number:</strong> {patient.phoneNumber}</p>
+                                <p><strong>Emergency Contact:</strong> {patient.emergencyContact}</p>
+                                <p><strong>Allergies:</strong> {patient.allergies}</p>
+                                <p><strong>Medical History:</strong> {patient.AppointmentHistory}</p>
+                            </div>
                             <div className="Patient-actions">
                                 <button
                                     className="action-button delete"
-                                    onClick={() => setDeletingPatientProfile(Patient)}
+                                    onClick={() => {
+                                        console.log('Patient object being set for deletion:', patient);
+                                        setDeletingPatientProfile(patient);
+                                    }}
                                 >
                                     Delete
                                 </button>
                                 <button
                                     className="action-button update"
-                                    onClick={() => setUpdatingPatientProfile(Patient)}
+                                    onClick={() => setUpdatingPatientProfile(patient)}
                                 >
                                     Update
                                 </button>
@@ -104,12 +99,11 @@ function PatientProfileList() {
             {deletingPatientProfile && (
                 <div className="modal">
                     <div className="modal-content">
-                    <DeletePatientProfile
-                    patient={deletingPatientProfile}
-                    authToken={authToken}
-                onDeleteSuccess={handleDeleteSuccess}
-                />
-
+                        <DeletePatientProfile
+                            Patient={deletingPatientProfile}
+                            authToken={authToken}
+                            onDeleteSuccess={handleDeleteSuccess}
+                        />
                     </div>
                 </div>
             )}
@@ -123,12 +117,8 @@ function PatientProfileList() {
                             onUpdateSuccess={handleUpdateSuccess}
                         />
                     </div>
-                    
                 </div>
             )}
-
-
-            
         </div>
     );
 }
