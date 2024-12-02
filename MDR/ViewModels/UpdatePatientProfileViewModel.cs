@@ -6,8 +6,6 @@ namespace Hospital.ViewModels{   // Al us , regarding Patient Profile Here.
     public class UpdatePatientProfileViewModel{
 
         [Required]
-        public string Id { get; set; } // Added Id
-
         [MaxLength(50, ErrorMessage = "First name cannot exceed 50 characters.")]
         public string? FirstName { get; set; } // Added FirstName
    

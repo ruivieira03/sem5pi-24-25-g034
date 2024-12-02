@@ -116,8 +116,7 @@ public class SystemUserController : ControllerBase
     // PUT: api/SystemUser/5
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> Update(Guid id, UpdateSystemUserViewModel model)
-    {
+    public async Task<ActionResult<SystemUserDto>> Update(Guid id, UpdateSystemUserViewModel model){
         try
         {
             var updatedUser = await _systemUserService.UpdateAsync(id, model);

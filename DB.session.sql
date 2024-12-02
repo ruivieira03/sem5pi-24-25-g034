@@ -2,4 +2,3 @@ SELECT * from Patients
 
 
 
-sl

@@ -12,12 +12,15 @@ function PatientProfileList() {
     const [authToken] = useState(localStorage.getItem('authToken'));
     const [deletingPatientProfile, setDeletingPatientProfile] = useState(null);
     const [updatingPatientProfile, setUpdatingPatientProfile] = useState(null);
+   
 
     useEffect(() => {
+
         const fetchPatientProfiles = async () => {
             try {
                 const response = await axios.get(`${API_BASE_URL}/api/Patient/getAll`, {
-                    headers: { Authorization: `Bearer ${authToken}` },
+                    headers: { 
+                        Authorization: `Bearer ${authToken}` },
                 });
                 console.log('Fetched patient data:', response.data); // Debugging log
                 setPatients(response.data);
@@ -57,7 +60,7 @@ function PatientProfileList() {
 
     return (
         <div className="patient-profile-list-container">
-            <h2>System Users</h2>
+              <h2>Patient Profiles </h2>
             <ul className="Patient Profiles-list">
                 {patients.length > 0 ? (
                     patients.map((patient) => (

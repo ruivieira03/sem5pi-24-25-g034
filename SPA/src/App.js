@@ -23,6 +23,8 @@ import ConfirmEmail from './modules/SystemUser/ConfirmEmail/ConfirmEmail';
 import UserDetails from './modules/Admin/UserManagement/UserDetails/UserDetails';
 import OperationRequestList from './modules/OperationRequest/OperationRequestList/OperationRequestList';
 import SceneComponent from './3d_module/components/Scene/SceneComponent.tsx';
+import RegisterPatientProfile from './modules/Admin/Patient-Profile-Management/RegisterPatientProfile/RegisterPatientProfile.js';
+import PatientProfileList from './modules/Admin/Patient-Profile-Management/PatientProfilesList/PatientProfileList.js';
 
 function App() {
   return (
@@ -44,6 +46,9 @@ function App() {
         <Route path="user-details/:id" element={<UserDetails />} />
         <Route path="update-user/:id" element={<UpdateUser />} />
         <Route path="register-user" element={<RegisterUser />} />
+        <Route path="register-patient-profile" element={<RegisterPatientProfile />} />
+        <Route path="patient-profile-list" element={<PatientProfileList />} />
+
         <Route path="operation-requests" element={<OperationRequestList />} />
 
         {/* Patient Routes */}
@@ -51,6 +56,7 @@ function App() {
         <Route path="request-delete-account" element={<RequestDeleteAccount />} />
         <Route path="delete-account" element={<ConfirmDeleteAccount />} />
         <Route path="patient-info" element={<PatientProfile />} />
+
 
         {/* Doctor Routes */}
         <Route path="/doctor/*" element={<PrivateRoute role="Doctor" element={<DoctorMenu />} />} />
