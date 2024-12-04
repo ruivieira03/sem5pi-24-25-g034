@@ -14550,19 +14550,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/ruivieira/.nuget/packages/": {}
+    "/Users/martim/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/MDR/sem5pi-24-25-g034.csproj",
+      "projectUniqueName": "/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/MDR/sem5pi-24-25-g034.csproj",
       "projectName": "sem5pi-24-25-g034",
-      "projectPath": "/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/MDR/sem5pi-24-25-g034.csproj",
-      "packagesPath": "/Users/ruivieira/.nuget/packages/",
-      "outputPath": "/Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/MDR/obj/",
+      "projectPath": "/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/MDR/sem5pi-24-25-g034.csproj",
+      "packagesPath": "/Users/martim/.nuget/packages/",
+      "outputPath": "/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/MDR/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/ruivieira/.nuget/NuGet/NuGet.Config"
+        "/Users/martim/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
