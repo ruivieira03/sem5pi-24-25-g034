@@ -1,144 +1,126 @@
-
 /*
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BrowserRouter as Router } from 'react-router-dom'; // For mocking useNavigate
 import axios from 'axios';
-import UpdateUser from './UpdatePatientProfile';
+import UpdatePatientProfile from './UpdatePatientProfile';
+
+jest.mock('axios'); // Certifica-te de que o mock está configurado
+
+import axios from 'axios';
+import UpdatePatientProfile from './UpdatePatientProfile';
 
 jest.mock('axios');
 
-const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useNavigate: () => mockNavigate,
-}));
-
-describe('UpdateUser Component', () => {
-    const mockUser = {
-        id: 1,
-        username: 'testuser',
-        email: 'testuser@example.com',
-        role: 'Admin',
-        phoneNumber: '1234567890',
+describe('UpdatePatientProfile Component', () => {
+    const mockPatient = {
+        id: 'e2ac787d-91e2-4e64-a35a-5e2266b85ca8',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john.doe@example.com',
+        phoneNumber: '123456789',
+        emergencyContact: '987654321',
+        allergiesOrMedicalConditions: 'None',
+        appointmentHistory: 'No appointments yet',
     };
+
     const mockAuthToken = 'mockAuthToken';
     const mockOnUpdateSuccess = jest.fn();
+    const mockNavigate = jest.fn();
+
+    jest.mock('react-router-dom', () => ({
+        ...jest.requireActual('react-router-dom'),
+        useNavigate: () => mockNavigate,
+    }));
 
     beforeEach(() => {
         jest.clearAllMocks();
+        process.env.REACT_APP_API_BASE_URL = 'https://localhost:5001'; // Garantir definição da variável de ambiente
     });
 
-    test('renders the update user form', () => {
+    test('renders update form with patient data', () => {
         render(
-            <Router>
-                <UpdateUser
-                    user={mockUser}
-                    authToken={mockAuthToken}
-                    onUpdateSuccess={mockOnUpdateSuccess}
-                />
-            </Router>
+            <UpdatePatientProfile
+                patient={mockPatient}
+                authToken={mockAuthToken}
+                onUpdateSuccess={mockOnUpdateSuccess}
+            />
         );
 
-        expect(screen.getByText('Update User')).toBeInTheDocument();
-        expect(screen.getByLabelText('Username:')).toHaveValue('testuser');
-        expect(screen.getByLabelText('Email:')).toHaveValue('testuser@example.com');
-        expect(screen.getByLabelText('Role:')).toHaveValue('Admin');
-        expect(screen.getByLabelText('Phone Number:')).toHaveValue('1234567890');
+        expect(screen.getByLabelText('First Name:')).toHaveValue('John');
+        expect(screen.getByLabelText('Last Name:')).toHaveValue('Doe');
+        expect(screen.getByLabelText('Email:')).toHaveValue('john.doe@example.com');
+        expect(screen.getByLabelText('Phone Number:')).toHaveValue('123456789');
+        expect(screen.getByLabelText('Emergency Contact:')).toHaveValue('987654321');
+        expect(screen.getByLabelText('Allergies or Medical Conditions:')).toHaveValue('None');
+        expect(screen.getByLabelText('Appointment History:')).toHaveValue('No appointments yet');
     });
 
-    test('updates form input values on change', () => {
-        render(
-            <Router>
-                <UpdateUser
-                    user={mockUser}
-                    authToken={mockAuthToken}
-                    onUpdateSuccess={mockOnUpdateSuccess}
-                />
-            </Router>
-        );
-
-        const usernameInput = screen.getByLabelText('Username:');
-        fireEvent.change(usernameInput, { target: { name: 'username', value: 'updateduser' } });
-        expect(usernameInput.value).toBe('updateduser');
-
-        const emailInput = screen.getByLabelText('Email:');
-        fireEvent.change(emailInput, { target: { name: 'email', value: 'updated@example.com' } });
-        expect(emailInput.value).toBe('updated@example.com');
-    });
-
-    test('calls onUpdateSuccess on successful update', async () => {
-        axios.put.mockResolvedValueOnce({ data: { id: 1, username: 'updateduser' } });
+    test('updates patient profile successfully', async () => {
+        axios.put.mockResolvedValueOnce({
+            data: { ...mockPatient, firstName: 'Johnny' },
+        });
 
         render(
-            <Router>
-                <UpdateUser
-                    user={mockUser}
-                    authToken={mockAuthToken}
-                    onUpdateSuccess={mockOnUpdateSuccess}
-                />
-            </Router>
+            <UpdatePatientProfile
+                patient={mockPatient}
+                authToken={mockAuthToken}
+                onUpdateSuccess={mockOnUpdateSuccess}
+            />
         );
 
-        const updateButton = screen.getByText('Update');
-        fireEvent.click(updateButton);
+        fireEvent.change(screen.getByLabelText('First Name:'), { target: { value: 'Johnny' } });
+        fireEvent.click(screen.getByText('Update'));
+
+        expect(screen.getByText('Updating...')).toBeInTheDocument();
 
         await waitFor(() => {
-            expect(mockOnUpdateSuccess).toHaveBeenCalledWith({ id: 1, username: 'updateduser' });
+            expect(mockOnUpdateSuccess).toHaveBeenCalledWith({
+                ...mockPatient,
+                firstName: 'Johnny',
+            });
         });
 
         expect(axios.put).toHaveBeenCalledWith(
-            `https://localhost:5001/api/SystemUser/${mockUser.id}`,
-            {
-                username: 'testuser',
-                email: 'testuser@example.com',
-                role: 'Admin',
-                phoneNumber: '1234567890',
-            },
-            {
+            `${process.env.REACT_APP_API_BASE_URL}/api/Patient/update/${mockPatient.id}`,
+            expect.objectContaining({ firstName: 'Johnny' }),
+            expect.objectContaining({
                 headers: { Authorization: `Bearer ${mockAuthToken}` },
-            }
+            })
         );
     });
 
-    test('displays an error message on update failure', async () => {
-        axios.put.mockRejectedValueOnce(new Error('Failed to update user.'));
+    test('displays error message on failed update', async () => {
+        axios.put.mockRejectedValueOnce(new Error('Failed to update'));
 
         render(
-            <Router>
-                <UpdateUser
-                    user={mockUser}
-                    authToken={mockAuthToken}
-                    onUpdateSuccess={mockOnUpdateSuccess}
-                />
-            </Router>
+            <UpdatePatientProfile
+                patient={mockPatient}
+                authToken={mockAuthToken}
+                onUpdateSuccess={mockOnUpdateSuccess}
+            />
         );
 
-        const updateButton = screen.getByText('Update');
-        fireEvent.click(updateButton);
+        fireEvent.click(screen.getByText('Update'));
 
         await waitFor(() => {
-            expect(screen.getByText('Failed to update user.')).toBeInTheDocument();
+            expect(screen.getByText('Failed to update patient profile.')).toBeInTheDocument();
         });
-
-        expect(mockOnUpdateSuccess).not.toHaveBeenCalled();
     });
 
-    test('navigates back to admin page on cancel', () => {
+    test('cancels update and navigates back', () => {
         render(
-            <Router>
-                <UpdateUser
-                    user={mockUser}
-                    authToken={mockAuthToken}
-                    onUpdateSuccess={mockOnUpdateSuccess}
-                />
-            </Router>
+            <UpdatePatientProfile
+                patient={mockPatient}
+                authToken={mockAuthToken}
+                onUpdateSuccess={mockOnUpdateSuccess}
+            />
         );
 
-        const cancelButton = screen.getByText('Cancel');
-        fireEvent.click(cancelButton);
+        fireEvent.click(screen.getByText('Cancel'));
 
         expect(mockNavigate).toHaveBeenCalledWith('/admin');
     });
 });
+
+
 */

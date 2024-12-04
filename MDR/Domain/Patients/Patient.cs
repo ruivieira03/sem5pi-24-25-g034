@@ -41,7 +41,6 @@ namespace Hospital.Domain.Patients{
             MedicalRecordNumber = medicalRecordNumber;
             Email = email;                                  // Email must be unique
             PhoneNumber = phoneNumber;                      
-     
             EmergencyContact = emergencyContact;
             AppointmentHistory = appointmentHistory;
             AllergiesOrMedicalConditions = allergiesOrMedicalConditions;

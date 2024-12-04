@@ -12,9 +12,10 @@ function RegisterPatientProfile() {
         Email: '',
         PhoneNumber: '',
         EmergencyContact: '',
-        Allergies: '',
-        MedicalHistory: '',
+        allergiesOrMedicalConditions: [], // Inicializado como array vazio
+        appointmentHistory: [], // Inicializado como array vazio
     });
+    
 
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -23,6 +24,21 @@ function RegisterPatientProfile() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+    };
+
+    const handleArrayChange = (e, index, field) => {
+        const newArray = [...formData[field]];
+        newArray[index] = e.target.value;
+        setFormData({ ...formData, [field]: newArray });
+    };
+
+    const handleAddField = (field) => {
+        setFormData({ ...formData, [field]: [...formData[field], ''] });
+    };
+
+    const handleRemoveField = (field, index) => {
+        const newArray = formData[field].filter((_, i) => i !== index);
+        setFormData({ ...formData, [field]: newArray });
     };
 
     const handleSubmit = async (e) => {
@@ -34,14 +50,14 @@ function RegisterPatientProfile() {
         try {
             const payload = { ...formData };
             const response = await axios.post(
-                `${API_BASE_URL}/api/Patient/register-profile`, // Use API_BASE_URL here
+                `${API_BASE_URL}/api/Patient/register-profile`,
                 payload,
                 {
                     headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
                 }
             );
 
-            if (response.status === 201) { // success, registered
+            if (response.status === 201) {
                 setSuccess(true);
                 setFormData({
                     FirstName: '',
@@ -51,8 +67,8 @@ function RegisterPatientProfile() {
                     Email: '',
                     PhoneNumber: '',
                     EmergencyContact: '',
-                    Allergies: '',
-                    MedicalHistory: '',
+                    allergiesOrMedicalConditions: [''],
+                    appointmentHistory: [''],
                 });
             }
         } catch (err) {
@@ -156,24 +172,34 @@ function RegisterPatientProfile() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="allergies">Allergies:</label>
-                    <textarea
-                        id="allergies"
-                        name="Allergies"
-                        value={formData.Allergies}
-                        onChange={handleChange}
-                    ></textarea>
-                </div>
+    <label>Allergies or Medical Conditions:</label>
+    {(formData.allergiesOrMedicalConditions || []).map((item, index) => (
+        <div key={index}>
+            <input
+                type="text"
+                value={item}
+                onChange={(e) => handleArrayChange(e, index, 'allergiesOrMedicalConditions')}
+            />
+            <button type="button" onClick={() => handleRemoveField('allergiesOrMedicalConditions', index)}>Remove</button>
+        </div>
+    ))}
+    <button type="button" onClick={() => handleAddField('allergiesOrMedicalConditions')}>Add Allergy/Condition</button>
+</div>
 
-                <div className="form-group">
-                    <label htmlFor="medicalHistory">Medical History:</label>
-                    <textarea
-                        id="medicalHistory"
-                        name="MedicalHistory"
-                        value={formData.MedicalHistory}
-                        onChange={handleChange}
-                    ></textarea>
-                </div>
+<div className="form-group">
+    <label>Appointment History:</label>
+    {(formData.appointmentHistory || []).map((item, index) => (
+        <div key={index}>
+            <input
+                type="text"
+                value={item}
+                onChange={(e) => handleArrayChange(e, index, 'appointmentHistory')}
+            />
+            <button type="button" onClick={() => handleRemoveField('appointmentHistory', index)}>Remove</button>
+        </div>
+    ))}
+    <button type="button" onClick={() => handleAddField('appointmentHistory')}>Add Appointment</button>
+</div>
 
                 <button type="submit" disabled={loading}>
                     {loading ? 'Registering Profile...' : 'Register'}
