@@ -1,5 +1,5 @@
 /* Overlay for the modal */
-.delete-user-overlay {
+.delete-patient-profile-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -13,7 +13,7 @@
 }
 
 /* Modal box */
-.delete-user-modal {
+.delete-patient-profile-modal {
     background-color: #fff;
     border-radius: 8px;
     width: 400px;
@@ -24,35 +24,35 @@
 }
 
 /* Title */
-.delete-user-title {
+.delete-patient-profile-title {
     font-size: 1.5em;
     margin-bottom: 10px;
     color: #333;
 }
 
 /* Message text */
-.delete-user-message {
+.delete-patient-profile-message {
     font-size: 1.1em;
     margin-bottom: 20px;
     color: #555;
 }
 
 /* Error message */
-.delete-user-error {
+.delete-patient-profile-error {
     color: #d9534f; /* Bootstrap danger color */
     font-size: 0.9em;
     margin-bottom: 10px;
 }
 
 /* Button container */
-.delete-user-actions {
+.delete-patient-profile-actions {
     display: flex;
     justify-content: space-between;
     gap: 10px;
 }
 
 /* Buttons */
-.delete-user-btn {
+.delete-patient-profile-btn {
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
@@ -61,21 +61,21 @@
     transition: background-color 0.3s ease;
 }
 
-.delete-user-confirm {
+.delete-patient-profile-confirm {
     background-color: #d9534f; /* Bootstrap danger color */
     color: #fff;
 }
 
-.delete-user-confirm:hover {
+.delete-patient-profile-confirm:hover {
     background-color: #c9302c; /* Darker danger color */
 }
 
-.delete-user-cancel {
+.delete-patient-cancel {
     background-color: #f4f4f4;
     color: #333;
 }
 
-.delete-user-cancel:hover {
+.delete-patient-cancel:hover {
     background-color: #ddd;
 }
 
