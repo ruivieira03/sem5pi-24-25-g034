@@ -1,106 +1,58 @@
-/* Container for the update user form */
-.update-user-container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fdfdfd;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
+/* Container principal */
+.update-patient-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    transition: transform 0.2s ease-in-out;
 }
 
-/* Header */
-.update-user-container h3 {
+.update-patient-container:hover {
+    transform: translateY(-5px);
+}
+
+/* Título */
+.update-patient-container h3 {
     text-align: center;
     margin-bottom: 20px;
-    font-size: 1.6em;
+    font-size: 1.8em;
     color: #333;
+    font-weight: 600;
 }
 
-/* Form */
-.update-user-form {
+/* Formulário */
+.update-patient-form {
     display: flex;
     flex-direction: column;
+    gap: 15px;
 }
 
 /* Labels */
-.update-user-form label {
+.update-patient-form label {
     font-size: 1em;
+    font-weight: 500;
     color: #444;
-    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
 }
 
-/* Inputs */
-.update-user-form input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+/* Inputs e Textareas */
+.update-patient-form input,
+.update-patient-form textarea {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
     font-size: 1em;
-    margin-bottom: 15px;
-    transition: border-color 0.3s ease;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.update-user-form input:focus {
+.update-patient-form input:focus,
+.update-patient-form textarea:focus {
     border-color: #007bff;
-    outline: none;
-}
-
-/* Error message */
-.error {
-    color: #dc3545;
-    font-size: 0.9em;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-/* Button group */
-.button-group {
-    display: flex;
-    justify-content: space-between;
-}
-
-/* Update button */
-.update-button {
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.update-button:hover {
-    background-color: #218838;
-}
-
-.update-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-/* Cancel button */
-.cancel-button {
-    padding: 10px 20px;
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.cancel-button:hover {
-    background-color: #c82333;
-}
-
-/* Button hover effect */
-.cancel-button:focus,
-.update-button:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0)
 }

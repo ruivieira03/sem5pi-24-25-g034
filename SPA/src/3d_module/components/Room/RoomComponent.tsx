@@ -36,7 +36,7 @@ const RoomComponent: React.FC<RoomProps> = ({ width, height, depth, position, oc
       <mesh position={[0, -height / 2, 0]}>
         <boxGeometry args={[width, 0.1, depth]} />
         <meshStandardMaterial map={floorTexture} />
-      </mesh>
+      </mesh> 
 
       {/* Walls */}
       <mesh position={[0, 0, -depth / 2]}>

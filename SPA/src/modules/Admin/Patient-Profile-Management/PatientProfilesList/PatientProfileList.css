@@ -1,97 +1,98 @@
-/* General container styling */
-.user-list-container {
-    max-width: 900px;
-    margin: 40px auto;
+/* Estilos gerais */
+.patient-profile-list-container {
+    max-width: 800px;
+    margin: 20px auto;
     padding: 20px;
-    background-color: #fdfdfd;
+    background-color: #f9f9f9;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
-    text-align: left;
+    color: #333;
 }
 
-/* Header */
-.user-list-container h2 {
-    font-size: 2rem;
+.patient-profile-list-container h2 {
     text-align: center;
     margin-bottom: 20px;
-    color: #333;
+    font-size: 24px;
+    color: #2c3e50;
+    font-weight: bold;
 }
 
-/* User list */
-.user-list {
+/* Lista de perfis */
+.Patient.Profiles-list {
     list-style: none;
-    margin: 0;
     padding: 0;
+    margin: 0;
 }
 
-/* User item */
-.user-item {
+.Patient-item {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 15px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-bottom: 1px solid #ddd;
-    transition: background-color 0.3s ease;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.user-item:hover {
-    background-color: #f9f9f9;
+.patient-details h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #34495e;
 }
 
-/* User details */
-.user-details p {
+.patient-details p {
     margin: 5px 0;
-    font-size: 1rem;
+    font-size: 14px;
     color: #555;
+    line-height: 1.5;
 }
 
-.user-details p strong {
-    color: #333;
-}
-
-/* Action buttons */
-.user-actions {
+/* Ações */
+.Patient-actions {
     display: flex;
-    gap: 10px; /* Space between buttons */
+    justify-content: flex-end;
+    gap: 10px;
 }
 
+/* Botões */
 .action-button {
     padding: 10px 15px;
-    font-size: 1rem;
+    font-size: 14px;
+    font-weight: bold;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    color: #fff;
 }
 
 .action-button.delete {
-    background-color: #dc3545;
-    color: white;
+    background-color: #e74c3c;
 }
 
 .action-button.delete:hover {
-    background-color: #c82333;
-    transform: scale(1.05);
+    background-color: #c0392b;
+    box-shadow: 0 3px 6px rgba(231, 76, 60, 0.3);
 }
 
 .action-button.update {
-    background-color: #007bff;
-    color: white;
+    background-color: #3498db;
 }
 
 .action-button.update:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
+    background-color: #2980b9;
+    box-shadow: 0 3px 6px rgba(52, 152, 219, 0.3);
 }
 
-/* Modal styling remains the same */
+/* Modal */
 .modal {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
@@ -100,11 +101,26 @@
 }
 
 .modal-content {
-    background-color: white;
+    background: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    max-width: 500px;
-    width: 100%;
-    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    max-width: 90%;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+    .Patient-item {
+        flex-direction: column;
+    }
+
+    .Patient-actions {
+        justify-content: center;
+    }
+
+    .action-button {
+        width: 100%;
+        text-align: center;
+    }
 }

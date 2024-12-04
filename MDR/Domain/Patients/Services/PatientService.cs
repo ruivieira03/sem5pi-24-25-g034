@@ -151,7 +151,7 @@ namespace Hospital.Domain.Patients{
             if (existingPatient == null){
                 throw new InvalidOperationException("Patient not found.");
             }
-            //editable atributes
+                                
 
             existingPatient.FirstName = model.FirstName;
             existingPatient.LastName = model.LastName;
@@ -177,6 +177,7 @@ namespace Hospital.Domain.Patients{
                 AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
                 AppointmentHistory = existingPatient.AppointmentHistory,
             };
+
         }
 
 
@@ -308,9 +309,7 @@ namespace Hospital.Domain.Patients{
             AppointmentHistory = patient.AppointmentHistory
             };
        
-        }
-    
-         
+        }     
 
       public async Task<PatientDto> GetByFirstNameAsync(String firstName){
             var patient = await this._patientRepository.GetByFirstNameAsync(firstName);

@@ -51,20 +51,18 @@ namespace Hospital.Controllers{
         
 
         // PUT: api/Patient/5/update-profile Update the patient's profile details
-        [HttpPut("update-profile/{id}")]
+        [HttpPut("update/{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateProfile(Guid id, UpdatePatientProfileViewModel model){
-            
+        public async Task<IActionResult> UpdateProfile([FromRoute] Guid id, UpdatePatientProfileViewModel model){
+        Console.WriteLine("\n\nATE AQUI TUDO BEM\n\n");
+        Console.WriteLine("\n\n" + id + "\n\n");
+        
             if (!ModelState.IsValid){
                 return BadRequest(ModelState);
             }
 
-             if (id != new PatientId(model.Id).AsGuid()){
-                return BadRequest();                                        // Return 400 if ID in the route doesn't match the current user's ID
-            }
 
             try {
-
                 var updatedPatient = await _patientService.UpdateProfileAsync(model, id); // Delegate the update logic to the service layer
                 return Ok(updatedPatient);              // Return OK with the updated user
 
@@ -72,6 +70,9 @@ namespace Hospital.Controllers{
                 return BadRequest(new { message = ex.Message, innerException = ex.InnerException?.Message });
             }
         }
+
+
+      
 
 
               
@@ -110,7 +111,7 @@ namespace Hospital.Controllers{
 // GET: api/Patient/{id}
     [HttpGet("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> GetById(Guid id){
+    public async Task<ActionResult<PatientDto>> GetById(Guid id){
 
         var user = await _patientService.GetByIdAsync(new PatientId(id));
 
@@ -125,29 +126,29 @@ namespace Hospital.Controllers{
 // GET: api/Patient/{email}
     [HttpGet("email/{email}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> GetByEmail(string email){
+    public async Task<ActionResult<PatientDto>> GetByEmail(string email){
 
-        var user = await _patientService.GetByEmailAsync(email);
+        var patient = await _patientService.GetByEmailAsync(email);
 
-        if (user == null){
+        if (patient == null){
             return NotFound(); // Return 404 if user not found
         }
 
-        return Ok(user); // Return OK status with the user data
+        return Ok(patient); // Return OK status with the user data
     }
 
     // GET: api/Patient/{email}
     [HttpGet("phoneNumber/{phoneNumber}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> GetByPhoneNumberAsync(string phoneNumber){
+    public async Task<ActionResult<PatientDto>> GetByPhoneNumberAsync(string phoneNumber){
 
-        var user = await _patientService.GetByPhoneNumberAsync(phoneNumber);
+        var Patient = await _patientService.GetByPhoneNumberAsync(phoneNumber);
 
-        if (user == null){
+        if (Patient == null){
             return NotFound(); // Return 404 if user not found
         }
 
-        return Ok(user); // Return OK status with the user data
+        return Ok(Patient); // Return OK status with the user data
     }
 
 

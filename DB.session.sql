@@ -1,5 +1,4 @@
 SELECT * from Patients
 
 
-
-sl
+SELECT + from SystemUser;
