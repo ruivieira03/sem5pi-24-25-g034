@@ -1,0 +1,35 @@
+@startuml vsl1
+
+skinparam linetype ortho
+
+skinparam component{
+  BackgroundColor lightsteelblue
+}
+
+skinparam interface{
+  BackgroundColor lightskyblue
+}
+
+
+interface HPT_API
+component Hospital{
+  port p1 as " "
+  component MasterData{
+    port p2 as " "
+    interface DB_API
+    component BackEnd{
+      port p3 as " "
+    }
+    component DataBase
+    p2 -up- p3
+  }
+  p1 -up- p2
+  DB_API -left- DataBase
+  DB_API )-right- BackEnd
+}
+
+HPT_API -down- p1
+
+
+
+@enduml

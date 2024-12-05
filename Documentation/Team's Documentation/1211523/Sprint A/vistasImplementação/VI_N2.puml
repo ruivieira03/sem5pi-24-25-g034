@@ -1,0 +1,53 @@
+@startuml 
+
+skinparam linetype ortho
+
+skinparam component{
+  BackgroundColor lightsteelblue
+}
+
+skinparam interface{
+  BackgroundColor lightskyblue
+}
+skinparam package{
+  BackgroundColor lightsteelblue
+}
+
+component Hospital{
+    package FrameworksAndDrivers{
+      package Routes {
+
+      }
+      package Persistence {
+
+      }
+    }
+    package InterfaceAdaptars{
+      package Controllers{
+
+      }
+      package Repositories{
+
+      }
+    }
+
+    package ApplicationBusinessRules{
+      package Services{
+
+      }
+    }
+
+    package EnterpriseBusinessRules{
+      package Model{
+
+      }
+    }
+}
+
+Routes .down.> Controllers
+Controllers .down.> Services
+Repositories ..|> Services
+Services .down.> Model
+Repositories .up.> Persistence
+
+@enduml
