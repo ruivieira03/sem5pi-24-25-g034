@@ -63,7 +63,6 @@ function OperationRequestList() {
                     operationRequests.map((request) => (
                         <li key={request.id} className="operation-request-item">
                             <div className="operation-request-details">
-                                <p><strong>ID:</strong> {request.id}</p>
                                 <p><strong>Patient ID:</strong> {request.patientID}</p>
                                 <p><strong>Doctor ID:</strong> {request.doctorID}</p>
                                 <p><strong>Operation Type:</strong> {request.operationTypeID}</p>

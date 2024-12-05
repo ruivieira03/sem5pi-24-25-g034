@@ -4,7 +4,6 @@ import { Link, Route, Routes } from 'react-router-dom';
 import CommonMenu from '../CommonMenu/CommonMenu';
 import OperationRequestList from '../../modules/OperationRequest/OperationRequestList/OperationRequestList';
 import OperationRequestCreate from '../../modules/OperationRequest/OperationRequestCreate/OperationRequestCreate';
-import OperationRequestById from '../../modules/OperationRequest/OperationRequestById/OperationRequestById';
 import OperationRequestByPatient from '../../modules/OperationRequest/OperationRequestByPatient/OperationRequestByPatient';
 import OperationRequestByType from '../../modules/OperationRequest/OperationRequestByType/OperationRequestByType';
 import OperationRequestByPriority from '../../modules/OperationRequest/OperationRequestByPriority/OperationRequestByPriority';
@@ -33,9 +32,6 @@ function DoctorMenu() {
                         <Link className="doctor-menu-link" to="/doctor/operation-requests">All Operation Requests</Link>
                     </li>
                     <li>
-                        <Link className="doctor-menu-link" to="/doctor/operation-request-by-id">Operation Request by ID</Link>
-                    </li>
-                    <li>
                         <Link className="doctor-menu-link" to="/doctor/operation-request-by-patient">Operation Request by Patient</Link>
                     </li>
                     <li>
@@ -59,7 +55,6 @@ function DoctorMenu() {
                     {/* <Route path="patient-list" element={<PatientList />} /> */}
                     {/* <Route path="appointments" element={<Appointments />} /> */}
                     <Route path="operation-requests" element={<OperationRequestList />} />
-                    <Route path="operation-request-by-id" element={<OperationRequestById />} />
                     <Route path="operation-request-by-patient" element={<OperationRequestByPatient />} />
                     <Route path="operation-request-by-type" element={<OperationRequestByType />} />
                     <Route path="operation-request-by-priority" element={<OperationRequestByPriority />} />

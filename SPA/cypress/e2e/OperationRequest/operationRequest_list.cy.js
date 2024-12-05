@@ -55,8 +55,11 @@ describe('Operation Request List E2E Tests', () => {
             statusCode: 200,
         }).as('deleteOperationRequest');
 
+        // Debugging step: Ensure the operation requests are rendered
+        cy.get('.operation-request-item').should('have.length', 2);
+
         // Click the Delete button for the first operation request
-        cy.contains('ID: 123')
+        cy.contains('Patient ID: patient123')
             .parents('.operation-request-item') // Locate the operation request's parent container
             .find('.delete', { timeout: 10000 }) // Find the Delete button
             .click();
@@ -71,7 +74,7 @@ describe('Operation Request List E2E Tests', () => {
 
         // Verify the operation request is removed from the list
         cy.get('.operation-request-item').should('have.length', 1); // Only one operation request should remain
-        cy.contains('ID: 123').should('not.exist'); // Ensure deleted operation request is gone
+        cy.contains('Patient ID: patient123').should('not.exist'); // Ensure deleted operation request is gone
     });
 
     it('updates an operation request successfully', () => {
@@ -94,7 +97,7 @@ describe('Operation Request List E2E Tests', () => {
         });
 
         // Click the Update button for the first operation request
-        cy.contains('ID: 123')
+        cy.contains('Patient ID: patient123')
             .parents('.operation-request-item') // Adjusted to use `.operation-request-item` as parent
             .find('.update', { timeout: 10000 }) // Ensure the button is visible
             .click();
@@ -113,7 +116,6 @@ describe('Operation Request List E2E Tests', () => {
         cy.wait('@updateOperationRequest');
 
         // Verify that the operation request is updated in the list
-        cy.contains('ID: 123').should('be.visible'); // Ensure the updated ID appears
         cy.contains('Patient ID: updatedPatient123').should('be.visible'); // Ensure the updated patient ID appears
         cy.contains('Doctor ID: updatedDoctor123').should('be.visible'); // Ensure the updated doctor ID appears
         cy.contains('Operation Type: updatedType123').should('be.visible'); // Ensure the updated operation type ID appears
@@ -125,8 +127,8 @@ describe('Operation Request List E2E Tests', () => {
         // Verify the operation requests are displayed
         cy.contains('h2', 'Operation Requests').should('be.visible');
         cy.get('.operation-request-item').should('have.length', 2); // Ensure two operation requests are displayed
-        cy.contains('ID: 123').should('be.visible');
-        cy.contains('ID: 124').should('be.visible');
+        cy.contains('Patient ID: patient123').should('be.visible');
+        cy.contains('Patient ID: patient124').should('be.visible');
     });
 
     it('displays "No operation requests found" when the operation request list is empty', () => {
