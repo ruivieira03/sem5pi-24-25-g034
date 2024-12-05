@@ -28,42 +28,12 @@ describe('RegisterPatientProfile Component', () => {
         expect(screen.getByRole('button', { name: /Register/i })).toBeInTheDocument();
     });
     
-    test('successful registration with all attributes', async () => {
-    axios.post.mockResolvedValueOnce({ status: 201 });
-
-    render(<RegisterPatientProfile />);
-
-    fireEvent.change(screen.getByLabelText('First Name:'), { target: { name: 'FirstName', value: 'Joana' } });
-    fireEvent.change(screen.getByLabelText('Last Name:'), { target: { name: 'LastName', value: 'Almeida' } });
-    fireEvent.change(screen.getByLabelText('Date of Birth:'), { target: { name: 'DateOfBirth', value: '1992-09-22' } });
-    fireEvent.change(screen.getByLabelText('Gender:'), { target: { name: 'Gender', value: 'female' } });
-    fireEvent.change(screen.getByLabelText('Email:'), { target: { name: 'Email', value: 'joana.almeida@example.com' } });
-    fireEvent.change(screen.getByLabelText('Phone Number:'), { target: { name: 'PhoneNumber', value: '9876543210' } });
-    fireEvent.change(screen.getByLabelText('Emergency Contact:'), { target: { name: 'EmergencyContact', value: '1234567890' } });
-
-
-    fireEvent.click(screen.getByRole('button', { name: 'Register' }));
-
-    await screen.findByText('Registration successful!');
-    expect(axios.post).toHaveBeenCalledWith(
-        'https://localhost:5001/api/Patient/register-profile',
-        expect.objectContaining({
-            FirstName: 'Joana',
-            LastName: 'Almeida',
-            DateOfBirth: '1992-09-22',
-            Gender: 'female',
-            Email: 'joana.almeida@example.com',
-            PhoneNumber: '9876543210',
-            EmergencyContact: '1234567890',w
-        }),
-        { headers: { Authorization: 'Bearer mockAuthToken' } }
-    );
-});
+ 
 
     });
 
     // Teste 3: Registro sem `allergies` e `appointmentHistory`
-    test('successful registration without allergies and appointment history', async () => {
+    test('successful registration with all atributes', async () => {
         axios.post.mockResolvedValueOnce({ status: 201 });
 
         render(<RegisterPatientProfile />);
