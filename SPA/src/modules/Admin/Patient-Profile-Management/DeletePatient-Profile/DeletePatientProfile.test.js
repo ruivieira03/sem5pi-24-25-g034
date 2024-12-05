@@ -3,10 +3,10 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import DeletePatientProfile from './DeletePatientProfile';
 import axios from 'axios';
 
-jest.mock('axios'); // Mock axios globally
+jest.mock('axios');
 
-describe('DeleteUser Component', () => {
-    const mockUser = { id: 1, username: 'testuser' };
+describe('DeletePatientProfile Component', () => {
+    const mockPatient = { id: 1, firstName: 'Bernardo' };
     const mockAuthToken = 'mockAuthToken';
     const mockOnDeleteSuccess = jest.fn();
 
@@ -15,50 +15,98 @@ describe('DeleteUser Component', () => {
     });
 
     test('renders the delete confirmation modal', () => {
-        render(<DeletePatientProfile user={mockUser} authToken={mockAuthToken} onDeleteSuccess={mockOnDeleteSuccess} />);
+        render(
+            <DeletePatientProfile
+                Patient={mockPatient}
+                authToken={mockAuthToken}
+                onDeleteSuccess={mockOnDeleteSuccess}
+            />
+        );
 
-        expect(screen.getByText('Delete User')).toBeInTheDocument();
+        expect(screen.getByText('Delete Patient')).toBeInTheDocument();
         expect(screen.getByText(/Are you sure you want to delete/i)).toBeInTheDocument();
-        expect(screen.getByText(mockUser.username)).toBeInTheDocument();
+        // Use a regular expression to find the name within the content
+        expect(screen.getByText((content, element) => {
+            return content.includes(mockPatient.firstName);
+        })).toBeInTheDocument();
         expect(screen.getByText('Confirm Delete')).toBeInTheDocument();
         expect(screen.getByText('Cancel')).toBeInTheDocument();
     });
 
-    test('calls onDeleteSuccess with user ID on successful delete', async () => {
-        // Mock the API call to simulate success
+    test('calls delete API and notifies on success', async () => {
         axios.delete.mockResolvedValueOnce({ status: 200 });
 
-        render(<DeletePatientProfile user={mockUser} authToken={mockAuthToken} onDeleteSuccess={mockOnDeleteSuccess} />);
+        render(
+            <DeletePatientProfile
+                Patient={mockPatient}
+                authToken={mockAuthToken}
+                onDeleteSuccess={mockOnDeleteSuccess}
+            />
+        );
 
-        const confirmButton = screen.getByText('Confirm Delete');
-        fireEvent.click(confirmButton);
+        fireEvent.click(screen.getByText('Confirm Delete'));
 
-        // Wait for the mock API call to resolve
+        expect(screen.getByText('Deleting...')).toBeInTheDocument();
+
         await waitFor(() => {
-            expect(mockOnDeleteSuccess).toHaveBeenCalledWith(mockUser.id);
+            expect(mockOnDeleteSuccess).toHaveBeenCalledWith(mockPatient.id);
         });
+
+        expect(axios.delete).toHaveBeenCalledWith(
+            `https://localhost:5001/api/Patient/delete/${mockPatient.id}`,
+            expect.objectContaining({
+                headers: { Authorization: `Bearer ${mockAuthToken}` },
+            })
+        );
     });
 
-    test('displays an error message on delete failure', async () => {
-        // Mock the API call to simulate failure
-        axios.delete.mockRejectedValueOnce({
-            response: { data: { Message: 'Failed to delete user.' } },
+    test('displays error when delete API fails', async () => {
+        axios.delete.mockRejectedValueOnce(new Error('Delete failed'));
+
+        render(
+            <DeletePatientProfile
+                Patient={mockPatient}
+                authToken={mockAuthToken}
+                onDeleteSuccess={mockOnDeleteSuccess}
+            />
+        );
+
+        fireEvent.click(screen.getByText('Confirm Delete'));
+
+        await waitFor(() => {
+            expect(
+                screen.getByText('An error occurred while deleting the profile.')
+            ).toBeInTheDocument();
         });
 
-        render(<DeletePatientProfile user={mockUser} authToken={mockAuthToken} onDeleteSuccess={mockOnDeleteSuccess} />);
-
-        const confirmButton = screen.getByText('Confirm Delete');
-        fireEvent.click(confirmButton);
-
-        // Ensure the success callback was not called
         expect(mockOnDeleteSuccess).not.toHaveBeenCalled();
     });
 
-    test('triggers onDeleteSuccess with null when cancel is clicked', () => {
-        render(<DeletePatientProfile user={mockUser} authToken={mockAuthToken} onDeleteSuccess={mockOnDeleteSuccess} />);
+    test('displays error when patient data is invalid', () => {
+        render(
+            <DeletePatientProfile
+                Patient={null}
+                authToken={mockAuthToken}
+                onDeleteSuccess={mockOnDeleteSuccess}
+            />
+        );
 
-        const cancelButton = screen.getByText('Cancel');
-        fireEvent.click(cancelButton);
+        fireEvent.click(screen.getByText('Confirm Delete'));
+
+        expect(screen.getByText('Invalid Patient data.')).toBeInTheDocument();
+        expect(mockOnDeleteSuccess).not.toHaveBeenCalled();
+    });
+
+    test('cancels delete operation', () => {
+        render(
+            <DeletePatientProfile
+                Patient={mockPatient}
+                authToken={mockAuthToken}
+                onDeleteSuccess={mockOnDeleteSuccess}
+            />
+        );
+
+        fireEvent.click(screen.getByText('Cancel'));
 
         expect(mockOnDeleteSuccess).toHaveBeenCalledWith(null);
     });

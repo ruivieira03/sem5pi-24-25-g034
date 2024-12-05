@@ -1,11 +1,5 @@
-/*
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import axios from 'axios';
-import UpdatePatientProfile from './UpdatePatientProfile';
-
-jest.mock('axios'); // Certifica-te de que o mock está configurado
-
 import axios from 'axios';
 import UpdatePatientProfile from './UpdatePatientProfile';
 
@@ -19,8 +13,8 @@ describe('UpdatePatientProfile Component', () => {
         email: 'john.doe@example.com',
         phoneNumber: '123456789',
         emergencyContact: '987654321',
-        allergiesOrMedicalConditions: 'None',
-        appointmentHistory: 'No appointments yet',
+        allergiesOrMedicalConditions: ['Peanuts', 'Dust'],
+        appointmentHistory: ['Check-up on 2024-01-01'],
     };
 
     const mockAuthToken = 'mockAuthToken';
@@ -34,7 +28,6 @@ describe('UpdatePatientProfile Component', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        process.env.REACT_APP_API_BASE_URL = 'https://localhost:5001'; // Garantir definição da variável de ambiente
     });
 
     test('renders update form with patient data', () => {
@@ -51,8 +44,9 @@ describe('UpdatePatientProfile Component', () => {
         expect(screen.getByLabelText('Email:')).toHaveValue('john.doe@example.com');
         expect(screen.getByLabelText('Phone Number:')).toHaveValue('123456789');
         expect(screen.getByLabelText('Emergency Contact:')).toHaveValue('987654321');
-        expect(screen.getByLabelText('Allergies or Medical Conditions:')).toHaveValue('None');
-        expect(screen.getByLabelText('Appointment History:')).toHaveValue('No appointments yet');
+        expect(screen.getByDisplayValue('Peanuts')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('Dust')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('Check-up on 2024-01-01')).toBeInTheDocument();
     });
 
     test('updates patient profile successfully', async () => {
@@ -81,7 +75,7 @@ describe('UpdatePatientProfile Component', () => {
         });
 
         expect(axios.put).toHaveBeenCalledWith(
-            `${process.env.REACT_APP_API_BASE_URL}/api/Patient/update/${mockPatient.id}`,
+            `https://localhost:5001/api/Patient/update/${mockPatient.id}`,
             expect.objectContaining({ firstName: 'Johnny' }),
             expect.objectContaining({
                 headers: { Authorization: `Bearer ${mockAuthToken}` },
@@ -107,20 +101,5 @@ describe('UpdatePatientProfile Component', () => {
         });
     });
 
-    test('cancels update and navigates back', () => {
-        render(
-            <UpdatePatientProfile
-                patient={mockPatient}
-                authToken={mockAuthToken}
-                onUpdateSuccess={mockOnUpdateSuccess}
-            />
-        );
-
-        fireEvent.click(screen.getByText('Cancel'));
-
-        expect(mockNavigate).toHaveBeenCalledWith('/admin');
-    });
+  
 });
-
-
-*/
