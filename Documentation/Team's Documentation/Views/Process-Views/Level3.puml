@@ -1,0 +1,52 @@
+@startuml
+actor Refactor
+participant "«Route»\nRoute" as Route
+participant "«Controller»\nController" as Controller
+participant "«DTO»\nDTO" as DTO
+participant "«PatientService»\nService" as Service
+database "«DB»\nRepository" as Repository
+participant "«Domain Services»\nPatientRegistrationService" as PatientRegistrationService
+participant "«Domain Aggregate»\nAggregate" as Aggregate
+
+activate Refactor
+Refactor -> Route: POST (/api/patients)
+activate Route
+Route -> Controller: POST
+activate Controller
+
+Controller -> DTO: receives request body info
+activate DTO
+deactivate DTO
+activate Service
+Controller -> Service: creates patient
+
+Service -> Repository: check if email is unique
+activate Repository
+Repository--> Service: response
+
+deactivate Repository
+
+Service -> Repository: check if phone number is unique
+activate Repository
+Repository--> Service: response
+deactivate Repository
+Service -> Repository: get the last patient registered in this month
+activate Repository
+Repository --> Service: last patient registered in month
+
+deactivate Repository
+Service -> PatientRegistrationService: generates medical record number\nusing the last patient
+activate PatientRegistrationService
+PatientRegistrationService -> Service: medical record number
+deactivate PatientRegistrationService
+Service -> Aggregate: creates the entity
+activate Aggregate
+Aggregate -> Repository: saves in Database
+deactivate Aggregate
+activate Repository
+Repository -> Service: entity to DTO
+deactivate Repository
+Service -> Controller: DTO
+Controller -> Route: DTO
+Route -> Refactor: response
+@enduml
