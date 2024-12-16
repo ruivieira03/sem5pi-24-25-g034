@@ -99,11 +99,11 @@ namespace Hospital.Infrastructure.Users
                             new SystemUser
                             {
                             Id = new SystemUserId(Guid.NewGuid()),
-                            Username = "nurseUser",
-                            Role = Roles.Nurse,
+                            Username = "staffUser",
+                            Role = Roles.Staff,
                             Password = _passwordService.HashPassword("SEM5pi1234@"),
                             IAMId = "3",
-                            Email = "nurse@hospital.com",
+                            Email = "staff@hospital.com",
                             PhoneNumber = "1234567892",
                             isVerified = true
                      }

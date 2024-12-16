@@ -1,4 +1,1 @@
-SELECT * from Patients
-
-
-SELECT + from SystemUser;
+SELECT * from Patients;
