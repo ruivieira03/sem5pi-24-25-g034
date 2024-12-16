@@ -48,27 +48,21 @@ namespace Hospital.Controllers{
 
         }
 
-  
-
-
-
         
 
         // PUT: api/Patient/5/update-profile Update the patient's profile details
-        [HttpPut("{id}/update-profile")]
+        [HttpPut("update/{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateProfile(Guid id, UpdatePatientProfileViewModel model){
-            
+        public async Task<IActionResult> UpdateProfile([FromRoute] Guid id, UpdatePatientProfileViewModel model){
+        Console.WriteLine("\n\nATE AQUI TUDO BEM\n\n");
+        Console.WriteLine("\n\n" + id + "\n\n");
+        
             if (!ModelState.IsValid){
                 return BadRequest(ModelState);
             }
 
-             if (id != new PatientId(model.PatientId).AsGuid()){
-                return BadRequest();                                        // Return 400 if ID in the route doesn't match the current user's ID
-            }
 
             try {
-
                 var updatedPatient = await _patientService.UpdateProfileAsync(model, id); // Delegate the update logic to the service layer
                 return Ok(updatedPatient);              // Return OK with the updated user
 
@@ -78,11 +72,14 @@ namespace Hospital.Controllers{
         }
 
 
+      
+
+
               
  // DELETE: api/Patient/5/Delete-Profilea 
-    [HttpDelete("{id}/Delete-Profile")]
+    [HttpDelete("delete/{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> DeletePatientProfile(Guid id){
+    public async Task<ActionResult<PatientDto>> DeletePatientProfile(Guid id){
 
         try{
            var patient =  await _patientService.DeleteAsync(new PatientId(id));
@@ -97,6 +94,7 @@ namespace Hospital.Controllers{
         }catch (Exception ex){
             return BadRequest(new { Message = ex.Message }); // Return 400 if any business rule fails
         }
+         
     }
 
         
@@ -113,7 +111,7 @@ namespace Hospital.Controllers{
 // GET: api/Patient/{id}
     [HttpGet("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> GetById(Guid id){
+    public async Task<ActionResult<PatientDto>> GetById(Guid id){
 
         var user = await _patientService.GetByIdAsync(new PatientId(id));
 
@@ -123,8 +121,58 @@ namespace Hospital.Controllers{
 
         return Ok(user); // Return OK status with the user data
     }
-   
+
+
+// GET: api/Patient/{email}
+    [HttpGet("email/{email}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<PatientDto>> GetByEmail(string email){
+
+        var patient = await _patientService.GetByEmailAsync(email);
+
+        if (patient == null){
+            return NotFound(); // Return 404 if user not found
+        }
+
+        return Ok(patient); // Return OK status with the user data
     }
 
+    // GET: api/Patient/{email}
+    [HttpGet("phoneNumber/{phoneNumber}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<PatientDto>> GetByPhoneNumberAsync(string phoneNumber){
+
+        var Patient = await _patientService.GetByPhoneNumberAsync(phoneNumber);
+
+        if (Patient == null){
+            return NotFound(); // Return 404 if user not found
+        }
+
+        return Ok(Patient); // Return OK status with the user data
+    }
+
+
+
+
+
+
+
+    [HttpGet("firstName/{firstname}")]
+    [Authorize(Roles = "Admin")]
+public async Task<ActionResult<IEnumerable<PatientDto>>> GetByFirstName(string firstName){
+    
+    if (string.IsNullOrEmpty(firstName)){
+        return BadRequest("First name is required.");
+    }
+
+    try{
+        var patients = await _patientService.GetByFirstNameAsync(firstName);
+        return Ok(patients);
+    }catch (Exception ex){
+        return BadRequest(new { message = ex.Message });
+    }
+}
+
+}    
 }
 

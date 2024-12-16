@@ -21,7 +21,7 @@ function Profile() {
                 const response = await axios.get(
                     `${API_BASE_URL}/api/account/profile`, // Use API_BASE_URL here
                     {
-                        headers: { Authorization: `Bearer ${token}` },
+                        headers: { Authorization: `Bearer ${token}` }, // heaeder do Token de autorização
                     }
                 );
                 console.log('Profile Response:', response.data); // Check the data returned by the API
@@ -45,7 +45,6 @@ function Profile() {
                     <p className="profile-info">Username: {profile.username}</p>
                     <p className="profile-info">Email: {profile.email}</p>
                     <p className="profile-info">Role: {profile.role}</p>
-                    <p className="profile-info">User Id: {profile.userId}</p>
                 </div>
             ) : (
                 <p className="loading-message">Loading...</p>

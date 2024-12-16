@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import OperationRequestDelete from '../OperationRequestDelete/OperationRequestDelete';
 import OperationRequestUpdate from '../OperationRequestUpdate/OperationRequestUpdate';
+import { API_BASE_URL } from '../../../config'; // Import API_BASE_URL
 import './OperationRequestList.css';
 
 function OperationRequestList() {
@@ -15,7 +16,7 @@ function OperationRequestList() {
     useEffect(() => {
         const fetchOperationRequests = async () => {
             try {
-                const response = await axios.get('https://localhost:5001/api/OperationRequest/', {
+                const response = await axios.get(`${API_BASE_URL}/api/OperationRequest/`, {
                     headers: { Authorization: `Bearer ${authToken}` },
                 });
                 setOperationRequests(response.data);

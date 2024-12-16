@@ -18,18 +18,16 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Install Dependencies and Build
+    - name: Install Dependencies and Build Locally
       run: |
         cd SPA
         npm install
         CI=false npm run build
 
-    - name: Deploy to Server
-      uses: appleboy/scp-action@v0.1.2
+    - name: Deploy Build to Server
+      uses: appleboy/ssh-action@v0.1.7
       with:
-        host: vsgate-ssh.dei.isep.ipp.pt
-        username: root
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 10606
-        source: SPA/build/*
-        target: /var/www/html/spa/

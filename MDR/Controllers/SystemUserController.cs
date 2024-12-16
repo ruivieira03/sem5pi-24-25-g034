@@ -81,6 +81,22 @@ public class SystemUserController : ControllerBase
         return Ok(users); // Return OK status with the list of users
     }
 
+    // GET: api/SystemUser/username/{username}
+    [HttpGet("username/{username}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<SystemUserDto>> GetByUsername(string username)
+    {
+        var user = await _systemUserService.GetByUsernameAsync(username);
+
+        if (user == null)
+        {
+            return NotFound(); // Return 404 if user not found
+        }
+
+        return Ok(user); // Return OK status with the user data
+    }
+    
+
     // GET: api/SystemUser/5
     [HttpGet("{id}")]
     [Authorize(Roles = "Admin")]
@@ -100,8 +116,7 @@ public class SystemUserController : ControllerBase
     // PUT: api/SystemUser/5
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SystemUserDto>> Update(Guid id, UpdateSystemUserViewModel model)
-    {
+    public async Task<ActionResult<SystemUserDto>> Update(Guid id, UpdateSystemUserViewModel model){
         try
         {
             var updatedUser = await _systemUserService.UpdateAsync(id, model);

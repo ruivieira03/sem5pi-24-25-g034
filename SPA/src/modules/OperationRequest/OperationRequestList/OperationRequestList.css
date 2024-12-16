@@ -28,34 +28,32 @@
 /* Operation request item */
 .operation-request-item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-between; /* Ensures buttons stay on the right */
+    align-items: center; /* Vertically centers content */
+    flex-wrap: nowrap; /* Prevents wrapping */
     padding: 15px;
     border-bottom: 1px solid #ddd;
     transition: background-color 0.3s ease;
 }
 
-.operation-request-item:hover {
-    background-color: #f9f9f9;
+/* Details section */
+.operation-request-details {
+    flex: 1; /* Allows this section to grow */
+    margin-right: 20px; /* Adds space between details and buttons */
+    overflow: hidden; /* Prevents overflow */
+    text-overflow: ellipsis; /* Show '...' for overflowing text */
+    white-space: nowrap; /* Prevent wrapping for long text */
 }
 
-/* Operation request details */
-.operation-request-details p {
-    margin: 5px 0;
-    font-size: 1rem;
-    color: #555;
-}
-
-.operation-request-details p strong {
-    color: #333;
-}
-
-/* Action buttons */
+/* Buttons container */
 .operation-request-actions {
     display: flex;
-    gap: 10px; /* Space between buttons */
+    flex-shrink: 0; /* Prevents buttons from shrinking */
+    gap: 10px; /* Adds spacing between buttons */
+    flex-wrap: nowrap; /* Ensures buttons remain inline */
 }
 
+/* Button styling */
 .action-button {
     padding: 10px 15px;
     font-size: 1rem;

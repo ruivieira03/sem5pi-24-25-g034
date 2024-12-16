@@ -61,7 +61,6 @@ function UserList() {
                     users.map((user) => (
                         <li key={user.id} className="user-item">
                             <div className="user-details">
-                                <p><strong>ID:</strong> {user.id}</p>
                                 <p><strong>Username:</strong> {user.username}</p>
                                 <p><strong>Role:</strong> {user.role}</p>
                             </div>
