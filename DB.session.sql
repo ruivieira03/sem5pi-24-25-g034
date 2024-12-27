@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 
 START TRANSACTION;
@@ -14,4 +15,7 @@ SELECT VERSION();
 =======
 
 x
+>>>>>>> Stashed changes
+=======
+select * from patients;
 >>>>>>> Stashed changes

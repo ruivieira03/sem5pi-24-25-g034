@@ -1,3 +1,8 @@
 
 Documentation/Domain-model/.DS_Store
+<<<<<<< Updated upstream
 node_modules
+=======
+*.dll
+Documentation/LAPR5/HospTech.mp4
+>>>>>>> Stashed changes
