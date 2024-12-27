@@ -1,0 +1,20 @@
+
+@startuml
+actor Admin
+participant UserDetails
+participant Axios
+
+Admin -> UserDetails: Enter User ID
+UserDetails -> UserDetails: Update state (onChange)
+Admin -> UserDetails: Click "Fetch User"
+UserDetails -> Axios: GET /SystemUser/{userId}
+Axios -> Backend: Send request with auth token
+Backend -> Axios: Response (User Data or Error)
+alt Success
+    Axios -> UserDetails: Update userData state
+    UserDetails -> Admin: Display user details
+else Error
+    Axios -> UserDetails: Update error state
+    UserDetails -> Admin: Show error message
+end
+@enduml

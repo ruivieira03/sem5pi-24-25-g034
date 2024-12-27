@@ -1,0 +1,92 @@
+/* Overlay for the modal */
+.delete-user-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's above other UI elements */
+}
+
+/* Modal box */
+.delete-user-modal {
+    background-color: #fff;
+    border-radius: 8px;
+    width: 400px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out; /* Smooth entry animation */
+}
+
+/* Title */
+.delete-user-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Message text */
+.delete-user-message {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+/* Error message */
+.delete-user-error {
+    color: #d9534f; /* Bootstrap danger color */
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+/* Button container */
+.delete-user-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* Buttons */
+.delete-user-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.delete-user-confirm {
+    background-color: #d9534f; /* Bootstrap danger color */
+    color: #fff;
+}
+
+.delete-user-confirm:hover {
+    background-color: #c9302c; /* Darker danger color */
+}
+
+.delete-user-cancel {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.delete-user-cancel:hover {
+    background-color: #ddd;
+}
+
+/* Smooth fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

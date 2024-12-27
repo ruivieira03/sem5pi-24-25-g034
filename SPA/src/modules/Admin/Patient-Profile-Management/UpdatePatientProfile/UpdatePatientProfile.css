@@ -1,0 +1,58 @@
+/* Container principal */
+.update-patient-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    transition: transform 0.2s ease-in-out;
+}
+
+.update-patient-container:hover {
+    transform: translateY(-5px);
+}
+
+/* Título */
+.update-patient-container h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    color: #333;
+    font-weight: 600;
+}
+
+/* Formulário */
+.update-patient-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Labels */
+.update-patient-form label {
+    font-size: 1em;
+    font-weight: 500;
+    color: #444;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Inputs e Textareas */
+.update-patient-form input,
+.update-patient-form textarea {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.update-patient-form input:focus,
+.update-patient-form textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0)
+}

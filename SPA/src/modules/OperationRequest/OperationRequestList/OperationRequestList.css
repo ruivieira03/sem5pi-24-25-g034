@@ -1,0 +1,108 @@
+/* General container styling */
+.operation-request-list-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fdfdfd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    text-align: left;
+}
+
+/* Header */
+.operation-request-list-container h2 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Operation request list */
+.operation-request-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Operation request item */
+.operation-request-item {
+    display: flex;
+    justify-content: space-between; /* Ensures buttons stay on the right */
+    align-items: center; /* Vertically centers content */
+    flex-wrap: nowrap; /* Prevents wrapping */
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+}
+
+/* Details section */
+.operation-request-details {
+    flex: 1; /* Allows this section to grow */
+    margin-right: 20px; /* Adds space between details and buttons */
+    overflow: hidden; /* Prevents overflow */
+    text-overflow: ellipsis; /* Show '...' for overflowing text */
+    white-space: nowrap; /* Prevent wrapping for long text */
+}
+
+/* Buttons container */
+.operation-request-actions {
+    display: flex;
+    flex-shrink: 0; /* Prevents buttons from shrinking */
+    gap: 10px; /* Adds spacing between buttons */
+    flex-wrap: nowrap; /* Ensures buttons remain inline */
+}
+
+/* Button styling */
+.action-button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.action-button.delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.action-button.delete:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+.action-button.update {
+    background-color: #007bff;
+    color: white;
+}
+
+.action-button.update:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Modal styling remains the same */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+}

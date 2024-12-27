@@ -1,0 +1,24 @@
+
+@startuml
+actor User
+participant PatientRegister
+participant State_Management
+participant Axios
+participant Browser
+
+User -> PatientRegister: Fill form fields
+PatientRegister -> State_Management: Update formData state (onChange)
+User -> PatientRegister: Submit form
+PatientRegister -> Axios: POST /register-patient
+Axios -> Backend: Send request
+Backend -> Axios: Response (Success or Error)
+Axios -> PatientRegister: Update state (success or error)
+alt Success
+    PatientRegister -> State_Management: Clear formData
+    PatientRegister -> Browser: Show success message
+    PatientRegister -> Browser: Redirect to Landing Page
+else Error
+    PatientRegister -> State_Management: Update error state
+    PatientRegister -> Browser: Show error message
+end
+@enduml

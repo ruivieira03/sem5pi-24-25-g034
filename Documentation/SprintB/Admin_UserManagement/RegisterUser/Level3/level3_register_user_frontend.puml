@@ -1,0 +1,22 @@
+
+@startuml
+actor Admin
+participant RegisterUser
+participant State_Management
+participant Axios
+participant Browser
+
+Admin -> RegisterUser: Fill form fields
+RegisterUser -> State_Management: Update formData state (onChange)
+Admin -> RegisterUser: Submit form
+RegisterUser -> Axios: POST /SystemUser with payload
+Axios -> Backend: Send request with auth token
+Backend -> Axios: Response (Success or Error)
+alt Success
+    Axios -> State_Management: Reset formData
+    RegisterUser -> Browser: Show success message
+else Error
+    Axios -> State_Management: Update error state
+    RegisterUser -> Browser: Show error message
+end
+@enduml

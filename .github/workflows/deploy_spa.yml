@@ -1,0 +1,33 @@
+name: Deploy React SPA
+
+on:
+  push:
+    paths:
+      - 'SPA/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install Dependencies and Build Locally
+      run: |
+        cd SPA
+        npm install
+        CI=false npm run build
+
+    - name: Deploy Build to Server
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 10606

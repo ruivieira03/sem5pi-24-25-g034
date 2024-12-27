@@ -1,0 +1,23 @@
+
+@startuml
+actor User
+participant Login
+participant State_Management
+participant Axios
+participant Browser
+participant localStorage
+
+User -> Login: Enter username and password
+Login -> State_Management: Update username and password states (onChange)
+User -> Login: Click "Login"
+Login -> Axios: POST /login
+Axios -> Backend: Send request
+Backend -> Axios: Response (JWT Token and Role)
+alt Success
+    Axios -> localStorage: Store token and role
+    Login -> Browser: Redirect to role-specific menu
+else Error
+    Axios -> State_Management: Update error state
+    Login -> Browser: Show error message
+end
+@enduml

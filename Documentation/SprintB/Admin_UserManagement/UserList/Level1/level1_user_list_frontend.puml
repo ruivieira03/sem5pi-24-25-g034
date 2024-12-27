@@ -1,0 +1,16 @@
+
+@startuml
+actor Admin
+participant Frontend
+
+Admin -> Frontend: Load User List
+Frontend -> Backend: GET /SystemUser
+Backend -> Frontend: Response (User List or Error)
+alt Success
+    Frontend -> Admin: Display user list
+    Admin -> Frontend: Click "Delete" or "Update"
+    Frontend -> Modal: Open DeleteUser or UpdateUser modal
+else Error
+    Frontend -> Admin: Show error message
+end
+@enduml

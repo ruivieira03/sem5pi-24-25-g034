@@ -1,0 +1,39 @@
+
+@startuml
+actor User
+participant API_Controller
+participant Service_Layer
+participant Repository
+participant Logging_Service
+participant Unit_of_Work
+database Database
+
+User -> API_Controller: GET /delete-account?email&token
+API_Controller -> API_Controller: Validate Email and Token
+alt Missing Email or Token
+    API_Controller -> User: 400 Bad Request
+else Valid Email and Token
+    API_Controller -> Service_Layer: ValidateDeleteTokenAsync
+    Service_Layer -> Repository: GetUserByEmailAsync
+    Repository -> Database: Query User by Email
+    alt User Not Found
+        Service_Layer -> API_Controller: Exception: "User not found"
+    else
+        Service_Layer -> Service_Layer: Validate Token
+        alt Invalid Token
+            Service_Layer -> API_Controller: Exception: "Invalid token"
+        else Valid Token
+            API_Controller -> Service_Layer: DeleteAsync
+            Service_Layer -> Repository: GetUserByEmailAsync
+            Repository -> Database: Query User by Email
+            Service_Layer -> Repository: Remove User
+            Repository -> Database: Delete User Record
+            Service_Layer -> Logging_Service: Log Account Deletion
+            Service_Layer -> Unit_of_Work: Commit
+            Unit_of_Work -> Database: Save Changes
+            Service_Layer -> API_Controller: SystemUserDto
+        end
+    end
+    API_Controller -> User: 200 OK with success message
+end
+@enduml

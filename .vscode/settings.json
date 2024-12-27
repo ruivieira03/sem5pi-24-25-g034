@@ -13,6 +13,34 @@
             "database": "sem5pi",
             "username": "root",
             "password": "B7j3zfKKkOXf"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "vs991.dei.isep.ipp.pt",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "Connection2",
+            "database": "sem5pi2",
+            "username": "root",
+            "password": ""
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "vs991.dei.isep.ipp.pt ",
+            "port": 10991,
+            "driver": "MySQL",
+            "name": "Connection2",
+            "database": "sem5pi2",
+            "username": "root",
+            "password": ""
         }
     ]
 }

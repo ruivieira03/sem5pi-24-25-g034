@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
@@ -19,3 +20,5 @@ x
 =======
 select * from patients;
 >>>>>>> Stashed changes
+=======
+>>>>>>> main

@@ -1,0 +1,14 @@
+
+@startuml
+actor Admin
+participant Frontend
+
+Admin -> Frontend: Click "Delete User"
+Frontend -> Backend: DELETE /SystemUser/{user.id}/hard
+Backend -> Frontend: Response (Success or Error)
+alt Success
+    Frontend -> Admin: Notify parent and remove user from UI
+else Error
+    Frontend -> Admin: Show error message
+end
+@enduml

@@ -1,0 +1,29 @@
+
+@startuml
+actor User
+participant API_Controller
+participant Repository
+participant Password_Service
+participant Jwt_Service
+
+User -> API_Controller: POST /login
+API_Controller -> API_Controller: Validate JWT Configuration
+alt Missing or Invalid Configuration
+    API_Controller -> User: 400 Bad Request
+else Configuration Valid
+    API_Controller -> Repository: GetUserByUsernameAsync
+    alt User Not Found
+        API_Controller -> User: 401 Unauthorized
+    else User Found
+        API_Controller -> Password_Service: HashPassword
+        API_Controller -> User: Validate Credentials
+        alt Invalid Credentials
+            API_Controller -> User: 401 Unauthorized
+        else Valid Credentials
+            API_Controller -> Jwt_Service: Generate JWT Token
+            Jwt_Service -> API_Controller: JWT Token
+            API_Controller -> User: 200 OK with JWT Token and Role
+        end
+    end
+end
+@enduml

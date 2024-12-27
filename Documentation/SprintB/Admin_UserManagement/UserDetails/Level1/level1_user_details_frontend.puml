@@ -1,0 +1,15 @@
+
+@startuml
+actor Admin
+participant Frontend
+
+Admin -> Frontend: Enter User ID
+Admin -> Frontend: Click "Fetch User"
+Frontend -> Backend: GET /SystemUser/{userId}
+Backend -> Frontend: Response (User Data or Error)
+alt Success
+    Frontend -> Admin: Display user details
+else Error
+    Frontend -> Admin: Show error message
+end
+@enduml
