@@ -16,6 +16,7 @@ const UpdatePatientProfile = ({ patient, authToken, onUpdateSuccess }) => {
         allergiesOrMedicalConditions: patient.allergiesOrMedicalConditions,
         appointmentHistory: patient.appointmentHistory, // Supondo que seja um campo editável
     });
+    
 
     const navigate = useNavigate(); // Hook para navegação
 
@@ -23,6 +24,22 @@ const UpdatePatientProfile = ({ patient, authToken, onUpdateSuccess }) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
+
+    const handleArrayChange = (e, index, field) => {
+        const newArray = [...formData[field]];
+        newArray[index] = e.target.value;
+        setFormData({ ...formData, [field]: newArray });
+      };
+      
+      const handleAddField = (field) => {
+        setFormData({ ...formData, [field]: [...formData[field], ""] });
+      };
+      
+      const handleRemoveField = (field, index) => {
+        const newArray = formData[field].filter((_, i) => i !== index);
+        setFormData({ ...formData, [field]: newArray });
+      };
+      
 
     const handleUpdate = async () => {
         try {
@@ -101,22 +118,71 @@ const UpdatePatientProfile = ({ patient, authToken, onUpdateSuccess }) => {
                         required
                     />
                 </label>
-                <label>
-                    Allergies or Medical Conditions:
-                    <textarea
-                        name="allergiesOrMedicalConditions"
-                        value={formData.allergiesOrMedicalConditions}
-                        onChange={handleInputChange}
-                    />
-                </label>
-                <label>
-                    Appointment History:
-                    <textarea
-                        name="appointmentHistory"
-                        value={formData.appointmentHistory}
-                        onChange={handleInputChange}
-                    />
-                </label>
+                
+                <div className="form-group">
+  <label>Allergies or Medical Conditions:</label>
+  {(formData?.allergiesOrMedicalConditions || []).map((item, index) => (
+    <div key={index}>
+      <input
+        type="text"
+        value={item}
+        onChange={(e) =>
+          handleArrayChange(e, index, "allergiesOrMedicalConditions")
+        }
+      />
+      <button
+        type="button"
+        onClick={() =>
+          handleRemoveField("allergiesOrMedicalConditions", index)
+        }
+      >
+        Remove
+      </button>
+    </div>
+  ))}
+  <button
+    type="button"
+    onClick={() =>
+      handleAddField("allergiesOrMedicalConditions")
+    }
+  >
+    Add Allergy/Condition
+  </button>
+</div>
+
+
+
+
+                <div className="form-group">
+  <label>Appointment History:</label>
+  {(formData?.appointmentHistory || []).map((item, index) => (
+    <div key={index}>
+      <input
+        type="text"
+        value={item}
+        onChange={(e) =>
+          handleArrayChange(e, index, "appointmentHistory")
+        }
+      />
+      <button
+        type="button"
+        onClick={() =>
+          handleRemoveField("appointmentHistory", index)
+        }
+      >
+        Remove
+      </button>
+    </div>
+  ))}
+  <button
+    type="button"
+    onClick={() => handleAddField("appointmentHistory")}
+  >
+    Add Appointment
+  </button>
+</div>
+
+                
                 <div className="button-group">
                     <button
                         type="button"

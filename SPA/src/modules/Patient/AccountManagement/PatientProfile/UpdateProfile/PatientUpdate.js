@@ -12,16 +12,27 @@ const PatientUpdate = ({ profileData, authToken, setProfileData, setError, setSu
         email: '',
         phoneNumber: '',
         emergencyContact: '',
+        allergiesOrMedicalConditions: [''], // Updated to a list
+        appointmentHistory: [''], // Updated to a list
     });
 
     const [loading, setLoading] = useState(false);
-    const [error, setLocalError] = useState('');
+    const [localError, setLocalError] = useState('');
     const navigate = useNavigate(); // For navigation when cancel button is clicked
     const token = localStorage.getItem('authToken');
 
+    
+
     // Populate the form fields with the current profile data when the component mounts
     useEffect(() => {
-        setFormData(profileData);
+        if (profileData) {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                ...profileData,
+                allergiesOrMedicalConditions: profileData.allergiesOrMedicalConditions || [''],
+                appointmentHistory: profileData.appointmentHistory || [''],
+            }));
+        }
     }, [profileData]);
 
     const handleInputChange = (e) => {
@@ -29,11 +40,26 @@ const PatientUpdate = ({ profileData, authToken, setProfileData, setError, setSu
         setFormData({ ...formData, [name]: value });
     };
 
+    const handleArrayChange = (e, index, field) => {
+        const newArray = [...formData[field]];
+        newArray[index] = e.target.value;
+        setFormData({ ...formData, [field]: newArray });
+    };
+
+    const handleAddField = (field) => {
+        setFormData({ ...formData, [field]: [...formData[field], ''] });
+    };
+
+    const handleRemoveField = (field, index) => {
+        const newArray = formData[field].filter((_, i) => i !== index);
+        setFormData({ ...formData, [field]: newArray });
+    };
+
     const handleUpdate = async () => {
         try {
             setLoading(true);
             const response = await axios.put(
-                `${API_BASE_URL}/api/account/update-profile`, // Use API_BASE_URL here
+                `${API_BASE_URL}/api/account/update-profile`,
                 formData,
                 {
                     headers: { Authorization: `Bearer ${token}` },
@@ -58,7 +84,7 @@ const PatientUpdate = ({ profileData, authToken, setProfileData, setError, setSu
     return (
         <div className="patient-update-container">
             <h2>Update Patient Profile</h2>
-            {error && <p className="error">{error}</p>}
+            {localError && <p className="error">{localError}</p>}
             <form className="patient-update-form" onSubmit={(e) => e.preventDefault()}>
                 <label>
                     First Name:
@@ -82,13 +108,17 @@ const PatientUpdate = ({ profileData, authToken, setProfileData, setError, setSu
                 </label>
                 <label>
                     Gender:
-                    <input
-                        type="text"
+                    <select
                         name="gender"
                         value={formData.gender}
                         onChange={handleInputChange}
                         required
-                    />
+                    >
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
                 </label>
                 <label>
                     Email:
@@ -120,6 +150,58 @@ const PatientUpdate = ({ profileData, authToken, setProfileData, setError, setSu
                         required
                     />
                 </label>
+                <div className="form-group">
+                    <label>Allergies or Medical Conditions:</label>
+                    {(formData.allergiesOrMedicalConditions || []).map((item, index) => (
+                        <div key={index}>
+                            <input
+                                type="text"
+                                value={item}
+                                onChange={(e) =>
+                                    handleArrayChange(e, index, 'allergiesOrMedicalConditions')
+                                }
+                            />
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    handleRemoveField('allergiesOrMedicalConditions', index)
+                                }
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    ))}
+                    <button
+                        type="button"
+                        onClick={() => handleAddField('allergiesOrMedicalConditions')}
+                    >
+                        Add Allergy/Condition
+                    </button>
+                </div>
+                <div className="form-group">
+                    <label>Appointment History:</label>
+                    {(formData.appointmentHistory || []).map((item, index) => (
+                        <div key={index}>
+                            <input
+                                type="text"
+                                value={item}
+                                onChange={(e) => handleArrayChange(e, index, 'appointmentHistory')}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => handleRemoveField('appointmentHistory', index)}
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    ))}
+                    <button
+                        type="button"
+                        onClick={() => handleAddField('appointmentHistory')}
+                    >
+                        Add Appointment
+                    </button>
+                </div>
                 <div className="button-group">
                     <button
                         type="button"
