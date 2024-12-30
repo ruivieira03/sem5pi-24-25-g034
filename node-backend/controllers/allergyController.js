@@ -1,23 +1,37 @@
 const Allergy = require('../models/allergyModel');
+const mongoose = require('mongoose'); // Import mongoose to validate ObjectId
 
-// Get all allergies
+// Get all allergies with pagination
 exports.getAllAllergies = async (req, res) => {
     try {
-        const allergies = await Allergy.findAll();
-        res.status(200).json(allergies);
+        const { page = 1, limit = 10 } = req.query; // Get pagination params from query
+        const skip = (page - 1) * limit;
+
+        const allergies = await Allergy.find().skip(skip).limit(parseInt(limit));
+        const total = await Allergy.countDocuments();
+
+        res.status(200).json({
+            total,
+            page: parseInt(page),
+            totalPages: Math.ceil(total / limit),
+            data: allergies,
+        });
     } catch (error) {
         console.error('Error fetching allergies:', error);
         res.status(500).json({ message: 'Error fetching allergies', error });
     }
 };
 
-// Get a single allergy by ID
-exports.getAllergyById = async (req, res) => {
+// Get a single allergy by name
+exports.getAllergyByName = async (req, res) => {
     try {
-        const allergy = await Allergy.findByPk(req.params.id);
+        const { name } = req.params; // Get the name from the route parameter
+
+        const allergy = await Allergy.findOne({ name }); // Search for the allergy by name
         if (!allergy) {
             return res.status(404).json({ message: 'Allergy not found' });
         }
+
         res.status(200).json(allergy);
     } catch (error) {
         console.error('Error fetching allergy:', error);
@@ -30,17 +44,19 @@ exports.createAllergy = async (req, res) => {
     try {
         const { name, description } = req.body;
 
-        // Ensure name is provided
-        if (!name) {
-            return res.status(400).json({ message: 'Name is required' });
+        // Validate input
+        if (!name || !description) {
+            return res.status(400).json({ message: 'Name and description are required' });
         }
 
         // Create the allergy
-        const newAllergy = await Allergy.create({ name, description });
+        const newAllergy = new Allergy({ name, description });
+        await newAllergy.save();
+
         res.status(201).json(newAllergy);
     } catch (error) {
         console.error('Error creating allergy:', error);
-        if (error.name === 'SequelizeUniqueConstraintError') {
+        if (error.code === 11000) { // Duplicate key error
             return res.status(400).json({ message: 'Allergy name must be unique' });
         }
         res.status(500).json({ message: 'Error creating allergy', error });
@@ -50,22 +66,26 @@ exports.createAllergy = async (req, res) => {
 // Update an existing allergy
 exports.updateAllergy = async (req, res) => {
     try {
+        const { id } = req.params; // Get the ID from the route
         const { name, description } = req.body;
 
-        // Find the allergy by ID
-        const allergy = await Allergy.findByPk(req.params.id);
+        if (!id) {
+            return res.status(400).json({ message: 'Allergy ID is required' });
+        }
+
+        const allergy = await Allergy.findById(id); // Find the allergy by ID
         if (!allergy) {
             return res.status(404).json({ message: 'Allergy not found' });
         }
 
         // Update the allergy details
-        await allergy.update({ name, description });
+        allergy.name = name || allergy.name;
+        allergy.description = description || allergy.description;
+
+        await allergy.save(); // Save the updated allergy
         res.status(200).json(allergy);
     } catch (error) {
         console.error('Error updating allergy:', error);
-        if (error.name === 'SequelizeUniqueConstraintError') {
-            return res.status(400).json({ message: 'Allergy name must be unique' });
-        }
         res.status(500).json({ message: 'Error updating allergy', error });
     }
 };
@@ -73,17 +93,28 @@ exports.updateAllergy = async (req, res) => {
 // Delete an allergy
 exports.deleteAllergy = async (req, res) => {
     try {
-        // Find the allergy by ID
-        const allergy = await Allergy.findByPk(req.params.id);
-        if (!allergy) {
+        const { id } = req.params;
+        console.log('Attempting to delete allergy with ID:', id);
+
+        // Validate the ID format
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid allergy ID format' });
+        }
+
+        const result = await Allergy.findByIdAndDelete(id);
+        if (!result) {
+            console.log('Allergy not found with ID:', id);
             return res.status(404).json({ message: 'Allergy not found' });
         }
 
-        // Delete the allergy
-        await allergy.destroy();
         res.status(200).json({ message: 'Allergy deleted successfully' });
     } catch (error) {
         console.error('Error deleting allergy:', error);
-        res.status(500).json({ message: 'Error deleting allergy', error });
+        res.status(500).json({ 
+            message: 'Error deleting allergy', 
+            error: error.message || 'Unknown error occurred' 
+        });
     }
 };
+
+

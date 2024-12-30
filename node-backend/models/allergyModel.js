@@ -1,27 +1,20 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../database/connection');
+const mongoose = require('mongoose');
 
-const Allergy = sequelize.define(
-    'Allergy',
+const AllergySchema = new mongoose.Schema(
     {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-        },
         name: {
-            type: DataTypes.STRING,
-            allowNull: false,
+            type: String,
+            required: true,
             unique: true,
         },
         description: {
-            type: DataTypes.TEXT,
+            type: String,
+            default: 'No description provided',
         },
     },
     {
-        timestamps: true, // Adds createdAt and updatedAt
-        tableName: 'allergies', // MySQL table name
+        timestamps: true, // Automatically adds createdAt and updatedAt fields
     }
 );
 
-module.exports = Allergy;
+module.exports = mongoose.model('Allergy', AllergySchema);

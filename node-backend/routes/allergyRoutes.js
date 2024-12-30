@@ -1,12 +1,13 @@
 const express = require('express');
 const allergyController = require('../controllers/allergyController');
+const authenticate = require('../middleware/authenticate');
+
 const router = express.Router();
 
-// Routes for managing allergies
-router.get('/', allergyController.getAllAllergies); // Get all allergies
-router.get('/:id', allergyController.getAllergyById); // Get allergy by ID
-router.post('/', allergyController.createAllergy); // Create new allergy
-router.put('/:id', allergyController.updateAllergy); // Update allergy by ID
-router.delete('/:id', allergyController.deleteAllergy); // Delete allergy by ID
+router.get('/', authenticate(['Doctor', 'Admin']), allergyController.getAllAllergies);
+router.get('/name/:name', authenticate(['Admin', 'Doctor']), allergyController.getAllergyByName);
+router.post('/', authenticate(['Admin']), allergyController.createAllergy);
+router.put('/:id', authenticate(['Admin']), allergyController.updateAllergy);
+router.delete('/:id', authenticate(['Admin']), allergyController.deleteAllergy);
 
 module.exports = router;
