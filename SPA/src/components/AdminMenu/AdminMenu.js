@@ -28,33 +28,32 @@ function AdminMenu() {
                     </li>
 
                     <li>
-                        <Link className="admin-menu-link" to="register-user">Register User</Link>
+                        <Link className="admin-menu-link" to="/admin/register-user">Register User</Link>
                     </li>
 
                     <li>
-                        <Link className="admin-menu-link" to="register-Patient-Profile">Register Patient Profile</Link>
+                        <Link className="admin-menu-link" to="/admin/register-Patient-Profile">Register Patient Profile</Link>
                     </li>
 
                     <li>
-                        <Link className="admin-menu-link" to="user-list">User List</Link>
+                        <Link className="admin-menu-link" to="/admin/user-list">User List</Link>
                     </li>
                     <li>
-                        <Link className="admin-menu-link" to="Patient-Profile-list">All Patient Profiles</Link>
+                        <Link className="admin-menu-link" to="/admin/Patient-Profile-list">All Patient Profiles</Link>
                         
                     </li>
                     <li>
-                        <Link className="admin-menu-link" to="patient-profile-details">Patient Profile Information</Link>
+                        <Link className="admin-menu-link" to="/admin/patient-profile-details">Patient Profile Information</Link>
                     </li>
                     <li>
-                        <Link className="admin-menu-link" to="user-details/:username">User Information</Link>
+                        <Link className="admin-menu-link" to="/admin/user-details/:username">User Information</Link>
                     </li>
                     <li>
-                        <Link className="admin-menu-link" to="profile">Profile</Link>
+                        <Link className="admin-menu-link" to="/admin/profile">Profile</Link>
                     </li>
                     <li>
                         <Link className="admin-menu-link" to="/admin/operation-requests">All Operation Requests</Link>
                     </li>
-
                     <li>
                         <Link className="admin-menu-link" to="/admin/operation-request-by-patient">Operation Request by Patient</Link>
                     </li>

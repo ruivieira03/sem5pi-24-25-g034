@@ -99,6 +99,25 @@ namespace Hospital.Infrastructure.Patients
             _context.Patients.Remove(patient);
         }
 
+       public async Task RemovePersonalData(Patient patient)
+{
+    if (patient == null) throw new ArgumentNullException(nameof(patient));
+    
+    patient.FirstName = null;
+    patient.LastName = null;
+    patient.DateOfBirth = default; // Para DateTime, defina como valor padrão
+    patient.Email = null;
+    patient.PhoneNumber = null;
+    patient.Gender = null;
+    patient.EmergencyContact = null;
+    patient.MedicalRecordNumber = null;
+
+    // Marcar como modificado e salvar no banco
+    _context.Patients.Update(patient);
+    await _context.SaveChangesAsync();
+}
+
+
         public async Task<List<Patient>> GetAllAsync()
         {
             return await _context.Patients.ToListAsync();

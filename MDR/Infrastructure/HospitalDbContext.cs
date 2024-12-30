@@ -9,10 +9,8 @@ using Hospital.Services;
 using Hospital.Infrastructure.operationrequestmanagement;
 using Hospital.Domain.OperationRequest;
 
-namespace Hospital.Infrastructure
-{
-    public class HospitalDbContext : DbContext
-    {
+namespace Hospital.Infrastructure{
+    public class HospitalDbContext : DbContext{
         private readonly IPasswordService _passwordService;
 
         public DbSet<SystemUser> SystemUsers { get; set; }
@@ -23,23 +21,17 @@ namespace Hospital.Infrastructure
 
         //  Constructor to accept IPasswordService
         public HospitalDbContext(DbContextOptions<HospitalDbContext> options, IPasswordService passwordService)
-            : base(options)
-        {
+            : base(options){
             _passwordService = passwordService ?? throw new ArgumentNullException(nameof(passwordService));
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        protected override void OnModelCreating(ModelBuilder modelBuilder){
             // Using an injected password service
             modelBuilder.ApplyConfiguration(new SystemUserEntityTypeConfiguration(_passwordService));
-
             modelBuilder.ApplyConfiguration(new PatientEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new AccountDeletionLogEntityTypeConfiguration());
-
             modelBuilder.ApplyConfiguration(new OperationRequestEntityTypeConfiguration());
-
             modelBuilder.ApplyConfiguration(new ProfileUpdateLogEntityTypeConfiguration());
-
             base.OnModelCreating(modelBuilder);
         }
     }
