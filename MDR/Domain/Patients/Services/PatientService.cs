@@ -175,7 +175,7 @@ namespace Hospital.Domain.Patients{
         }
 
 
-           public async Task <PatientDto> DeleteAsync(PatientId patientId){
+    public async Task <PatientDto> DeleteAsync(PatientId patientId){
 
             var existingPatient = await _patientRepository.GetByIdAsync(patientId);
             
@@ -205,6 +205,46 @@ namespace Hospital.Domain.Patients{
                 
             };
         }
+public async Task<PatientDto> DeletePersonalDataAsync(PatientId patientId)
+{
+    // Busca o paciente no repositório pelo ID
+    var existingPatient = await _patientRepository.GetByIdAsync(patientId);
+
+    if (existingPatient == null)
+    {
+        throw new InvalidOperationException("Patient not found.");
+    }
+
+    // Remove os dados pessoais do paciente
+    await _patientRepository.RemovePersonalData(existingPatient);
+
+    // Salva as alterações no banco de dados
+    var changes = await _unitOfWork.CommitAsync();
+
+    if (changes <= 0)
+    {
+        throw new InvalidOperationException("Failed to update patient data.");
+    }
+
+    // Retorna os dados do paciente (já atualizados) em forma de DTO
+    return new PatientDto
+    {
+        Id = existingPatient.Id.AsGuid(),
+        FirstName = existingPatient.FirstName,
+        LastName = existingPatient.LastName,
+        DateOfBirth = existingPatient.DateOfBirth,
+        Email = existingPatient.Email,
+        Gender = existingPatient.Gender,
+        MedicalRecordNumber = existingPatient.MedicalRecordNumber,
+        PhoneNumber = existingPatient.PhoneNumber,
+        EmergencyContact = existingPatient.EmergencyContact,
+        AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
+        AppointmentHistory = existingPatient.AppointmentHistory
+    };
+}
+
+
+        
     
 
 
@@ -235,6 +275,15 @@ namespace Hospital.Domain.Patients{
             if (patient == null){
                 throw new Exception("Patient not found.");
             }
+
+
+            patient.FirstName = null;
+            patient.LastName = null;
+            patient.DateOfBirth = default; 
+            patient.Email = null;
+            patient.PhoneNumber = null;
+            patient.Gender = null;
+            patient.EmergencyContact = null;
 
 
          return new PatientDto { 
@@ -330,43 +379,7 @@ namespace Hospital.Domain.Patients{
        
         }
 
-public async Task<PatientDto> UpdateNullPersonalDataAsync(Guid patientId,PatientDto patientDto){
 
-    if (patientDto == null){
-                throw new ArgumentNullException(nameof(patientDto));
-            }
-
-            
-    var existingPatient = await _patientRepository.GetByIdAsync(new PatientId(patientId));
-    
-    if (existingPatient == null){
-        throw new InvalidOperationException("Patient not found.");
-    }
-
-    // Set all personal data attributes to null
-    existingPatient.FirstName = null;
-    existingPatient.LastName = null;
-    existingPatient.Email = null;
-    existingPatient.PhoneNumber = null;
-    existingPatient.EmergencyContact = null;
-
-    await _patientRepository.UpdatePatientAsync(existingPatient);
-    await _unitOfWork.CommitAsync();
-
-    return new PatientDto{
-        Id = existingPatient.Id.AsGuid(),
-        FirstName = existingPatient.FirstName,
-        LastName = existingPatient.LastName,
-        DateOfBirth = existingPatient.DateOfBirth,
-        Email = existingPatient.Email,
-        Gender = existingPatient.Gender,
-        MedicalRecordNumber = existingPatient.MedicalRecordNumber,
-        PhoneNumber = existingPatient.PhoneNumber,
-        EmergencyContact = existingPatient.EmergencyContact,
-        AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
-        AppointmentHistory = existingPatient.AppointmentHistory
-    };
-}
 
       
 }

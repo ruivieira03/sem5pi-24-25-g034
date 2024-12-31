@@ -12,13 +12,11 @@ namespace Hospital.Domain.Patients{
         Task <Patient> GetByAllergiesAsync(string allergies);
         Task <Patient> GetByAppointmentHistoryAsync(string AppointmentHistory);
         Task <Patient> GetByEmergencyContact(string EmergencyContact);
-   
-
-
         Task<List<Patient>> GetAllAsync(); // Get all patients
         Task AddPatientAsync(Patient patient); // Add a new patient
         Task UpdatePatientAsync(Patient patient); // Update an existing patient
         Task Remove(Patient patient); // Remove a patient
+        Task  RemovePersonalData(Patient patient); // Remove a patient
      
     }
 }

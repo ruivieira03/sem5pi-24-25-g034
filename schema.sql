@@ -1,1 +1,7 @@
-SELECT * from Patients;
+
+
+
+DESCRIBE Patients;
+
+
+DESCRIBE SystemUser;

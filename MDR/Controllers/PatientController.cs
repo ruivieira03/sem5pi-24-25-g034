@@ -74,25 +74,30 @@ namespace Hospital.Controllers{
             }
         }
 
-        // PUT: api/Patient/5/update-profile Update the patient's profile details
-        [HttpPut("delete-personal-data/{id}")]
-        [Authorize(Roles = "Patient")]
-        public async Task<IActionResult> UpdateNullPersonalData([FromRoute] Guid id,PatientDto patientDto){
+   [HttpDelete("delete-personal-data/{id}")]
+[Authorize(Roles = "Patient")]
+public async Task<ActionResult<PatientDto>> DeletePersonalData(Guid id)
+{
+    try
+    {
+        // Chama o serviço para remover os dados pessoais
+        var patient = await _patientService.DeletePersonalDataAsync(new PatientId(id));
 
-            var updatedPatient = await _patientService.UpdateNullPersonalDataAsync(id,patientDto);         // Delegate the update lxogic to the service layer
-
-
-            if (updatedPatientpatient == null){
-                return NotFound(); // Return 404 if user not found
-            }
-
-            try {
-                return Ok(updatedPatient);                                                          // Return OK with the updated user
-
-            }catch (Exception ex){
-                return BadRequest(new { message = ex.Message, innerException = ex.InnerException?.Message });
-            }
+        if (patient == null)
+        {
+            return NotFound(); // Retorna 404 se o paciente não for encontrado
         }
+
+        return Ok(patient); // Retorna 200 com os dados atualizados do paciente
+    }
+    catch (Exception ex)
+    {
+        // Retorna 400 com mensagem de erro
+        return BadRequest(new { Message = ex.Message });
+    }
+}
+
+
 
 
 
@@ -133,13 +138,13 @@ public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll(){
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<PatientDto>> GetById(Guid id){
 
-        var user = await _patientService.GetByIdAsync(new PatientId(id));
+        var Patient = await _patientService.GetByIdAsync(new PatientId(id));
 
-        if (user == null){
+        if (Patient == null){
             return NotFound(); // Return 404 if user not found
         }
 
-        return Ok(user); // Return OK status with the user data
+        return Ok(Patient); // Return OK status with the user data
     }
 
 
@@ -190,7 +195,7 @@ public async Task<ActionResult<IEnumerable<PatientDto>>> GetByFirstName(string f
     }
 }
 
-
 }
-}    
-
+    
+        
+}

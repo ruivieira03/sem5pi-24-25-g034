@@ -8,11 +8,6 @@ import PatientProfileList from '../../modules/Admin/Patient-Profile-Management/P
 import PatientProfileDetails from '../../modules/Admin/Patient-Profile-Management/PatientProfileDetails/PatientProfileDetails';
 import Profile from '../../modules/Auth/Profile/Profile';
 import UserDetails from '../../modules/Admin/UserManagement/UserDetails/UserDetails';
-import OperationRequestList from '../../modules/OperationRequest/OperationRequestList/OperationRequestList';
-import OperationRequestCreate from '../../modules/OperationRequest/OperationRequestCreate/OperationRequestCreate';
-import OperationRequestByPatient from '../../modules/OperationRequest/OperationRequestByPatient/OperationRequestByPatient';
-import OperationRequestByType from '../../modules/OperationRequest/OperationRequestByType/OperationRequestByType';
-import OperationRequestByPriority from '../../modules/OperationRequest/OperationRequestByPriority/OperationRequestByPriority';
 import './AdminMenu.css'; // Import new CSS file for styling
 
 function AdminMenu() {
@@ -51,22 +46,8 @@ function AdminMenu() {
                     <li>
                         <Link className="admin-menu-link" to="/admin/profile">Profile</Link>
                     </li>
-                    <li>
-                        <Link className="admin-menu-link" to="/admin/operation-requests">All Operation Requests</Link>
-                    </li>
-                    <li>
-                        <Link className="admin-menu-link" to="/admin/operation-request-by-patient">Operation Request by Patient</Link>
-                    </li>
-                    <li>
-                        <Link className="admin-menu-link" to="/admin/operation-request-by-type">Operation Request by Type</Link>
-                    </li>
-                    <li>
-                        <Link className="admin-menu-link" to="/admin/operation-request-by-priority">Operation Request by Priority</Link>
-                    </li>
-                    <li>
-                        <Link className="admin-menu-link" to="/admin/operation-request-create">Create Operation Request</Link>
-                    </li>
                 </ul>
+                
                 <div className="admin-menu-logout">
                     <Link to="/logout" className="admin-menu-link">Logout</Link>
                 </div>
@@ -82,11 +63,6 @@ function AdminMenu() {
                     <Route path="Patient-Profile-list" element={<PatientProfileList />} />
                     <Route path="Patient-Profile-details" element={<PatientProfileDetails />} />
                     <Route path="profile" element={<Profile />} />
-                    <Route path="operation-requests" element={<OperationRequestList />} />
-                    <Route path="operation-request-by-patient" element={<OperationRequestByPatient />} />
-                    <Route path="operation-request-by-type" element={<OperationRequestByType />} />
-                    <Route path="operation-request-by-priority" element={<OperationRequestByPriority />} />
-                    <Route path="operation-request-create" element={<OperationRequestCreate />} />
                     <Route
                         path="*"
                         element={
