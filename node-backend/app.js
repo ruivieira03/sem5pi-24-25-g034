@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors'); // Import CORS
-const connectDB = require('./database/connection'); // Import MongoDB connection
+const connectDB = require('./api/database/connection'); // Import MongoDB connection
 const allergyRoutes = require('./routes/allergyRoutes');
 require('dotenv').config();
 
@@ -30,4 +30,8 @@ app.use((err, req, res, next) => {
 
 // Start the server
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`
+    ################################################
+      🛡️  Server listening on port: ${PORT} 🛡️ 
+    ################################################`
+));

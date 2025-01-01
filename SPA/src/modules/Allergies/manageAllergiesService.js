@@ -25,7 +25,7 @@ export const fetchAllergyByName = async (name) => {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`,
             },
         });
-        return response.data; // Ensure this matches your API response structure
+        return response.data;
     } catch (error) {
         console.error('Error fetching allergy by name:', error);
         throw error;
@@ -62,16 +62,17 @@ export const updateAllergy = async (_id, updatedAllergy) => {
     }
 };
 
-// Delete an allergy by ID
-export const deleteAllergy = async (_id) => {
+// Soft delete an allergy by domainId
+export const deleteAllergy = async (domainId) => {
     try {
-        await axios.delete(`${API_URL}/${_id}`, {
+        await axios.patch(`${API_URL}/${domainId}`, {}, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`,
             },
         });
     } catch (error) {
-        console.error('Error deleting allergy:', error);
+        console.error('Error soft deleting allergy:', error);
         throw error;
     }
+
 };

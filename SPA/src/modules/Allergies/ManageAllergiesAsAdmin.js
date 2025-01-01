@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAllergies, addAllergy, updateAllergy, deleteAllergy, fetchAllergyByName } from './manageAllergiesService';
-import './ManageAllergies.css'; // Import the CSS file
+import './ManageAllergies.css';
 
 function ManageAllergiesAsAdmin() {
     const [allergies, setAllergies] = useState([]);
@@ -33,7 +33,7 @@ function ManageAllergiesAsAdmin() {
         try {
             setLoading(true);
             const allergy = await fetchAllergyByName(searchQuery);
-            setAllergies(allergy ? [allergy] : []); // Show the result or empty list
+            setAllergies(allergy ? [allergy] : []);
         } catch (error) {
             console.error('Error searching for allergy:', error);
             setAllergies([]);
@@ -56,36 +56,42 @@ function ManageAllergiesAsAdmin() {
         }
     };
 
-    const handleDeleteAllergy = async (_id) => {
-        if (!_id) {
-            console.error('Invalid ID provided for deletion.');
+    const handleDeleteAllergy = async (domainId) => {
+        if (!domainId) {
+            console.error('No domainId provided for soft delete');
+            alert('Failed to delete: Invalid ID');
             return;
         }
+    
+        console.log('Soft deleting allergy with domainId:', domainId); // Debug log
         try {
-            await deleteAllergy(_id);
+            await deleteAllergy(domainId);
             loadAllergies();
         } catch (error) {
-            console.error('Error deleting allergy:', error);
+            console.error('Error soft deleting allergy:', error);
         }
-    };
+    };       
 
     const handleEditAllergy = (allergy) => {
         setUpdateAllergyData(allergy);
     };
 
     const handleUpdateAllergy = async () => {
-        if (!updateAllergyData.name || !updateAllergyData.description) {
-            alert('Both name and description are required!');
+        if (!updateAllergyData.domainId) {
+            console.error('No domainId provided for update');
+            alert('Failed to update: Invalid ID');
             return;
         }
+    
+        console.log('Updating allergy with domainId:', updateAllergyData.domainId); // Debug log
         try {
-            await updateAllergy(updateAllergyData._id, updateAllergyData);
+            await updateAllergy(updateAllergyData.domainId, updateAllergyData);
             setUpdateAllergyData(null);
             loadAllergies();
         } catch (error) {
             console.error('Error updating allergy:', error);
         }
-    };
+    };    
 
     return (
         <div className="manage-allergies">
@@ -109,7 +115,7 @@ function ManageAllergiesAsAdmin() {
                 <ul className="allergy-list">
                     {allergies.length > 0 ? (
                         allergies.map((allergy) => (
-                            <li key={allergy._id} className="allergy-item">
+                            <li key={allergy.domainId} className="allergy-item">
                                 <strong>{allergy.name}</strong>: {allergy.description}
                                 <div className="allergy-actions">
                                     <button
@@ -120,7 +126,7 @@ function ManageAllergiesAsAdmin() {
                                     </button>
                                     <button
                                         className="delete-button"
-                                        onClick={() => handleDeleteAllergy(allergy._id)}
+                                        onClick={() => handleDeleteAllergy(allergy.domainId)}
                                     >
                                         Delete
                                     </button>

@@ -1,4 +1,4 @@
-const sequelize = require('./database/connection'); // Database connection
+const sequelize = require('./api/database/connection'); // Database connection
 const Allergy = require('./models/allergyModel');   // Model definition
 
 (async () => {
