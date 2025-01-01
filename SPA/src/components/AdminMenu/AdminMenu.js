@@ -13,6 +13,7 @@ import OperationRequestCreate from '../../modules/OperationRequest/OperationRequ
 import OperationRequestByPatient from '../../modules/OperationRequest/OperationRequestByPatient/OperationRequestByPatient';
 import OperationRequestByType from '../../modules/OperationRequest/OperationRequestByType/OperationRequestByType';
 import OperationRequestByPriority from '../../modules/OperationRequest/OperationRequestByPriority/OperationRequestByPriority';
+import ManageAllergies from '../../modules/Allergies/ManageAllergiesAsAdmin';
 import './AdminMenu.css'; // Import new CSS file for styling
 
 function AdminMenu() {
@@ -52,6 +53,9 @@ function AdminMenu() {
                         <Link className="admin-menu-link" to="profile">Profile</Link>
                     </li>
                     <li>
+                        <Link className="admin-menu-link" to="allergies">Allergies</Link>
+                    </li>
+                    <li>
                         <Link className="admin-menu-link" to="/admin/operation-requests">All Operation Requests</Link>
                     </li>
 
@@ -83,6 +87,7 @@ function AdminMenu() {
                     <Route path="Patient-Profile-list" element={<PatientProfileList />} />
                     <Route path="Patient-Profile-details" element={<PatientProfileDetails />} />
                     <Route path="profile" element={<Profile />} />
+                    <Route path="allergies" element={<ManageAllergies />} />
                     <Route path="operation-requests" element={<OperationRequestList />} />
                     <Route path="operation-request-by-patient" element={<OperationRequestByPatient />} />
                     <Route path="operation-request-by-type" element={<OperationRequestByType />} />

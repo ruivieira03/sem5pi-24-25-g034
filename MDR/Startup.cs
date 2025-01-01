@@ -51,7 +51,7 @@ namespace Hospital
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowReactApp", builder =>
-                    builder.WithOrigins("http://localhost:3000", "http://vs606.dei.isep.ipp.pt")
+                    builder.WithOrigins("http://localhost:3000", "http://vs606.dei.isep.ipp.pt", "http://localhost:4000")
                            .AllowAnyHeader()
                            .AllowAnyMethod()
                            .AllowCredentials());
