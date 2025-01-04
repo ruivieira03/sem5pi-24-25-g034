@@ -14550,19 +14550,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {}
+    "/Users/admin/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\MDR\\sem5pi-24-25-g034.csproj",
+      "projectUniqueName": "/Users/admin/Desktop/sem5pi-24-25-g034/MDR/sem5pi-24-25-g034.csproj",
       "projectName": "sem5pi-24-25-g034",
-      "projectPath": "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\MDR\\sem5pi-24-25-g034.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\Desktop\\sem5pi-24-25-g034\\MDR\\obj\\",
+      "projectPath": "/Users/admin/Desktop/sem5pi-24-25-g034/MDR/sem5pi-24-25-g034.csproj",
+      "packagesPath": "/Users/admin/.nuget/packages/",
+      "outputPath": "/Users/admin/Desktop/sem5pi-24-25-g034/MDR/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/admin/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -14723,7 +14723,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
