@@ -2,9 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls, SpotLight } from '@react-three/drei';
 import RoomComponent from '../Room/RoomComponent.tsx';
+import SceneControls from '../Scene/SceneControls.tsx'; // Import SceneControls
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import './SceneComponent.css';
+
+type RoomStatus = 'free' | 'maintenance' | 'occupied';
 
 type Room = {
   id: number;
@@ -12,7 +15,8 @@ type Room = {
   height: number;
   depth: number;
   position: [number, number, number];
-  occupied: boolean;
+  status: RoomStatus;
+  patients: number;
 };
 
 const SceneContent: React.FC<{
@@ -27,18 +31,8 @@ const SceneContent: React.FC<{
     // Ensure spotlight target is added to the scene
     if (spotlightTargetRef.current) {
       scene.add(spotlightTargetRef.current);
-      console.log('Spotlight target added to scene:', spotlightTargetRef.current);
     }
   }, [scene]);
-
-  useEffect(() => {
-    // Debugging spotlight position and configuration
-    if (spotlightRef.current) {
-      console.log('Spotlight initialized:', spotlightRef.current);
-    } else {
-      console.error('Spotlight reference is null.');
-    }
-  }, [spotlightRef]);
 
   return (
     <>
@@ -80,11 +74,13 @@ const SceneContent: React.FC<{
 
 const SceneComponent = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null); // Track selected room
   const tweenGroup = new TWEEN.Group();
   const spotlightRef = useRef<THREE.SpotLight>(null);
   const spotlightTargetRef = useRef(new THREE.Object3D());
 
   useEffect(() => {
+    // Fetch hospital floor data
     fetch('/hospital.json')
       .then((response) => response.json())
       .then((data) => {
@@ -108,15 +104,11 @@ const SceneComponent = () => {
       room.position[2] - 1 // Slightly in front of the room in Z
     );
 
-
     const tablePosition = new THREE.Vector3(
       room.position[0],
       room.position[1],
       room.position[2]
     );
-
-    console.log('Camera target position:', targetPosition);
-    console.log('Spotlight target position:', tablePosition);
 
     new TWEEN.Tween(camera.position, tweenGroup)
       .to({ x: targetPosition.x, y: targetPosition.y, z: targetPosition.z }, 1000)
@@ -125,27 +117,17 @@ const SceneComponent = () => {
         camera.lookAt(tablePosition);
 
         if (spotlightTargetRef.current) {
-          // Update spotlight target to the calculated position
           spotlightTargetRef.current.position.copy(tablePosition);
-          console.log('Spotlight target updated:', spotlightTargetRef.current.position);
-        } else {
-          console.error('Spotlight target is null during animation.');
         }
 
         if (spotlightRef.current) {
           spotlightRef.current.position.copy(camera.position);
-          console.log('Spotlight position updated:', spotlightRef.current.position);
-        } else {
-          console.error('Spotlight is null during animation.');
         }
       })
       .onComplete(() => {
         camera.lookAt(tablePosition);
-        console.log('Camera position after animation:', camera.position);
       })
       .start();
-
-    console.log('Tween started for camera movement.');
   };
 
   useEffect(() => {
@@ -158,10 +140,16 @@ const SceneComponent = () => {
 
   return (
     <div className="scene-canvas">
+      {/* Scene Controls */}
+      <SceneControls selectedRoom={selectedRoom} />
+
       <Canvas shadows camera={{ position: [0, 5, 15] }}>
         <SceneContent
           rooms={rooms}
-          handleRoomSelect={handleRoomSelect}
+          handleRoomSelect={(room, camera) => {
+            setSelectedRoom(room); // Update the selected room
+            handleRoomSelect(room, camera); // Move the camera to the selected room
+          }}
           spotlightRef={spotlightRef}
         />
       </Canvas>
