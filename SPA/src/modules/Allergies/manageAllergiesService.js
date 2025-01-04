@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:4000/api/allergies';
+const API_URL = 'http://10.9.22.94:4000/api/allergies';
 
 // Fetch all allergies
 export const fetchAllergies = async () => {
