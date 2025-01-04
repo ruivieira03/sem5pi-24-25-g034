@@ -9,7 +9,7 @@ const app = express();
 
 // Enable CORS
 app.use(cors({
-    origin: 'http://localhost:3000', // Allow requests from the frontend
+    origin: ['http://localhost:3000', 'http://vs606.dei.isep.ipp.pt'], // Allow requests from the frontend
     credentials: true, // Allow credentials like cookies or Authorization headers
 }));
 
