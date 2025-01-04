@@ -22,28 +22,14 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         port: 10606
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        timeout: 600 # Increased timeout to prevent timeout errors
+        timeout: 600 # Increased timeout to 10 minutes
         command_timeout: 600
         script: |
-          # Navigate to the backend directory
           cd /var/www/project/MDR
-          
-          # Reset the repository and remove untracked files to prevent conflicts
           git reset --hard
-          git clean -fd # Remove untracked files and directories
-          
-          # Pull the latest changes
-          git pull
-          
-          # Build the project
+          git pull         
           dotnet build
-          
-          # Stop and delete the existing PM2 process for the backend
           pm2 stop backend || true
           pm2 delete backend || true
-          
-          # Start the new backend process
           pm2 start "dotnet run --project /var/www/project/MDR/sem5pi-24-25-g034.csproj" --name backend
-          
-          # Save the PM2 process list
           pm2 save
