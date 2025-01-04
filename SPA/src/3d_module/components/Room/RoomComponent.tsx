@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLoader } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
@@ -9,9 +9,12 @@ type RoomProps = {
   depth: number;
   position: [number, number, number];
   occupied: boolean;
+  onSelect: () => void; // Add onSelect prop
 };
 
-const RoomComponent: React.FC<RoomProps> = ({ width, height, depth, position, occupied }) => {
+const RoomComponent: React.FC<RoomProps> = ({ width, height, depth, position, occupied, onSelect }) => {
+  const [isDoorOpen, setIsDoorOpen] = useState(false);
+
   const wallTexture = useLoader(THREE.TextureLoader, '/textures/wall.jpg');
   const floorTexture = useLoader(THREE.TextureLoader, '/textures/floor.jpg');
   const tableModel = useGLTF('/models/surgical_table.glb').scene.clone();
@@ -24,13 +27,17 @@ const RoomComponent: React.FC<RoomProps> = ({ width, height, depth, position, oc
   floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
   floorTexture.repeat.set(2, 2);
 
+  const handleDoorClick = () => {
+    setIsDoorOpen((prev) => !prev);
+  };
+
   return (
     <group position={position}>
       {/* Floor */}
       <mesh position={[0, -height / 2, 0]}>
         <boxGeometry args={[width, 0.1, depth]} />
         <meshStandardMaterial map={floorTexture} />
-      </mesh>
+      </mesh> 
 
       {/* Walls */}
       <mesh position={[0, 0, -depth / 2]}>
@@ -50,22 +57,34 @@ const RoomComponent: React.FC<RoomProps> = ({ width, height, depth, position, oc
         <meshStandardMaterial map={wallTexture} />
       </mesh>
 
+      {/* Door */}
+      <group
+        position={[0, -height / 4, -depth / 2 + 0.05]} // Place the door at the wall
+        rotation={[0, isDoorOpen ? Math.PI / 2 : 0, 0]} // Rotate door on Y-axis
+        onClick={handleDoorClick} // Toggle door open/close on click
+      >
+        <mesh>
+          <boxGeometry args={[2, height / 2, 0.1]} />
+          <meshStandardMaterial color="brown" />
+        </mesh>
+      </group>
+
       {/* Surgical Table */}
       <primitive
         object={tableModel}
-        name={`surgical-table-${position[0]}`} // Unique name for raycasting
-        position={[0, -height / 2, 0]}
-        scale={[0.7, 0.7, 0.7]}
+        position={[0, -height / 2, 0]} // Position table above the floor
+        scale={[0.7, 0.7, 0.7]} // Ensure table fits well
+        onClick={onSelect} // Call onSelect when the table is clicked
       />
 
       {/* Human Body (if occupied) */}
       {occupied && (
         <primitive
           object={humanModel}
-          position={[-1, -height / 3, 0]}  // Move human up slightly onto the table
+          position={[-1, -height / 3, 0]} // Move human up slightly onto the table
           rotation={[1.5, 3, 1.55]} // Ensure the human is lying flat (parallel to the table)
-          scale={[0.9, 0.9, 0.9]} // Adjust scaling
-          />
+          scale={[0.9, 0.9, 0.9]} // Slightly increase size of the human model
+        />
       )}
     </group>
   );

@@ -8,6 +8,7 @@ function ManageAllergiesAsAdmin() {
     const [updateAllergyData, setUpdateAllergyData] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
+    const [notification, setNotification] = useState(null); // State for showing messages
 
     useEffect(() => {
         loadAllergies();
@@ -50,9 +51,13 @@ function ManageAllergiesAsAdmin() {
         try {
             await addAllergy(newAllergy);
             setNewAllergy({ name: '', description: '' });
+            setNotification('Allergy added successfully!'); // Set success message
             loadAllergies();
         } catch (error) {
             console.error('Error adding allergy:', error);
+            setNotification('Failed to add allergy. Please try again.'); // Set error message
+        } finally {
+            setTimeout(() => setNotification(null), 3000); // Clear message after 3 seconds
         }
     };
 
@@ -62,15 +67,19 @@ function ManageAllergiesAsAdmin() {
             alert('Failed to delete: Invalid ID');
             return;
         }
-    
+
         console.log('Soft deleting allergy with domainId:', domainId); // Debug log
         try {
             await deleteAllergy(domainId);
+            setNotification('Allergy deleted successfully!');
             loadAllergies();
         } catch (error) {
             console.error('Error soft deleting allergy:', error);
+            setNotification('Failed to delete allergy. Please try again.');
+        } finally {
+            setTimeout(() => setNotification(null), 3000); // Clear message after 3 seconds
         }
-    };       
+    };
 
     const handleEditAllergy = (allergy) => {
         setUpdateAllergyData(allergy);
@@ -82,20 +91,26 @@ function ManageAllergiesAsAdmin() {
             alert('Failed to update: Invalid ID');
             return;
         }
-    
+
         console.log('Updating allergy with domainId:', updateAllergyData.domainId); // Debug log
         try {
             await updateAllergy(updateAllergyData.domainId, updateAllergyData);
             setUpdateAllergyData(null);
+            setNotification('Allergy updated successfully!');
             loadAllergies();
         } catch (error) {
             console.error('Error updating allergy:', error);
+            setNotification('Failed to update allergy. Please try again.');
+        } finally {
+            setTimeout(() => setNotification(null), 3000); // Clear message after 3 seconds
         }
-    };    
+    };
 
     return (
         <div className="manage-allergies">
             <h2>Manage Allergies</h2>
+
+            {notification && <div className="notification">{notification}</div>}
 
             <div className="search-section">
                 <input
