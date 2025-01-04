@@ -22,8 +22,8 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         port: 10606
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        timeout: 600 # Increased timeout to 10 minutes
-        command_timeout: 600
+        timeout: 600s # Properly formatted with 's' for seconds
+        command_timeout: 600s # Properly formatted with 's' for seconds
         script: |
           cd /var/www/project/MDR
           git reset --hard
