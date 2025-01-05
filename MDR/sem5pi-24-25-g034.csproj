@@ -7,9 +7,8 @@
     <RootNamespace>sem5pi_24_25_g034</RootNamespace>
 <StartupObject>Hospital.Program</StartupObject>
 
+
 </PropertyGroup>
-
-
   <ItemGroup>
     <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.4.1" />
     <PackageReference Include="Auth0.ManagementApi" Version="7.27.0" />

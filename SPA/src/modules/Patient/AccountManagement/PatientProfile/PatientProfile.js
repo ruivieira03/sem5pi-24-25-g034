@@ -5,6 +5,7 @@ import PatientUpdate from './UpdateProfile/PatientUpdate';
 import { API_BASE_URL } from '../../../../config'; // Import API_BASE_URL
 import './PatientProfile.css';
 
+
 const PatientProfile = () => {
     const [profileData, setProfileData] = useState({
         firstName: '',
@@ -14,8 +15,8 @@ const PatientProfile = () => {
         phoneNumber: '',
         emergencyContact: '',
         dateOfBirth: '',
-        allergiesOrMedicalConditions: '',
-        appointmentHistory: '',
+        allergiesOrMedicalConditions: [''],
+        appointmentHistory: [''],
     });
 
     const [error, setError] = useState('');
