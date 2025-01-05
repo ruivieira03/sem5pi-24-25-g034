@@ -24,7 +24,7 @@ jobs:
       run: |
         cd SPA
         npm install
-        NODE_OPTIONS="--max-old-space-size=4096" npm run build
+        CI=false npm run build
 
     - name: Deploy Build to Server
       uses: appleboy/scp-action@v0.1.7
