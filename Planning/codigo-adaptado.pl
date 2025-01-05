@@ -104,19 +104,34 @@ generate_generation(N,G,Pop):-
 	mutation(NPop1,NPop),
 	evaluate_population(NPop,NPopValue),
 	order_population(NPopValue,NPopOrd),
-	ensure_best_individual(Pop, NPopOrd, NPopFinal),
+	select_with_probability(NPopOrd, 0.1, SelectedPop), % Seleção com probabilidade
+	ensure_best_individual(Pop, SelectedPop, FinalPop),
 	N1 is N+1,
-	generate_generation(N1,G,NPopFinal).
+	generate_generation(N1,G,FinalPop).
 
-% Ensure the best individual is carried over to the next generation
+% Seleção com probabilidade
+select_with_probability(Pop, Prob, SelectedPop):-
+    population(PopSize),
+    length(Top, PopSize),
+    append(Top, Rest, Pop),
+    random_selection(Rest, Prob, Additional),
+    append(Top, Additional, TempPop),
+    order_population(TempPop, SelectedPop).
+
+% Seleção randômica baseada em probabilidade
+random_selection([], _, []).
+random_selection([Ind*V|Rest], Prob, [Ind*V|SelectedRest]):-
+    random(0.0, 1.0, R),
+    R =< Prob, % Seleciona indivíduo com base na probabilidade
+    random_selection(Rest, Prob, SelectedRest).
+random_selection([_|Rest], Prob, SelectedRest):-
+    random_selection(Rest, Prob, SelectedRest).
+
+% Garantir o melhor indivíduo
 ensure_best_individual(CurrentPop, NewPopOrd, FinalPop):-
-	% Extract the best individual from the current population
 	CurrentPop = [BestCurrent*VCurrent|_],
-	% Extract the best individual from the new population
 	NewPopOrd = [BestNew*VNew|_],
-	% Compare and keep the best individual between the two
 	((VCurrent =< VNew, Best = BestCurrent, V = VCurrent) ; (Best = BestNew, V = VNew)),
-	% Replace the worst individual in the new population with the best individual
 	append(NewPopOrd, [Best*V], TempPop),
 	order_population(TempPop, FinalPop).
 
@@ -136,7 +151,6 @@ generate_crossover_points1(P1,P2):-
 crossover([],[]).
 crossover([Ind*_],[Ind]).
 crossover(Pop,NewPop):-
-	% Randomize order of individuals to avoid sequential pairing
 	random_permutation(Pop, ShuffledPop),
 	perform_crossover(ShuffledPop,NewPop).
 
@@ -251,3 +265,4 @@ mutacao23(G1,P,[G|Ind],G2,[G|NInd]):-
 
 %% First Attribute fine here
 %% Second Attribute fine here
+%% Third done and testes , thouhg not implemented and registerd
