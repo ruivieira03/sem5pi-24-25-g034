@@ -1,4 +1,3 @@
-// src/components/DoctorMenu.js
 import React from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
 import CommonMenu from '../CommonMenu/CommonMenu';
@@ -7,11 +6,13 @@ import OperationRequestCreate from '../../modules/OperationRequest/OperationRequ
 import OperationRequestByPatient from '../../modules/OperationRequest/OperationRequestByPatient/OperationRequestByPatient';
 import OperationRequestByType from '../../modules/OperationRequest/OperationRequestByType/OperationRequestByType';
 import OperationRequestByPriority from '../../modules/OperationRequest/OperationRequestByPriority/OperationRequestByPriority';
-import './DoctorMenu.css'; // Import new CSS file for styling
+import ManageMedicalCondition from '../../modules/MedicalCondition/ManageMedicalConditionAsDoctor';
+import ManageAllergies from '../../modules/Allergies/ManageAllergiesAsDoctor';
+import './DoctorMenu.css';
 
 function DoctorMenu() {
-  return (
-    <div className="doctor-container">
+    return (
+        <div className="doctor-container">
             {/* Left-side menu */}
             <nav className="doctor-menu">
                 <CommonMenu />
@@ -20,14 +21,12 @@ function DoctorMenu() {
                     <li>
                         <Link className="doctor-menu-link" to="/doctor">Doctor Initial Page</Link>
                     </li>
-                    {/* 
                     <li>
-                        <Link className="doctor-menu-link" to="/doctor/patient-list">Patient List</Link>
+                        <Link className="doctor-menu-link" to="/doctor/allergies">View Allergies</Link>
                     </li>
                     <li>
-                        <Link className="doctor-menu-link" to="/doctor/appointments">Appointments</Link>
+                        <Link className="doctor-menu-link" to="/doctor/medicalConditions">View MedicalConditions</Link>
                     </li>
-                     */}
                     <li>
                         <Link className="doctor-menu-link" to="/doctor/operation-requests">All Operation Requests</Link>
                     </li>
@@ -52,8 +51,8 @@ function DoctorMenu() {
             {/* Content area */}
             <div className="doctor-content">
                 <Routes>
-                    {/* <Route path="patient-list" element={<PatientList />} /> */}
-                    {/* <Route path="appointments" element={<Appointments />} /> */}
+                    <Route path="allergies" element={<ManageAllergies />} /> {/* Allergies route */}
+                    <Route path="medicalConditions" element={<ManageMedicalCondition />} /> {/* Medical Conditions route */}
                     <Route path="operation-requests" element={<OperationRequestList />} />
                     <Route path="operation-request-by-patient" element={<OperationRequestByPatient />} />
                     <Route path="operation-request-by-type" element={<OperationRequestByType />} />
@@ -73,7 +72,7 @@ function DoctorMenu() {
                 </Routes>
             </div>
         </div>
-  );
+    );
 }
 
 export default DoctorMenu;

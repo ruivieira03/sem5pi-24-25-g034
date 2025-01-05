@@ -1,31 +1,53 @@
 {
-    "hospitalFloor": {
-      "rooms": [
-        {
-          "id": 1,
-          "width": 10,
-          "height": 5,
-          "depth": 10,
-          "position": [0, 0, 0],
-          "occupied": true
-        },
-        {
-          "id": 2,
-          "width": 10,
-          "height": 5,
-          "depth": 10,
-          "position": [12, 0, 0],
-          "occupied": false
-        },
-        {
-          "id": 3,
-          "width": 10,
-          "height": 5,
-          "depth": 10,
-          "position": [-12, 0, 0],
-          "occupied": true
+  "hospitalFloor": {
+    "rooms": [
+      {
+        "id": 1,
+        "width": 10,
+        "height": 5,
+        "depth": 8,
+        "position": [0, 0, 0],
+        "occupied": true,
+        "state": "Occupied",
+        "patient": {
+          "name": "John Doe",
+          "surgeryType": "Heart Transplant",
+          "scheduledTime": "14:00"
         }
-      ]
-    }
+      },
+      {
+        "id": 2,
+        "width": 10,
+        "height": 5,
+        "depth": 8,
+        "position": [15, 0, 0],
+        "occupied": false,
+        "state": "Free"
+      },
+      {
+        "id": 3,
+        "width": 12,
+        "height": 6,
+        "depth": 9,
+        "position": [30, 0, 0],
+        "occupied": true,
+        "state": "Occupied",
+        "patient": {
+          "name": "Jane Smith",
+          "surgeryType": "Knee Replacement",
+          "scheduledTime": "16:00"
+        }
+      },
+      {
+        "id": 4,
+        "width": 10,
+        "height": 5,
+        "depth": 8,
+        "position": [45, 0, 0],
+        "occupied": true,
+        "state": "Maintenance"
+      }
+
+    ]
   }
-  
+}

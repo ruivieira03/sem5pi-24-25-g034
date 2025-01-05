@@ -13,4 +13,3 @@ namespace Hospital{
                 .UseStartup<Startup>();
     }
 }
-
