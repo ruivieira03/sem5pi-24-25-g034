@@ -1,0 +1,13 @@
+@startuml
+actor User
+participant System
+
+User -> System: DELETE /allergies/{domainId}
+System -> System: Validate Path Parameter
+alt Invalid domainId
+    System -> User: 400 Bad Request
+else Valid domainId
+    System -> System: Call Service Layer
+    System -> User: 200 OK with deletion confirmation
+end
+@enduml
