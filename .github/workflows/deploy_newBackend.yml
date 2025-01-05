@@ -43,7 +43,7 @@ jobs:
           pm2 delete node-backend || true
           
           # Start the new backend process on port 4000
-          pm2 start npm --name node-backend -- run start -- --port 4000
+          pm2 start app.js --name node-backend -- --port 4000
           
           # Save the pm2 process list
           pm2 save
