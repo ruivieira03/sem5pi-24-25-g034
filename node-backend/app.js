@@ -4,7 +4,7 @@ const cors = require('cors'); // Import CORS
 const connectDB = require('./api/database/connection'); // Import MongoDB connection
 const allergyRoutes = require('./routes/allergyRoutes');
 const specializationRoutes = require('./routes/specializationRoutes');
-const MedicalConditionService = require('./services/medicalConditionService');
+const medicalConditionRoutes = require('./routes/medicalConditionRoute');
 require('dotenv').config();
 
 const app = express();
@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 // Routes
 app.use('/api/allergies', allergyRoutes);
 app.use('/api/specializations', specializationRoutes);
-app.use('/api/medicalConditions', MedicalConditionService);
+app.use('/api/medicalConditions', medicalConditionRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
