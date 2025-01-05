@@ -6,6 +6,7 @@ import PatientProfile from '../../modules/Patient/AccountManagement/PatientProfi
 import './PatientMenu.css'; // Updated CSS file
 
 function PatientMenu() {
+    
     return (
         <div className="patient-container">
             {/* Left-side menu */}

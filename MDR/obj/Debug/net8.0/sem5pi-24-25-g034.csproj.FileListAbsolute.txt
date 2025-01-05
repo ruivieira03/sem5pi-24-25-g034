@@ -1495,3 +1495,4 @@ C:/Users/User/Desktop/sem5pi-24-25-g034/MDR/obj/Debug/net8.0/ref/sem5pi-24-25-g0
 /Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/MDR/obj/Debug/net8.0/sem5pi-24-25-g034.pdb
 /Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/MDR/obj/Debug/net8.0/sem5pi-24-25-g034.genruntimeconfig.cache
 /Users/ruivieira/Desktop/LEI/3ano/1semestre/lapr5/sem5pi-24-25-g034/MDR/obj/Debug/net8.0/ref/sem5pi-24-25-g034.dll
+/Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/MDR/bin/Debug/net8.0/package-lock.json

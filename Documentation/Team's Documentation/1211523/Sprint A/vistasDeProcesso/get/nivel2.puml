@@ -1,0 +1,6 @@
+@startuml nivel2
+
+[o-> MasterData ++: GET Xpto
+[<-- MasterData --: status 201 / 409
+
+@enduml

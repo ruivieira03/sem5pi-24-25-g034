@@ -1,0 +1,8 @@
+@startuml nivel3
+
+[o-> BackEnd ++: POST Xpto
+BackEnd -> DataBase ++: Insert Xpto
+DataBase --> BackEnd --: Success / Insuccess
+[<-- BackEnd --: status 201 / 40[0/4/9]
+
+@enduml

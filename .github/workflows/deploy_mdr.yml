@@ -22,10 +22,13 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         port: 10606
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        timeout: 600s
+        command_timeout: 600s
         script: |
           cd /var/www/project/MDR
-          git reset --hard
-          git pull         
+          git reset --hard # Reset any changes in the working directory
+          git clean -fd # Remove untracked files and directories
+          git pull # Pull the latest changes
           dotnet build
           pm2 stop backend || true
           pm2 delete backend || true

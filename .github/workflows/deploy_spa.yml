@@ -2,6 +2,8 @@ name: Deploy React SPA
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'SPA/**'
 
@@ -25,9 +27,11 @@ jobs:
         CI=false npm run build
 
     - name: Deploy Build to Server
-      uses: appleboy/ssh-action@v0.1.7
+      uses: appleboy/scp-action@v0.1.7
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 10606
+        source: SPA/build/*
+        target: /var/www/project/SPA/

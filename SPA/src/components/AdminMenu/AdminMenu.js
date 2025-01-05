@@ -14,6 +14,8 @@ import OperationRequestByPatient from '../../modules/OperationRequest/OperationR
 import OperationRequestByType from '../../modules/OperationRequest/OperationRequestByType/OperationRequestByType';
 import OperationRequestByPriority from '../../modules/OperationRequest/OperationRequestByPriority/OperationRequestByPriority';
 import ManageAllergies from '../../modules/Allergies/ManageAllergiesAsAdmin';
+import ManageSpecializations from '../../modules/Specializations/ManageSpecializationsAsAdmin';
+import ManageMedicalCondition from '../../modules/MedicalCondition/ManageMedicalConditionAsAdmin';
 import './AdminMenu.css'; // Import new CSS file for styling
 
 function AdminMenu() {
@@ -29,7 +31,7 @@ function AdminMenu() {
                     </li>
 
                     <li>
-                        <Link className="admin-menu-link" to="register-user">Register User</Link>
+                        <Link className="admin-menu-link" to="/admin/register-user">Register User</Link>
                     </li>
 
                     <li>
@@ -37,7 +39,7 @@ function AdminMenu() {
                     </li>
 
                     <li>
-                        <Link className="admin-menu-link" to="user-list">User List</Link>
+                        <Link className="admin-menu-link" to="/admin/user-list">User List</Link>
                     </li>
                     <li>
                         <Link className="admin-menu-link" to="Patient-Profile-list">All Patient Profiles</Link>
@@ -54,6 +56,12 @@ function AdminMenu() {
                     </li>
                     <li>
                         <Link className="admin-menu-link" to="allergies">Allergies</Link>
+                    </li>
+                    <li>
+                        <Link className="admin-menu-link" to="specializations">Specializations</Link>
+                    </li>
+                    <li>
+                        <Link className="admin-menu-link" to="medicalCondition">Medical Condition</Link>
                     </li>
                     <li>
                         <Link className="admin-menu-link" to="/admin/operation-requests">All Operation Requests</Link>
@@ -88,6 +96,8 @@ function AdminMenu() {
                     <Route path="Patient-Profile-details" element={<PatientProfileDetails />} />
                     <Route path="profile" element={<Profile />} />
                     <Route path="allergies" element={<ManageAllergies />} />
+                    <Route path="specializations" element={<ManageSpecializations />} />
+                    <Route path="MedicalCondition" element={<ManageMedicalCondition />} />
                     <Route path="operation-requests" element={<OperationRequestList />} />
                     <Route path="operation-request-by-patient" element={<OperationRequestByPatient />} />
                     <Route path="operation-request-by-type" element={<OperationRequestByType />} />

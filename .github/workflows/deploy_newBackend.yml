@@ -1,0 +1,49 @@
+name: Deploy Node.js Backend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'node-backend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Deploy and Restart Node.js Backend
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        port: 10606
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        timeout: 600s
+        command_timeout: 600s
+        script: |
+          # Navigate to the backend directory
+          cd /var/www/project/node-backend
+          
+          # Reset the repository and clean untracked files to avoid conflicts
+          git reset --hard
+          git clean -fd # Remove untracked files and directories
+          
+          # Pull the latest changes
+          git pull
+          
+          # Install dependencies
+          npm install
+          
+          # Stop and delete the previous pm2 process for the Node.js backend
+          pm2 stop node-backend || true
+          pm2 delete node-backend || true
+          
+          # Start the new backend process on port 4000
+          pm2 start app.js --name node-backend -- --port 4000
+          
+          # Save the pm2 process list
+          pm2 save

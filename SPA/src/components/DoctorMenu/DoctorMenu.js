@@ -6,6 +6,7 @@ import OperationRequestCreate from '../../modules/OperationRequest/OperationRequ
 import OperationRequestByPatient from '../../modules/OperationRequest/OperationRequestByPatient/OperationRequestByPatient';
 import OperationRequestByType from '../../modules/OperationRequest/OperationRequestByType/OperationRequestByType';
 import OperationRequestByPriority from '../../modules/OperationRequest/OperationRequestByPriority/OperationRequestByPriority';
+import ManageMedicalCondition from '../../modules/MedicalCondition/ManageMedicalConditionAsDoctor';
 import ManageAllergies from '../../modules/Allergies/ManageAllergiesAsDoctor';
 import './DoctorMenu.css';
 
@@ -22,6 +23,9 @@ function DoctorMenu() {
                     </li>
                     <li>
                         <Link className="doctor-menu-link" to="/doctor/allergies">View Allergies</Link>
+                    </li>
+                    <li>
+                        <Link className="doctor-menu-link" to="/doctor/medicalConditions">View MedicalConditions</Link>
                     </li>
                     <li>
                         <Link className="doctor-menu-link" to="/doctor/operation-requests">All Operation Requests</Link>
@@ -48,6 +52,7 @@ function DoctorMenu() {
             <div className="doctor-content">
                 <Routes>
                     <Route path="allergies" element={<ManageAllergies />} /> {/* Allergies route */}
+                    <Route path="medicalConditions" element={<ManageMedicalCondition />} /> {/* Medical Conditions route */}
                     <Route path="operation-requests" element={<OperationRequestList />} />
                     <Route path="operation-request-by-patient" element={<OperationRequestByPatient />} />
                     <Route path="operation-request-by-type" element={<OperationRequestByType />} />
