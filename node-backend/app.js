@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors'); // Import CORS
 const connectDB = require('./api/database/connection'); // Import MongoDB connection
 const allergyRoutes = require('./routes/allergyRoutes');
+const specializationRoutes = require('./routes/specializationRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/api/allergies', allergyRoutes);
+app.use('/api/specializations', specializationRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
