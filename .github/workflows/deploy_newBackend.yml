@@ -22,12 +22,17 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         port: 10606
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        timeout: 600s
+        command_timeout: 600s
         script: |
           # Navigate to the backend directory
           cd /var/www/project/node-backend
           
-          # Reset and pull the latest changes
+          # Reset the repository and clean untracked files to avoid conflicts
           git reset --hard
+          git clean -fd # Remove untracked files and directories
+          
+          # Pull the latest changes
           git pull
           
           # Install dependencies
