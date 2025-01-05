@@ -315,6 +315,157 @@ earliest_sufficient_interval(TotalTime, [_ | Rest], Earliest) :-
     earliest_sufficient_interval(TotalTime, Rest, Earliest).
 
 
+    % ------------------------------Sprint C-------------------------------
+
+
+% ------------------------------US7.3.1: Automatic room assignment-------------------------------
+
+    assign_surgeries_to_rooms(Rooms, Day) :-
+    findall(Room, agenda_operation_room(Room, Day, _), Rooms),
+    retractall(agenda_operation_room1(_, _, _)),
+    retractall(availability(_, _, _)),
+    % Initialize agendas for all rooms
+    forall(
+        member(Room, Rooms),
+        (
+            agenda_operation_room(Room, Day, Agenda),
+            assertz(agenda_operation_room1(Room, Day, Agenda)),
+            free_agenda0(Agenda, FreeSlots),
+            adapt_timetable(Room, Day, FreeSlots, AdjustedSlots),
+            assertz(availability(Room, Day, AdjustedSlots))
+        )
+    ),
+    % Assign surgeries
+    findall(OpCode, surgery_id(OpCode, _), Surgeries),
+    assign_surgeries(Surgeries, Rooms, Day).
+
+assign_surgeries([], _, _).
+assign_surgeries([OpCode | RemainingSurgeries], Rooms, Day) :-
+    surgery_id(OpCode, OpType),
+    surgery(OpType, TAnaesthesia, TSurgery, TCleaning),
+    TotalDuration is TAnaesthesia + TSurgery + TCleaning,
+    find_best_room(Rooms, Day, TotalDuration, OpCode, SelectedRoom),
+    (SelectedRoom \= none ->
+        schedule_phases(OpCode, SelectedRoom, Day),
+        assign_surgeries(RemainingSurgeries, Rooms, Day)
+    ;
+        write('Could not assign surgery '), write(OpCode), nl,
+        assign_surgeries(RemainingSurgeries, Rooms, Day)
+    ).
+
+find_best_room([], _, _, _, none).
+find_best_room([Room | RemainingRooms], Day, Duration, OpCode, SelectedRoom) :-
+    availability(Room, Day, FreeSlots),
+    remove_unf_intervals(Duration, FreeSlots, ValidSlots),
+    (ValidSlots = [] ->
+        find_best_room(RemainingRooms, Day, Duration, OpCode, SelectedRoom)
+    ;
+        SelectedRoom = Room
+    ).
+
+% ------------------------------US7.3.2: Genetic Algorithm for Surgery Scheduling-------------------------------
+
+schedule_surgeries_ga(Rooms, Day, Solution) :-
+    findall(OpCode, surgery_id(OpCode, _), Surgeries),
+    length(Surgeries, NumGenes),
+    % Define GA parameters
+    PopulationSize = 50,
+    MaxGenerations = 100,
+    MutationRate = 0.1,
+    CrossoverRate = 0.8,
+    % Initialize population
+    initialize_population(PopulationSize, NumGenes, Rooms, InitialPopulation),
+    % Run the genetic algorithm
+    ga_loop(InitialPopulation, MaxGenerations, MutationRate, CrossoverRate, Rooms, Day, Solution).
+
+initialize_population(0, _, _, []) :- !.
+initialize_population(PopulationSize, NumGenes, Rooms, [Chromosome | Rest]) :-
+    random_chromosome(NumGenes, Rooms, Chromosome),
+    NewPopulationSize is PopulationSize - 1,
+    initialize_population(NewPopulationSize, NumGenes, Rooms, Rest).
+
+random_chromosome(0, _, []) :- !.
+random_chromosome(NumGenes, Rooms, [Gene | Rest]) :-
+    random_member(Gene, Rooms),
+    NewNumGenes is NumGenes - 1,
+    random_chromosome(NewNumGenes, Rooms, Rest).
+
+% Genetic Algorithm Loop
+ga_loop(Population, 0, _, _, _, _, BestChromosome) :-
+    evaluate_population(Population, EvaluatedPopulation),
+    select_best_chromosome(EvaluatedPopulation, BestChromosome).
+ga_loop(Population, Generations, MutationRate, CrossoverRate, Rooms, Day, BestChromosome) :-
+    evaluate_population(Population, EvaluatedPopulation),
+    select_best_chromosome(EvaluatedPopulation, BestChromosome),
+    generate_new_population(EvaluatedPopulation, MutationRate, CrossoverRate, Rooms, Day, NewPopulation),
+    NewGenerations is Generations - 1,
+    ga_loop(NewPopulation, NewGenerations, MutationRate, CrossoverRate, Rooms, Day, BestChromosome).
+
+evaluate_population([], []).
+evaluate_population([Chromosome | Rest], [(Chromosome, Fitness) | EvaluatedRest]) :-
+    fitness_function(Chromosome, Fitness),
+    evaluate_population(Rest, EvaluatedRest).
+
+fitness_function(Chromosome, Fitness) :-
+    % Calculate fitness based on room conflicts, idle times, etc.
+    findall(OpCode, surgery_id(OpCode, _), Surgeries),
+    compute_fitness(Surgeries, Chromosome, Fitness).
+
+compute_fitness(_, _, Fitness) :-
+    % Example fitness logic
+    Fitness = 100. % Replace with actual computation
+
+select_best_chromosome(EvaluatedPopulation, BestChromosome) :-
+    sort(2, @>=, EvaluatedPopulation, [(BestChromosome, _) | _]).
+
+generate_new_population(EvaluatedPopulation, MutationRate, CrossoverRate, Rooms, Day, NewPopulation) :-
+    length(EvaluatedPopulation, PopulationSize),
+    generate_offspring(EvaluatedPopulation, MutationRate, CrossoverRate, Rooms, Day, PopulationSize, NewPopulation).
+
+generate_offspring(_, _, _, _, _, 0, []) :- !.
+generate_offspring(EvaluatedPopulation, MutationRate, CrossoverRate, Rooms, Day, PopulationSize, [Offspring | Rest]) :-
+    select_parents(EvaluatedPopulation, Parent1, Parent2),
+    crossover(Parent1, Parent2, CrossoverRate, Child),
+    mutate(Child, MutationRate, Rooms, MutatedChild),
+    PopulationSize1 is PopulationSize - 1,
+    generate_offspring(EvaluatedPopulation, MutationRate, CrossoverRate, Rooms, Day, PopulationSize1, Rest).
+
+select_parents(EvaluatedPopulation, Parent1, Parent2) :-
+    % Use roulette wheel or tournament selection
+    random_member((Parent1, _), EvaluatedPopulation),
+    random_member((Parent2, _), EvaluatedPopulation).
+
+crossover(Parent1, Parent2, CrossoverRate, Child) :-
+    random(0.0, 1.0, Rand),
+    (Rand =< CrossoverRate ->
+        % Perform crossover
+        length(Parent1, Length),
+        random(1, Length, CrossoverPoint),
+        append(Prefix, Suffix, Parent1),
+        length(Prefix, CrossoverPoint),
+        append(Prefix, Suffix2, Child),
+        append(_, Suffix, Parent2),
+        append(Suffix2, _, Child)
+    ;
+        % No crossover, copy Parent1
+        Child = Parent1
+    ).
+
+mutate(Chromosome, MutationRate, Rooms, MutatedChromosome) :-
+    random(0.0, 1.0, Rand),
+    (Rand =< MutationRate ->
+        random_chromosome(1, Rooms, [Gene]),
+        random(1, Length, MutationPoint),
+        nth1(MutationPoint, Chromosome, _, Rest),
+        nth1(MutationPoint, MutatedChromosome, Gene, Rest)
+    ;
+        MutatedChromosome = Chromosome
+    ).
+
+
+
+
+
 
 
 
