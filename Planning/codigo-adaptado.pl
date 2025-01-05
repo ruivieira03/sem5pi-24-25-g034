@@ -1,7 +1,7 @@
-:- dynamic generations/1.
-:- dynamic population/1.
-:- dynamic prob_crossover/1.
-:- dynamic prob_mutation/1.
+:-dynamic generations/1.
+:-dynamic population/1.
+:-dynamic prob_crossover/1.
+:-dynamic prob_mutation/1.
 
 % task(Id,ProcessTime,DueTime,PenaltyWeight).
 task(t1,2,5,1).
@@ -14,13 +14,13 @@ task(t5,3,8,2).
 tasks(5).
 
 % parameters initialization
-initialize:-write('Number of new generations: '),read(NG), 
+initialize:-write('Number of new generations: '),read(NG), 			
     (retract(generations(_));true), asserta(generations(NG)),
 	write('Population size: '),read(PS),
 	(retract(population(_));true), asserta(population(PS)),
 	write('Probability of crossover (%):'), read(P1),
 	PC is P1/100, 
-	(retract(prob_crossover(_));true), asserta(prob_crossover(PC)),
+	(retract(prob_crossover(_));true), 	asserta(prob_crossover(PC)),
 	write('Probability of mutation (%):'), read(P2),
 	PM is P2/100, 
 	(retract(prob_mutation(_));true), asserta(prob_mutation(PM)).
@@ -35,7 +35,6 @@ generate:-
     generations(NG),
     generate_generation(0,NG,PopOrd).
 
-% Generate initial population
 generate_population(Pop):-
     population(PopSize),
     tasks(NumT),
@@ -48,11 +47,14 @@ generate_population(PopSize,TasksList,NumT,[Ind|Rest]):-
     generate_population(PopSize1,TasksList,NumT,Rest),
     generate_individual(TasksList,NumT,Ind),
     not(member(Ind,Rest)).
+generate_population(PopSize,TasksList,NumT,L):-
+    generate_population(PopSize,TasksList,NumT,L).
+    
 
 generate_individual([G],1,[G]):-!.
 
 generate_individual(TasksList,NumT,[G|Rest]):-
-    NumTemp is NumT + 1,
+    NumTemp is NumT + 1, % to use with random
     random(1,NumTemp,N),
     remove(N,TasksList,G,NewList),
     NumT1 is NumT-1,
@@ -62,16 +64,14 @@ remove(1,[G|Rest],G,Rest).
 remove(N,[G1|Rest],G,[G1|Rest1]):- N1 is N-1,
             remove(N1,Rest,G,Rest1).
 
-% Evaluate population
 evaluate_population([],[]).
 evaluate_population([Ind|Rest],[Ind*V|Rest1]):-
     evaluate(Ind,V),
     evaluate_population(Rest,Rest1).
 
-% Evaluation function (adapted for surgery scheduling)
 evaluate(Seq,V):- evaluate(Seq,0,V).
 
-evaluate([],_,0).
+evaluate([ ],_,0).
 evaluate([T|Rest],Inst,V):-
     task(T,Dur,Due,Pen),
     FinInst is Inst+Dur,
@@ -79,7 +79,6 @@ evaluate([T|Rest],Inst,V):-
     ((FinInst =< Due,!, VT is 0) ; (VT is (FinInst-Due)*Pen)),
     V is VT+VRest.
 
-% Order population by fitness
 order_population(PopValue,PopValueOrd):-
     bsort(PopValue,PopValueOrd).
 
@@ -87,6 +86,7 @@ bsort([X],[X]):-!.
 bsort([X|Xs],Ys):-
     bsort(Xs,Zs),
     bchange([X|Zs],Ys).
+
 
 bchange([X],[X]):-!.
 
@@ -96,77 +96,128 @@ bchange([X*VX,Y*VY|L1],[Y*VY|L2]):-
 
 bchange([X|L1],[X|L2]):-bchange(L1,L2).
     
-% Generate new generations
 generate_generation(G,G,Pop):-!,
 	write('Generation '), write(G), write(':'), nl, write(Pop), nl.
 generate_generation(N,G,Pop):-
 	write('Generation '), write(N), write(':'), nl, write(Pop), nl,
-	select_next_generation(Pop,NextPop),
+	crossover(Pop,NPop1),
+	mutation(NPop1,NPop),
+	evaluate_population(NPop,NPopValue),
+	order_population(NPopValue,NPopOrd),
+	select_with_probability(NPopOrd, 0.1, SelectedPop), % Seleção com probabilidade
+	ensure_best_individual(Pop, SelectedPop, FinalPop),
 	N1 is N+1,
-	generate_generation(N1,G,NextPop).
+	generate_generation(N1,G,FinalPop).
 
-% Selection method: hybrid elitism
-select_next_generation(Pop,NextPop):-
+% Seleção com probabilidade
+select_with_probability(Pop, Prob, SelectedPop):-
     population(PopSize),
-    crossover_and_mutation(Pop,Descendants),
-    append(Pop,Descendants,Merged),
-    sort_population(Merged,Sorted),
-    select_elites(Sorted,Elites),
-    select_non_elites(Sorted,Elites,PopSize,NonElites),
-    append(Elites,NonElites,NextPop).
+    length(Top, PopSize),
+    append(Top, Rest, Pop),
+    random_selection(Rest, Prob, Additional),
+    append(Top, Additional, TempPop),
+    order_population(TempPop, SelectedPop).
 
-% Sort population by fitness
-sort_population(Pop,Sorted):-
-    sort(2, @=<, Pop, Sorted).
+% Seleção randômica baseada em probabilidade
+random_selection([], _, []).
+random_selection([Ind*V|Rest], Prob, [Ind*V|SelectedRest]):-
+    random(0.0, 1.0, R),
+    R =< Prob, % Seleciona indivíduo com base na probabilidade
+    random_selection(Rest, Prob, SelectedRest).
+random_selection([_|Rest], Prob, SelectedRest):-
+    random_selection(Rest, Prob, SelectedRest).
 
-% Select top P% as elites
-select_elites(Sorted,Elites):-
-    population(PopSize),
-    P is round(PopSize * 0.3), % Select top 30%
-    length(Elites,P),
-    append(Elites,_,Sorted).
+% Garantir o melhor indivíduo
+ensure_best_individual(CurrentPop, NewPopOrd, FinalPop):-
+	CurrentPop = [BestCurrent*VCurrent|_],
+	NewPopOrd = [BestNew*VNew|_],
+	((VCurrent =< VNew, Best = BestCurrent, V = VCurrent) ; (Best = BestNew, V = VNew)),
+	append(NewPopOrd, [Best*V], TempPop),
+	order_population(TempPop, FinalPop).
 
-% Select non-elites based on randomized fitness
-select_non_elites(Sorted,Elites,PopSize,NonElites):-
-    length(Elites,NumElites),
-    Remaining is PopSize - NumElites,
-    exclude(memberchk,Elites,Sorted,NonEliteCandidates),
-    assign_random_weights(NonEliteCandidates,Weighted),
-    sort(2, @=<, Weighted, WeightedSorted),
-    length(NonElites,Remaining),
-    append(NonElites,_,WeightedSorted).
+generate_crossover_points(P1,P2):- generate_crossover_points1(P1,P2).
 
-assign_random_weights([],[]).
-assign_random_weights([Ind*Fitness|Rest],[Ind*(Random*Fitness)|WeightedRest]):-
-    random(0.0,1.0,Random),
-    assign_random_weights(Rest,WeightedRest).
+generate_crossover_points1(P1,P2):-
+	tasks(N),
+	NTemp is N+1,
+	random(1,NTemp,P11),
+	random(1,NTemp,P21),
+	P11\==P21,!,
+	((P11<P21,!,P1=P11,P2=P21);P1=P21,P2=P11).
+generate_crossover_points1(P1,P2):-
+	generate_crossover_points1(P1,P2).
 
-% Crossover and mutation
-crossover_and_mutation(Pop,Descendants):-
-    random_permutation(Pop,Shuffled),
-    crossover(Shuffled,Crossovered),
-    mutation(Crossovered,Descendants).
 
-% Generate random crossover points
-generate_crossover_points(P1, P2):-
-    tasks(NumT),
-    NumT > 1,
-    random(1, NumT+1, P1),
-    random(1, NumT+1, P2),
-    P1 \= P2.
-
-% Crossover logic
 crossover([],[]).
 crossover([Ind*_],[Ind]).
-crossover([Ind1*_,Ind2*_|Rest],[NInd1,NInd2|Rest1]):-
-    generate_crossover_points(P1,P2),
-    prob_crossover(Pcruz),random(0.0,1.0,Pc),
-    ((Pc =< Pcruz,!,
+crossover(Pop,NewPop):-
+	random_permutation(Pop, ShuffledPop),
+	perform_crossover(ShuffledPop,NewPop).
+
+perform_crossover([],[]).
+perform_crossover([Ind1*_,Ind2*_|Rest],[NInd1,NInd2|Rest1]):-
+	generate_crossover_points(P1,P2),
+	prob_crossover(Pcruz),random(0.0,1.0,Pc),
+	((Pc =< Pcruz,!,
         cross(Ind1,Ind2,P1,P2,NInd1),
 	  cross(Ind2,Ind1,P1,P2,NInd2))
 	;
 	(NInd1=Ind1,NInd2=Ind2)),
-	crossover(Rest,Rest1).
+	perform_crossover(Rest,Rest1).
+perform_crossover([Ind*_|Rest],[Ind|Rest1]):-
+	perform_crossover(Rest,Rest1).
+
+
+fillh([ ],[ ]).
+
+fillh([_|R1],[h|R2]):-
+	fillh(R1,R2).
+
+sublist(L1,I1,I2,L):-I1 < I2,!,
+    sublist1(L1,I1,I2,L).
+
+sublist(L1,I1,I2,L):-sublist1(L1,I2,I1,L).
+
+sublist1([X|R1],1,1,[X|H]):-!, fillh(R1,H).
+
+sublist1([X|R1],1,N2,[X|R2]):-!,N3 is N2 - 1,
+	sublist1(R1,1,N3,R2).
+
+sublist1([_|R1],N1,N2,[h|R2]):-N3 is N1 - 1,
+		N4 is N2 - 1,
+		sublist1(R1,N3,N4,R2).
+
+rotate_right(L,K,L1):- tasks(N),
+	T is N - K,
+	rr(T,L,L1).
+
+rr(0,L,L):-!.
+
+rr(N,[X|R],R2):- N1 is N - 1,
+	append(R,[X],R1),
+	rr(N1,R1,R2).
+
+remove([],_,[]):-!.
+
+remove([X|R1],L,[X|R2]):- not(member(X,L)),!,
+        remove(R1,L,R2).
+
+remove([_|R1],L,R2):-
+    remove(R1,L,R2).
+
+insert([],L,_,L):-!.
+insert([X|R],L,N,L2):-
+    tasks(T),
+    ((N>T,!,N1 is N mod T);N1 = N),
+    insert1(X,N1,L,L1),
+    N2 is N + 1,
+    insert(R,L1,N2,L2).
+
+
+insert1(X,1,L,[X|L]):-!.
+insert1(X,N,[Y|L],[Y|L1]):-
+    N1 is N-1,
+    insert1(X,N1,L,L1).
 
 cross(Ind1,Ind2,P1,P2,NInd11):-
     sublist(Ind1,P1,P2,Sub1),
@@ -178,13 +229,15 @@ cross(Ind1,Ind2,P1,P2,NInd11):-
     insert(Sub2,Sub1,P3,NInd1),
     removeh(NInd1,NInd11).
 
+
 removeh([],[]).
+
 removeh([h|R1],R2):-!,
     removeh(R1,R2).
+
 removeh([X|R1],[X|R2]):-
     removeh(R1,R2).
 
-% Mutation
 mutation([],[]).
 mutation([Ind|Rest],[NInd|Rest1]):-
 	prob_mutation(Pmut),
@@ -207,3 +260,9 @@ mutacao23(G1,1,[G2|Ind],G2,[G1|Ind]):-!.
 mutacao23(G1,P,[G|Ind],G2,[G|NInd]):-
 	P1 is P-1,
 	mutacao23(G1,P1,Ind,G2,NInd).
+
+
+
+%% First Attribute fine here
+%% Second Attribute fine here
+%% Third done and testes , thouhg not implemented and registerd
