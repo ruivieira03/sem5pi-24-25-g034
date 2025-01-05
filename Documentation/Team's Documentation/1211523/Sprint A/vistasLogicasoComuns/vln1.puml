@@ -1,0 +1,17 @@
+@startuml vsl1
+
+skinparam linetype ortho
+
+skinparam component{
+  BackgroundColor lightsteelblue
+}
+
+
+interface API
+component Hospital{
+  port api as " "
+}
+
+api -up- API
+
+@enduml

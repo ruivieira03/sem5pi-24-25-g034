@@ -1,0 +1,6 @@
+@startuml nivel1
+
+[o-> Hospital ++: GET Xpto
+[<-- Hospital --: status 200 / 404
+
+@enduml

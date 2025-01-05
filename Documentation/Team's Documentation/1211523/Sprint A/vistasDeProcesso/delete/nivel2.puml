@@ -1,0 +1,6 @@
+@startuml nivel2
+
+[o-> MasterData ++: DELETE Xpto
+[<-- MasterData --: status 201 / 40[0/4/9]
+
+@enduml

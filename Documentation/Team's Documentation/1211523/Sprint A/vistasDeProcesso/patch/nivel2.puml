@@ -1,0 +1,6 @@
+@startuml nivel2
+
+[o-> MasterData ++: PATCH Xpto
+[<-- MasterData --: status 200 / 404
+
+@enduml
