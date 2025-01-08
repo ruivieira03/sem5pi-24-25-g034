@@ -1,7 +1,7 @@
 import axios from 'axios';
+import { API_URL_NODE } from '../../config';
 
-//const API_URL = 'http://localhost:4000/api/medicalConditions';
-const API_URL = 'http://10.9.22.94:4000/api/medicalConditions';
+const API_URL = API_URL_NODE + ':4000/api/medicalConditions';
 
 // Fetch all medical conditions
 export const fetchMedicalConditions = async () => {

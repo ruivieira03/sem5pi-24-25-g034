@@ -1,4 +1,4 @@
-.manage-allergies {
+.manage-medicalConditions {
     margin: 20px;
     font-family: 'Roboto', Arial, sans-serif;
     color: #333;
@@ -7,8 +7,8 @@
     margin-right: auto;
 }
 
-.manage-allergies h2,
-.manage-allergies h3 {
+.manage-medicalConditions h2,
+.manage-medicalConditions h3 {
     color: #2c3e50;
     margin-bottom: 15px;
     font-size: 1.8rem;
@@ -47,13 +47,13 @@
     background-color: #0056b3;
 }
 
-.allergy-list {
+.medicalCondition-list {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-.allergy-item {
+.medicalCondition-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -65,17 +65,31 @@
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.allergy-item strong {
+.medicalCondition-item strong {
     font-size: 1.1rem;
 }
 
-.allergy-actions button {
+.medicalCondition-actions button {
     margin-left: 10px;
     padding: 8px 12px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+.notification {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    margin: 15px 0;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.notification.error {
+    background-color: #dc3545;
 }
 
 .edit-button {
@@ -153,12 +167,12 @@ input {
         width: 100%;
     }
 
-    .allergy-item {
+    .medicalCondition-item {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .allergy-actions {
+    .medicalCondition-actions {
         margin-top: 10px;
     }
 }
