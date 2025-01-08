@@ -10,7 +10,7 @@ function CommonMenu() {
             <ul>
                 {/* Common menu items */}
                 <li><Link to="/">Landing Page</Link></li>
-                <li><Link to="/about">About</Link></li>
+                <li><Link to="/termsofservice">Terms of Service</Link></li>
                 
             </ul>
         </div>

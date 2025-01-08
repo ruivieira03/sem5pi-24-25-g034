@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './components/LandingPage/LandingPage';
-import About from './components/About/About'; 
+import TermsOfService from './components/About/About'; 
 import Login from './modules/Auth/Login/Login';
 import Logout from './modules/Auth/Logout/Logout';
 import AdminMenu from './components/AdminMenu/AdminMenu';
@@ -32,6 +32,7 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
+        <Route path="/termsofservice" element={<TermsOfService />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register-patient" element={<PatientRegister />} />
         <Route path="/request-password-reset" element={<RequestPasswordReset />} />
