@@ -29,6 +29,15 @@ class SpecializationService {
 
     async createSpecialization(data) {
         const { name, description } = data;
+
+        // Check if a specialization with the same name exists and is soft deleted
+        const existingSpecialization = await Specialization.findOne({ name, deleted: true });
+        if (existingSpecialization && existingSpecialization.deleted) {
+            // Perform a hard delete on the existing specialization
+            await Specialization.deleteOne({ _id: existingSpecialization._id });
+        }
+
+        // Proceed to create the new specialization
         const newSpecialization = new Specialization({ name, description });
         await newSpecialization.save();
         return SpecializationMapper.toDTO(newSpecialization);
