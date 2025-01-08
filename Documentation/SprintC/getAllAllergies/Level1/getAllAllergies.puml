@@ -1,0 +1,13 @@
+@startuml
+actor User
+participant System
+
+User -> System: GET /allergies?page={page}&limit={limit}
+System -> System: Validate Query Parameters
+alt Invalid Query Parameters
+    System -> User: 400 Bad Request
+else Valid Query Parameters
+    System -> System: Call Service Layer
+    System -> User: 200 OK with allergies data
+end
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+actor User
+participant API_Controller
+participant Service_Layer
+participant Repository
+
+User -> API_Controller: GET /allergies?page={page}&limit={limit}
+API_Controller -> API_Controller: Validate Query Parameters
+alt Invalid Query Parameters
+    API_Controller -> User: 400 Bad Request
+else Valid Query Parameters
+    API_Controller -> Service_Layer: GetAllAllergies(page, limit)
+    Service_Layer -> Repository: FetchPaginatedAllergies(page, limit)
+    Repository -> Service_Layer: List of allergies
+    Service_Layer -> API_Controller: List of allergies
+    API_Controller -> User: 200 OK with allergies data
+end
+@enduml
