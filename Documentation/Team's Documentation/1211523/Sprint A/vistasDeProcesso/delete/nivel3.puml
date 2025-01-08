@@ -1,0 +1,8 @@
+@startuml nivel3
+
+[o-> BackEnd ++: DELETE Xpto
+BackEnd -> DataBase ++: Remove Xpto
+DataBase --> BackEnd --: Success / Insuccess
+[<-- BackEnd --: status 201 / 40[0/4/9]
+
+@enduml

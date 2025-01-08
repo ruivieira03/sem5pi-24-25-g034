@@ -1,0 +1,8 @@
+@startuml nivel3
+
+[o-> BackEnd ++: PATCH Xpto
+BackEnd -> DataBase ++: update Xpto
+DataBase --> BackEnd --: Success / Insuccess
+[<-- BackEnd --: status 200 / 404
+
+@enduml

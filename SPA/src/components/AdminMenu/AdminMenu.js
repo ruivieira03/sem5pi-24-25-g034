@@ -8,6 +8,17 @@ import PatientProfileList from '../../modules/Admin/Patient-Profile-Management/P
 import PatientProfileDetails from '../../modules/Admin/Patient-Profile-Management/PatientProfileDetails/PatientProfileDetails';
 import Profile from '../../modules/Auth/Profile/Profile';
 import UserDetails from '../../modules/Admin/UserManagement/UserDetails/UserDetails';
+<<<<<<< HEAD
+=======
+import OperationRequestList from '../../modules/OperationRequest/OperationRequestList/OperationRequestList';
+import OperationRequestCreate from '../../modules/OperationRequest/OperationRequestCreate/OperationRequestCreate';
+import OperationRequestByPatient from '../../modules/OperationRequest/OperationRequestByPatient/OperationRequestByPatient';
+import OperationRequestByType from '../../modules/OperationRequest/OperationRequestByType/OperationRequestByType';
+import OperationRequestByPriority from '../../modules/OperationRequest/OperationRequestByPriority/OperationRequestByPriority';
+import ManageAllergies from '../../modules/Allergies/ManageAllergiesAsAdmin';
+import ManageSpecializations from '../../modules/Specializations/ManageSpecializationsAsAdmin';
+import ManageMedicalCondition from '../../modules/MedicalCondition/ManageMedicalConditionAsAdmin';
+>>>>>>> main
 import './AdminMenu.css'; // Import new CSS file for styling
 
 function AdminMenu() {
@@ -44,7 +55,36 @@ function AdminMenu() {
                         <Link className="admin-menu-link" to="/admin/user-details/:username">User Information</Link>
                     </li>
                     <li>
+<<<<<<< HEAD
                         <Link className="admin-menu-link" to="/admin/profile">Profile</Link>
+=======
+                        <Link className="admin-menu-link" to="profile">Profile</Link>
+                    </li>
+                    <li>
+                        <Link className="admin-menu-link" to="allergies">Allergies</Link>
+                    </li>
+                    <li>
+                        <Link className="admin-menu-link" to="specializations">Specializations</Link>
+                    </li>
+                    <li>
+                        <Link className="admin-menu-link" to="medicalCondition">Medical Condition</Link>
+                    </li>
+                    <li>
+                        <Link className="admin-menu-link" to="/admin/operation-requests">All Operation Requests</Link>
+                    </li>
+
+                    <li>
+                        <Link className="admin-menu-link" to="/admin/operation-request-by-patient">Operation Request by Patient</Link>
+                    </li>
+                    <li>
+                        <Link className="admin-menu-link" to="/admin/operation-request-by-type">Operation Request by Type</Link>
+                    </li>
+                    <li>
+                        <Link className="admin-menu-link" to="/admin/operation-request-by-priority">Operation Request by Priority</Link>
+                    </li>
+                    <li>
+                        <Link className="admin-menu-link" to="/admin/operation-request-create">Create Operation Request</Link>
+>>>>>>> main
                     </li>
                 </ul>
                 
@@ -63,6 +103,17 @@ function AdminMenu() {
                     <Route path="Patient-Profile-list" element={<PatientProfileList />} />
                     <Route path="Patient-Profile-details" element={<PatientProfileDetails />} />
                     <Route path="profile" element={<Profile />} />
+<<<<<<< HEAD
+=======
+                    <Route path="allergies" element={<ManageAllergies />} />
+                    <Route path="specializations" element={<ManageSpecializations />} />
+                    <Route path="MedicalCondition" element={<ManageMedicalCondition />} />
+                    <Route path="operation-requests" element={<OperationRequestList />} />
+                    <Route path="operation-request-by-patient" element={<OperationRequestByPatient />} />
+                    <Route path="operation-request-by-type" element={<OperationRequestByType />} />
+                    <Route path="operation-request-by-priority" element={<OperationRequestByPriority />} />
+                    <Route path="operation-request-create" element={<OperationRequestCreate />} />
+>>>>>>> main
                     <Route
                         path="*"
                         element={

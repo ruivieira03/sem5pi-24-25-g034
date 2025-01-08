@@ -1,0 +1,23 @@
+@startuml
+actor User
+participant API_Controller
+participant AllergyService
+participant Repository
+
+User -> API_Controller: GET /allergies/{name}
+API_Controller -> API_Controller: Validate Path Parameter
+alt Invalid Name
+    API_Controller -> User: 400 Bad Request
+else Valid Name
+    API_Controller -> AllergyService: GetAllergyByName(name)
+    AllergyService -> Repository: FetchAllergyByName(name)
+    alt Allergy Not Found
+        AllergyService -> API_Controller: Exception: "Allergy not found"
+        API_Controller -> User: 404 Not Found
+    else
+        Repository -> AllergyService: Allergy Details
+        AllergyService -> API_Controller: Allergy Details
+        API_Controller -> User: 200 OK with allergy details
+    end
+end
+@enduml

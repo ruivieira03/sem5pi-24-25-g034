@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* About.css */
 
 .about-container {
@@ -30,3 +31,60 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+=======
+/* src/pages/About.css */
+
+.about-page {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    color: #333;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.about-page h1 {
+    font-size: 2rem;
+    color: #0056b3;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.about-page h2 {
+    font-size: 1.5rem;
+    color: #004085;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.about-page p {
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+.about-page ul {
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+.about-page ul li {
+    margin-bottom: 10px;
+    list-style-type: disc;
+}
+
+.about-page strong {
+    color: #004085;
+}
+
+.about-page a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.about-page a:hover {
+    text-decoration: underline;
+}
+>>>>>>> main

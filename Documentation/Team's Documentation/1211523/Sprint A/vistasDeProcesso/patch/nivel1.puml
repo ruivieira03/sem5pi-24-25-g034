@@ -1,0 +1,6 @@
+@startuml nivel1
+
+[o-> Hospital ++: PATCH Xpto
+[<-- Hospital --: status 200 / 404
+
+@enduml

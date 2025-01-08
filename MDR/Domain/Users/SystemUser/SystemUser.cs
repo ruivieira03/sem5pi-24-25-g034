@@ -7,8 +7,7 @@ namespace Hospital.Domain.Users.SystemUser
     public enum Roles{
         Admin,
         Doctor,
-        Nurse,
-        Technician,
+        Staff,
         Patient
     }
 

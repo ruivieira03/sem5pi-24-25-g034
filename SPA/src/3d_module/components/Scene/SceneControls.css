@@ -1,0 +1,26 @@
+.scene-controls-menu {
+    position: fixed; /* Fixa no canto da tela */
+    top: 20px; /* Distância do topo */
+    right: 20px; /* Distância da direita */
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente */
+    color: white; /* Texto branco para contraste */
+    padding: 40px; /* Espaçamento interno aumentado */
+    border-radius: 16px; /* Bordas arredondadas */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3); /* Sombra suave */
+    max-width: 700px; /* Limita a largura aumentada */
+    z-index: 1000; /* Garante que fique acima de outros elementos */
+    font-family: Arial, sans-serif; /* Fonte limpa e profissional */
+}
+
+.scene-controls-menu h3 {
+    margin: 0 0 30px 0; /* Espaço abaixo do título aumentado */
+    font-size: 42px; /* Tamanho do título aumentado */
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5); /* Linha decorativa */
+    padding-bottom: 15px; /* Espaçamento interno do título aumentado */
+}
+
+.scene-controls-menu p {
+    margin: 15px 0; /* Espaçamento vertical entre os parágrafos aumentado */
+    font-size: 32px; /* Tamanho do texto aumentado */
+    line-height: 3.5; /* Melhor legibilidade */
+}

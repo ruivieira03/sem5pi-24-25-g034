@@ -9,9 +9,10 @@ type RoomProps = {
   depth: number;
   position: [number, number, number];
   occupied: boolean;
+  onSelect: () => void; // Add onSelect prop
 };
 
-const RoomComponent: React.FC<RoomProps> = ({ width, height, depth, position, occupied }) => {
+const RoomComponent: React.FC<RoomProps> = ({ width, height, depth, position, occupied, onSelect }) => {
   const [isDoorOpen, setIsDoorOpen] = useState(false);
 
   const wallTexture = useLoader(THREE.TextureLoader, '/textures/wall.jpg');
@@ -68,11 +69,12 @@ const RoomComponent: React.FC<RoomProps> = ({ width, height, depth, position, oc
         </mesh>
       </group>
 
-    {/* Surgical Table */}
-    <primitive
+      {/* Surgical Table */}
+      <primitive
         object={tableModel}
         position={[0, -height / 2, 0]} // Position table above the floor
         scale={[0.7, 0.7, 0.7]} // Ensure table fits well
+        onClick={onSelect} // Call onSelect when the table is clicked
       />
 
       {/* Human Body (if occupied) */}
