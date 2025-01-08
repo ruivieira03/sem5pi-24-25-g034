@@ -59,8 +59,7 @@ namespace Hospital.Domain.Patients{
         existingPatient.LastName = model.LastName ?? existingPatient.LastName;
         existingPatient.Gender = model.Gender ?? existingPatient.Gender;
 
-        if (!string.IsNullOrEmpty(model.Email))
-        {
+        if (!string.IsNullOrEmpty(model.Email)){
             existingPatient.Email = model.Email;
             existingUser.Email = model.Email;
         }
@@ -74,8 +73,7 @@ namespace Hospital.Domain.Patients{
         existingPatient.EmergencyContact = model.EmergencyContact ?? existingPatient.EmergencyContact;
 
         // Create a DTO for the updated patient
-        var updatedPatientDto = new PatientDto
-        {
+        var updatedPatientDto = new PatientDto{
              Id = existingPatient.Id.AsGuid(),
             FirstName = existingPatient.FirstName,
             LastName = existingPatient.LastName,
@@ -88,8 +86,7 @@ namespace Hospital.Domain.Patients{
         };
 
         // Compare changes and log
-        try
-        {
+        try{
             string changedFields = _loggingService.GetChangedFields(originalPatientDto, updatedPatientDto);
             await _loggingService.LogProfileUpdateAsync(existingPatient.Id.ToString(), changedFields, DateTime.UtcNow);
         }
@@ -118,14 +115,13 @@ namespace Hospital.Domain.Patients{
         }
 
         // Save updates to the repositories
-        try
-        {
+        try{
             await _patientRepository.UpdatePatientAsync(existingPatient);
             await _systemUserRepository.UpdateUserAsync(existingUser);
             await _unitOfWork.CommitAsync();
         }
-        catch (Exception dbEx)
-        {
+
+        catch (Exception dbEx){
             Console.WriteLine($"Database commit failed: {dbEx.Message}");
             throw new InvalidOperationException("Failed to save updates.");
         }
@@ -133,8 +129,6 @@ namespace Hospital.Domain.Patients{
         // Return the updated patient data
         return updatedPatientDto;
     }
-
-
 
 
         // 5.8.7
@@ -151,7 +145,7 @@ namespace Hospital.Domain.Patients{
             if (existingPatient == null){
                 throw new InvalidOperationException("Patient not found.");
             }
-                                
+
 
             existingPatient.FirstName = model.FirstName;
             existingPatient.LastName = model.LastName;
@@ -181,7 +175,7 @@ namespace Hospital.Domain.Patients{
         }
 
 
-           public async Task <PatientDto> DeleteAsync(PatientId patientId){
+    public async Task <PatientDto> DeleteAsync(PatientId patientId){
 
             var existingPatient = await _patientRepository.GetByIdAsync(patientId);
             
@@ -211,6 +205,46 @@ namespace Hospital.Domain.Patients{
                 
             };
         }
+public async Task<PatientDto> DeletePersonalDataAsync(PatientId patientId)
+{
+    // Busca o paciente no repositório pelo ID
+    var existingPatient = await _patientRepository.GetByIdAsync(patientId);
+
+    if (existingPatient == null)
+    {
+        throw new InvalidOperationException("Patient not found.");
+    }
+
+    // Remove os dados pessoais do paciente
+    await _patientRepository.RemovePersonalData(existingPatient);
+
+    // Salva as alterações no banco de dados
+    var changes = await _unitOfWork.CommitAsync();
+
+    if (changes <= 0)
+    {
+        throw new InvalidOperationException("Failed to update patient data.");
+    }
+
+    // Retorna os dados do paciente (já atualizados) em forma de DTO
+    return new PatientDto
+    {
+        Id = existingPatient.Id.AsGuid(),
+        FirstName = existingPatient.FirstName,
+        LastName = existingPatient.LastName,
+        DateOfBirth = existingPatient.DateOfBirth,
+        Email = existingPatient.Email,
+        Gender = existingPatient.Gender,
+        MedicalRecordNumber = existingPatient.MedicalRecordNumber,
+        PhoneNumber = existingPatient.PhoneNumber,
+        EmergencyContact = existingPatient.EmergencyContact,
+        AllergiesOrMedicalConditions = existingPatient.AllergiesOrMedicalConditions,
+        AppointmentHistory = existingPatient.AppointmentHistory
+    };
+}
+
+
+        
     
 
 
@@ -241,6 +275,15 @@ namespace Hospital.Domain.Patients{
             if (patient == null){
                 throw new Exception("Patient not found.");
             }
+
+
+            patient.FirstName = null;
+            patient.LastName = null;
+            patient.DateOfBirth = default; 
+            patient.Email = null;
+            patient.PhoneNumber = null;
+            patient.Gender = null;
+            patient.EmergencyContact = null;
 
 
          return new PatientDto { 
@@ -335,6 +378,8 @@ namespace Hospital.Domain.Patients{
             };
        
         }
+
+
 
       
 }

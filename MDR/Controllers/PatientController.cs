@@ -3,6 +3,9 @@ using Hospital.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Hospital.Domain.Users.SystemUser;
 using Hospital.Domain.Patients;
+using System.Security.Claims; // Para ClaimTypes
+using Hospital.Domain.Patients; // Para PatientId
+
 //using  org.springframework.hateoas.RepresentationModel;
 
 namespace Hospital.Controllers{
@@ -63,16 +66,39 @@ namespace Hospital.Controllers{
 
 
             try {
-                var updatedPatient = await _patientService.UpdateProfileAsync(model, id); // Delegate the update logic to the service layer
-                return Ok(updatedPatient);              // Return OK with the updated user
+                var updatedPatient = await _patientService.UpdateProfileAsync(model, id);   // Delegate the update logic to the service layer
+                return Ok(updatedPatient);                                                  // Return OK with the updated user
 
             }catch (Exception ex){
                 return BadRequest(new { message = ex.Message, innerException = ex.InnerException?.Message });
             }
         }
 
+   [HttpDelete("delete-personal-data/{id}")]
+[Authorize(Roles = "Patient")]
+public async Task<ActionResult<PatientDto>> DeletePersonalData(Guid id)
+{
+    try
+    {
+        // Chama o serviço para remover os dados pessoais
+        var patient = await _patientService.DeletePersonalDataAsync(new PatientId(id));
 
-      
+        if (patient == null)
+        {
+            return NotFound(); // Retorna 404 se o paciente não for encontrado
+        }
+
+        return Ok(patient); // Retorna 200 com os dados atualizados do paciente
+    }
+    catch (Exception ex)
+    {
+        // Retorna 400 com mensagem de erro
+        return BadRequest(new { Message = ex.Message });
+    }
+}
+
+
+
 
 
               
@@ -83,7 +109,6 @@ namespace Hospital.Controllers{
 
         try{
            var patient =  await _patientService.DeleteAsync(new PatientId(id));
-
 
 
             if (patient == null){
@@ -97,13 +122,13 @@ namespace Hospital.Controllers{
          
     }
 
+
         
-        
-        // GET: api/patient/getall
-        [HttpGet("getAll")] 
-        [Authorize(Roles = "Admin")] 
-        public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll(){
-            var patient = await _patientService.GetAllAsync();
+// GET: api/patient/getall
+[HttpGet("getAll")] 
+[Authorize(Roles = "Admin")] 
+public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll(){
+        var patient = await _patientService.GetAllAsync();
             return Ok(patient); // Return OK status with the list of users
             
         }
@@ -113,13 +138,13 @@ namespace Hospital.Controllers{
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<PatientDto>> GetById(Guid id){
 
-        var user = await _patientService.GetByIdAsync(new PatientId(id));
+        var Patient = await _patientService.GetByIdAsync(new PatientId(id));
 
-        if (user == null){
+        if (Patient == null){
             return NotFound(); // Return 404 if user not found
         }
 
-        return Ok(user); // Return OK status with the user data
+        return Ok(Patient); // Return OK status with the user data
     }
 
 
@@ -154,9 +179,6 @@ namespace Hospital.Controllers{
 
 
 
-
-
-
     [HttpGet("firstName/{firstname}")]
     [Authorize(Roles = "Admin")]
 public async Task<ActionResult<IEnumerable<PatientDto>>> GetByFirstName(string firstName){
@@ -173,6 +195,7 @@ public async Task<ActionResult<IEnumerable<PatientDto>>> GetByFirstName(string f
     }
 }
 
-}    
 }
-
+    
+        
+}
