@@ -5,7 +5,7 @@ import './About.css';
 
 function About() {
     return (
-        <div>
+        <div className="about-page">
             <h1>Termos de Uso e Políticas de Retenção e Transparência de Dados Pessoais</h1>
             <section>
                 <h2>1. Introdução</h2>
