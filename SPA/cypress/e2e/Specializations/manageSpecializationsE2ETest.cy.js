@@ -1,9 +1,11 @@
+const config = require('../../URLconfig');
+
 describe('Specializations Management E2E Tests', () => {
     let specializationId;
 
     beforeEach(() => {
         // Log in as the admin user
-        cy.request('POST', 'https://localhost:5001/api/account/login', {
+        cy.request('POST', `${config.baseUrl}/api/account/login`, {
             username: 'adminUser',
             password: 'SEM5pi1234@',
         }).then((response) => {
