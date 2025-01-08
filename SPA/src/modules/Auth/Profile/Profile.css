@@ -5,62 +5,157 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     padding: 20px;
-    background-color: #f9f9f9; /* Light gray background */
-    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e8f1f7, #cfd9df); /* Sofisticado gradiente hospitalar */
+    font-family: 'Arial', sans-serif;
     color: #333;
     text-align: center;
     box-sizing: border-box;
 }
 
 .profile-header {
-    font-size: 2rem;
+    font-size: 2.5rem;
     margin-bottom: 20px;
-    color: #4caf50; /* Green accent color */
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    color: #0077b6; /* Azul para evocar confiança e saúde */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    letter-spacing: 1px;
 }
 
 .profile-info {
     font-size: 1.2rem;
-    margin: 10px 0;
-    color: #555;
-    background-color: #fff;
-    padding: 10px 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 15px 0;
+    color: #444;
+    background-color: #ffffff;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.15);
     width: 100%;
-    max-width: 500px;
+    max-width: 600px;
     text-align: left;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.profile-info:hover {
+    transform: translateY(-4px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.error-message, .success-message {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    padding: 15px 30px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.1);
 }
 
 .error-message {
-    color: #f44336; /* Red for error */
-    font-size: 1rem;
-    margin-bottom: 20px;
-    background-color: #ffe6e6;
-    padding: 10px 20px;
+    color: #d32f2f; /* Vermelho sóbrio */
+    background-color: #fdecea;
+}
+
+.success-message {
+    color: #388e3c; /* Verde confiável */
+    background-color: #e8f5e9;
+}
+
+.action-button {
+    background-color: #0077b6; /* Azul marcante */
+    color: #fff;
+    padding: 12px 25px;
+    border: none;
     border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 15px 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.action-button:hover {
+    background-color: #005f87;
+    transform: translateY(-3px);
+}
+
+.action-button.delete-button {
+    background-color: #d32f2f;
+}
+
+.action-button.delete-button:hover {
+    background-color: #b71c1c;
+}
+
+.patient-profile-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+    gap: 15px;
+}
+
+.tab-button {
+    background-color: #f0f4f8;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.tab-button:hover {
+    background-color: #d0e0e8;
+    transform: translateY(-3px);
+}
+
+.tab-button.active {
+    background-color: #0077b6;
+    color: #fff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .loading-message {
     font-size: 1.2rem;
     color: #555;
     margin-top: 20px;
+    animation: fade-in 1.5s infinite alternate;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0.6;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @media (max-width: 600px) {
     .profile-container {
-        padding: 10px;
+        padding: 15px;
+    }
+
+    .profile-header {
+        font-size: 2rem;
     }
 
     .profile-info {
         font-size: 1rem;
-        padding: 8px 15px;
+        padding: 15px 20px;
     }
 
-    .profile-header {
-        font-size: 1.5rem;
+    .action-button {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+    }
+
+    .tab-button {
+        font-size: 0.9rem;
+        padding: 10px 20px;
     }
 }
