@@ -1,4 +1,4 @@
-class MedicalConditionDto {
+class MedicalConditionDTO {
     constructor({ domainId, name, description, deleted = false }) {
         this.domainId = domainId;
         this.name = name;
@@ -7,4 +7,4 @@ class MedicalConditionDto {
     }
 }
 
-module.exports = MedicalConditionDto;
+module.exports = MedicalConditionDTO;
