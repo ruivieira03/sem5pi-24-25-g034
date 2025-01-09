@@ -37,7 +37,6 @@ class MedicalConditionService {
     async updateMedicalCondition(domainId, data) {
         console.log('Updating medical condition with domainId:', domainId); // Log the domainId
         const medicalCondition = await MedicalCondition.findOne({ domainId, deleted: false });
-        P
         if (!medicalCondition) {
             console.error('Medical condition not found for domainId:', domainId);
             throw new Error('Medical condition not found');

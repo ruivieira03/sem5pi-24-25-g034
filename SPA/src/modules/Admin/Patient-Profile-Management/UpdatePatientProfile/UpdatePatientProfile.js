@@ -153,7 +153,7 @@ const UpdatePatientProfile = ({ patient, authToken, onUpdateSuccess }) => {
 
 
 
-                <div className="form-group">
+<div className="form-group">
   <label>Appointment History:</label>
   {(formData?.appointmentHistory || []).map((item, index) => (
     <div key={index}>

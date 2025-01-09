@@ -72,8 +72,8 @@ function PatientProfileList() {
                                 <p><strong>Email:</strong> {patient.email}</p>
                                 <p><strong>Phone Number:</strong> {patient.phoneNumber}</p>
                                 <p><strong>Emergency Contact:</strong> {patient.emergencyContact}</p>
-                                <p><strong>Allergies:</strong> {patient.allergiesOrMedicalCondition}</p>
-                                <p><strong>Medical History:</strong> {patient.AppointmentHistory}</p>
+                                <p><strong>Allergies:</strong> {patient.allergiesOrMedicalConditions}</p>
+                                <p><strong>Medical History:</strong> {patient.appointmentHistory}</p>
                             </div>
                             <div className="Patient-actions">
                                 <button
