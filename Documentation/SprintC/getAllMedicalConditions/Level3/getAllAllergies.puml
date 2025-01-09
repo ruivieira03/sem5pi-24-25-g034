@@ -1,0 +1,21 @@
+@startuml
+actor User
+participant API_Controller
+participant AllergyService
+participant Repository
+database Database
+
+User -> API_Controller: GET /medicalCondition?page={page}&limit={limit}
+API_Controller -> API_Controller: Validate Query Parameters
+alt Invalid Query Parameters
+    API_Controller -> User: 400 Bad Request
+else Valid Query Parameters
+    API_Controller -> AllergyService: GetAllMedicalConditions(page, limit)
+    AllergyService -> Repository: Fetch medical conditions
+    Repository -> Database: Query for medical conditions
+    Database -> Repository: Results of query
+    Repository -> AllergyService: List of medical conditions
+    AllergyService -> API_Controller: List of medical conditions
+    API_Controller -> User: 200 OK with medicalCondition data
+end
+@enduml

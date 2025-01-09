@@ -1,0 +1,16 @@
+@startuml
+actor Doctor
+participant System
+
+activate Doctor
+
+Doctor-> System: POST /medicalcondition
+activate System
+System -> System: Validate medicalCondition Data
+alt Invalid Data
+    System -> Doctor: 400 Bad Request
+else Valid Data
+    System -> System: Call Service Layer
+    System -> Doctor: 201 Created with new medicalCondition details
+end
+@enduml

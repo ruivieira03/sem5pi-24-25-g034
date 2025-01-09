@@ -1,0 +1,28 @@
+@startuml
+actor Doctor
+participant API_Controller
+participant MedicalConditionService
+participant Repository
+
+activate Doctor
+Doctor -> API_Controller: POST /medicalcondition
+activate API_Controller
+API_Controller -> API_Controller: Validate MedicalCondition Data
+alt Invalid Data
+    API_Controller -> Doctor: 400 Bad Request
+    deactivate API_Controller
+    deactivate Doctor
+else Valid Data
+    API_Controller -> MedicalConditionService: CreateMedicalCondition(MedicalConditionDTO)
+    activate MedicalConditionService
+    MedicalConditionService -> Repository: InsertMedicalCondition(MedicalConditionDTO)
+    activate Repository
+    Repository -> MedicalConditionService: Created MedicalCondition
+    deactivate Repository
+    MedicalConditionService -> API_Controller: Created MedicalCondition
+    deactivate MedicalConditionService
+    API_Controller -> Doctor: 201 Created with new medical condition details
+    deactivate API_Controller
+    deactivate Doctor
+end
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+actor User
+participant System
+
+User -> System: GET /specialization/{name}
+System -> System: Validate Path Parameter
+alt Invalid Name
+    System -> User: 400 Bad Request
+else Valid Name
+    System -> System: Call Service Layer
+    System -> User: 200 OK with specialization data
+end
+@enduml

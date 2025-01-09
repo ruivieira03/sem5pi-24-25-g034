@@ -1,0 +1,18 @@
+@startuml
+actor Admin
+participant API_Controller
+participant AllergyService
+participant Repository
+
+Admin -> API_Controller: POST /Specialization
+API_Controller -> API_Controller: Validate Allergy Data
+alt Invalid Data
+    API_Controller -> User: 400 Bad Request
+else Valid Data
+    API_Controller -> AllergyService: CreateSpecialization(SpecializaDTO)
+    AllergyService -> Repository: InsertSpecialization(SpecializaDTO)
+    Repository -> AllergyService: Created Specialization
+    AllergyService -> API_Controller: Created specialization
+    API_Controller -> User: 201 Created with new specialization details
+end
+@enduml

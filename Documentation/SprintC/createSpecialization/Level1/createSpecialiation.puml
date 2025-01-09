@@ -1,0 +1,13 @@
+@startuml
+actor Admin
+participant System
+
+Admin -> System: POST /Specialization
+System -> System: Validate SpecializationData
+alt Invalid Data
+    System -> Admin: 400 Bad Request
+else Valid Data
+    System -> System: Call Service Layer
+    System -> Admin: 201 Created with new Specialization details
+end
+@enduml

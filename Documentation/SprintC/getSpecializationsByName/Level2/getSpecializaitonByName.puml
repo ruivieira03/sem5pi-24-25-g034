@@ -1,0 +1,23 @@
+@startuml
+actor User
+participant API_Controller
+participant AllergyService
+participant Repository
+
+User -> API_Controller: GET /Specialization/{name}
+API_Controller -> API_Controller: Validate Path Parameter
+alt Invalid Name
+    API_Controller -> User: 400 Bad Request
+else Valid Name
+    API_Controller -> AllergyService: GetSpecializationByName(name)
+    SpecializationService -> Repository: Fetch specialization  
+    alt Specialization Not Found
+        SpecializationService -> API_Controller: Exception: "Specialization not found"
+        API_Controller -> User: 404 Not Found
+    else
+        Repository -> SpecializationService: Specialization
+        SpecializationService -> API_Controller: Specialization
+        API_Controller -> User: 200 OK with specialization data
+    end
+end
+@enduml

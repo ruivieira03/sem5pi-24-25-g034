@@ -4,9 +4,9 @@ import '@testing-library/jest-dom';
 // Mock Axios Globally
 jest.mock('axios', () => ({
     delete: jest.fn(), // Mock the `delete` method
-    get: jest.fn(),    // Mock the `get` method (optional, for other components)
-    post: jest.fn(),   // Mock the `post` method (optional, for other components)
-    put: jest.fn(),    // Mock the `put` method (optional, for other components)
+    get: jest.fn(),    // Mock the `get` method
+    post: jest.fn(),   // Mock the `post` method
+    put: jest.fn(),    // Mock the `put` method
 }));
 
 // Suppress console warnings and errors during tests
@@ -22,7 +22,7 @@ console.error = (...args) => {
 const originalWarn = console.warn;
 console.warn = (...args) => {
     // Ignore React Router Future Flag Warnings
-    if (/React Router Future Flag Warning/.test(args[0])) {
+    if (/React Router.*Future Flag Warning/.test(args[0])) {
         return;
     }
     originalWarn.call(console, ...args);

@@ -1,0 +1,30 @@
+@startuml
+actor Doctor
+participant API_Controller
+participant AllergyService
+participant Repository
+database Database
+
+Doctor -> API_Controller: POST /allergies
+activate API_Controller
+API_Controller -> API_Controller: Validate Allergy Data
+alt Invalid Data
+    API_Controller -> Doctor: 400 Bad Request
+    deactivate API_Controller
+else Valid Data
+    API_Controller -> AllergyService: CreateAllergy(AllergyDTO)
+    activate AllergyService
+    AllergyService -> Repository: InsertAllergy(AllergyDTO)
+    activate Repository
+    Repository -> Database: Insert Allergy Record
+    activate Database
+    Database -> Repository: Insert Confirmation
+    deactivate Database
+    Repository -> AllergyService: Created Allergy
+    deactivate Repository
+    AllergyService -> API_Controller: Created Allergy
+    deactivate AllergyService
+    API_Controller -> Doctor: 201 Created with new allergy details
+    deactivate API_Controller
+end
+@enduml
