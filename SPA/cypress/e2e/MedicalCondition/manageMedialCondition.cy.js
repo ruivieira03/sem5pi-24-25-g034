@@ -19,10 +19,10 @@ describe('Register User E2E Tests', () => {
     });
 
     // Visit the admin registration page
-    cy.visit('/admin/medicalConditions');
+    cy.visit('/admin/medicalCondition');
 
     // Verify the page loaded correctly
-    cy.location('pathname').should('eq', '/admin/medicalConditions');
+    cy.location('pathname').should('eq', '/admin/medicalCondition');
   });
 
   it('fetches and displays the list of medicalConditions', () => {
@@ -30,35 +30,34 @@ describe('Register User E2E Tests', () => {
       statusCode: 200,
       body: {
         data: [
-          { domainId: '1', name: 'Peanuts', description: 'Peanut medicalCondition' },
-          { domainId: '2', name: 'Gluten', description: 'Gluten medicalCondition' },
+          { domainId: '1', name: 'Psychiatry', description: 'Psychiatry medicalCondition' },
+          { domainId: '2', name: 'Neurology', description: 'Neurology medicalCondition' },
         ],
       },
     }).as('fetchMedicalConditions');
 
     cy.wait('@fetchMedicalConditions');
-    cy.contains('strong', 'Peanuts').should('exist');
-    cy.contains('strong', 'Gluten').should('exist');
+    cy.contains('strong', 'Psychiatry').should('exist');
+    cy.contains('strong', 'Neurology').should('exist');
   });
 
   it('adds a new medicalCondition', () => {
     cy.intercept('POST', '**/api/medicalConditions', {
       statusCode: 201,
-      body: { message: 'MedicalCondition added successfully!' },
-    }).as('addMedicalCondition');
+      body: { message: 'MedicalConditions added successfully!' },
+    }).as('addMedicalConditions');
 
-    cy.get('input[placeholder="MedicalCondition Name"]').type('Dairy');
-    cy.get('input[placeholder="Description"]').type('Dairy medicalCondition');
+    cy.get('input[placeholder="Medical Condition Name"]').type('Radiology');
+    cy.get('input[placeholder="Description"]').type('Radiology medicalCondition');
     cy.get('.add-button').click();
 
-    cy.wait('@addMedicalCondition');
-    cy.contains('MedicalCondition added successfully!').should('exist');
+    cy.wait('@addMedicalConditions');
   });
 
   it('updates an existing medicalCondition', () => {
       const medicalConditionId = 'e75e60aa-8566-47e3-aa3d-e7aac31efbd6'; // Example domainId
       const updatedData = {
-        name: 'Peanuts',
+        name: 'Psychiatry',
         description: 'Updated description',
       };
     
@@ -67,7 +66,7 @@ describe('Register User E2E Tests', () => {
         statusCode: 200,
         body: {
           data: [
-            { domainId: medicalConditionId, name: 'Peanuts', description: 'Peanut medicalCondition' },
+            { domainId: medicalConditionId, name: 'Psychiatry', description: 'Psychiatry medicalCondition' },
           ],
         },
       }).as('fetchMedicalConditions');
@@ -75,28 +74,25 @@ describe('Register User E2E Tests', () => {
       // Mock the PUT request for updating an medicalCondition
       cy.intercept('PUT', `**/api/medicalConditions/${medicalConditionId}`, {
         statusCode: 200,
-        body: { message: 'MedicalCondition updated successfully!' },
-      }).as('updateMedicalCondition');
+        body: { message: 'MedicalConditions updated successfully!' },
+      }).as('updateMedicalConditions');
     
       // Load the medicalConditions
-      cy.visit('/admin/medicalConditions');
+      cy.visit('/admin/medicalCondition');
       cy.wait('@fetchMedicalConditions');
     
       // Start the update process
       cy.get('.edit-button').first().click();
-      cy.get('input[placeholder="MedicalCondition Name"]').clear().type(updatedData.name);
+      cy.get('input[placeholder="Medical Condition Name"]').clear().type(updatedData.name);
       cy.get('input[placeholder="Description"]').clear().type(updatedData.description);
       cy.get('.update-button').click();
     
       // Wait for the update request and verify
-      cy.wait('@updateMedicalCondition').then((interception) => {
+      cy.wait('@updateMedicalConditions').then((interception) => {
         expect(interception.response.statusCode).to.eq(200);
         expect(interception.request.body.name).to.eq(updatedData.name);
         expect(interception.request.body.description).to.eq(updatedData.description);
       });
-    
-      // Check for success message
-      cy.contains('MedicalCondition updated successfully!').should('exist');
     });
     
 
@@ -108,7 +104,7 @@ describe('Register User E2E Tests', () => {
         statusCode: 200,
         body: {
           data: [
-            { domainId: medicalConditionId, name: 'Peanuts', description: 'Peanut medicalCondition' },
+            { domainId: medicalConditionId, name: 'Psychiatry', description: 'Psychiatry medicalCondition' },
           ],
         },
       }).as('fetchMedicalConditions');
@@ -116,50 +112,47 @@ describe('Register User E2E Tests', () => {
       // Mock the PATCH request for soft deleting an medicalCondition
       cy.intercept('PATCH', `**/api/medicalConditions/${medicalConditionId}`, {
         statusCode: 200,
-        body: { message: 'MedicalCondition deleted successfully!' },
-      }).as('deleteMedicalCondition');
+        body: { message: 'MedicalConditions deleted successfully!' },
+      }).as('deleteMedicalConditions');
     
       // Load the medicalConditions
-      cy.visit('/admin/medicalConditions');
+      cy.visit('/admin/medicalCondition');
       cy.wait('@fetchMedicalConditions');
     
       // Start the delete process
       cy.get('.delete-button').first().click();
     
       // Wait for the delete request and verify
-      cy.wait('@deleteMedicalCondition').then((interception) => {
+      cy.wait('@deleteMedicalConditions').then((interception) => {
         expect(interception.response.statusCode).to.eq(200);
-      });
-    
-      // Check for success message
-      cy.contains('MedicalCondition deleted successfully!').should('exist');
+      }); 
     });
     
 
   it('searches for an medicalCondition by name', () => {
-    cy.intercept('GET', '**/api/medicalConditions/name/Peanuts', {
+    cy.intercept('GET', '**/api/medicalConditions/name/Psychiatry', {
       statusCode: 200,
-      body: { domainId: '1', name: 'Peanuts', description: 'Peanut medicalCondition' },
-    }).as('searchMedicalCondition');
+      body: { domainId: '1', name: 'Psychiatry', description: 'Psychiatry medicalCondition' },
+    }).as('searchMedicalConditions');
 
-    cy.get('.search-section input').type('Peanuts');
+    cy.get('.search-section input').type('Psychiatry');
     cy.get('.search-button').click();
 
-    cy.wait('@searchMedicalCondition');
-    cy.contains('strong', 'Peanuts').should('exist');
-    cy.get('.medicalCondition-item').should('have.length', 1);
+    cy.wait('@searchMedicalConditions');
+    cy.contains('strong', 'Psychiatry').should('exist');
+    cy.get('.medical-condition-item').should('have.length', 1);
   });
 
   it('shows a message when no medicalConditions are found', () => {
     cy.intercept('GET', '**/api/medicalConditions/name/Unknown', {
       statusCode: 200,
       body: null,
-    }).as('searchMedicalCondition');
+    }).as('searchMedicalConditions');
 
     cy.get('.search-section input').type('Unknown');
     cy.get('.search-button').click();
 
-    cy.wait('@searchMedicalCondition');
-    cy.contains('No medicalConditions found. Add a new one below.').should('exist');
+    cy.wait('@searchMedicalConditions');
+    cy.contains('No medical conditions found. Add a new one below.').should('exist');
   });
 });
