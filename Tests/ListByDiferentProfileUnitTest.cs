@@ -1,6 +1,4 @@
 
-
-/*
 [Fact]
 public async Task ListPatientsByDifferentAttributes_ShouldReturnPatients_WhenPatientsExist()
 {
@@ -25,5 +23,3 @@ public async Task ListPatientsByDifferentAttributes_ShouldReturnPatients_WhenPat
 
 
 
-
-*/

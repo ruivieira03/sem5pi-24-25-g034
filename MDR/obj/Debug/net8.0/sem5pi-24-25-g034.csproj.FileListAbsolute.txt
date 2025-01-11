@@ -1500,3 +1500,4 @@ C:/Users/User/Desktop/sem5pi-24-25-g034/MDR/obj/Debug/net8.0/ref/sem5pi-24-25-g0
 /Users/martim/Documentos/ISEP/6_semester/pi5/sem5pi-24-25-g034/MDR/bin/Debug/net8.0/package-lock.json
 C:/Users/User/Desktop/sem5pi-24-25-g034/MDR/bin/Debug/net8.0/package-lock.json
 >>>>>>> main
+/Users/admin/Desktop/sem5pi-24-25-g034/MDR/bin/Debug/net8.0/package-lock.json

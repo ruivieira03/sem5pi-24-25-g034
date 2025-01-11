@@ -1,4 +1,3 @@
-/*
 
 using System;
 using System.Threading.Tasks;
@@ -9,8 +8,7 @@ using Hospital.Domain.Shared;
 using Hospital.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
-public class RegisterPatientProfileUnitTests
-{
+public class RegisterPatientProfileUnitTests{
     private readonly Mock<IPatientRepository> _patientRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly PatientService _patientService;
@@ -26,8 +24,7 @@ public class RegisterPatientProfileUnitTests
 
 
     [Fact]
-    public async Task RegisterPatientProfileAsync_ShouldCreatePatient_WhenDataIsValid()
-    {
+    public async Task RegisterPatientProfileAsync_ShouldCreatePatient_WhenDataIsValid(){
         // Arrange
         var model = new PatientProfileViewModel
         {
@@ -60,7 +57,7 @@ public class RegisterPatientProfileUnitTests
     }
 
 
-        [Fact]
+    [Fact]
     public async Task RegisterPatientProfileAsync_ShouldThrowException_WhenEmailIsAlreadyInUse()
     {
         // Arrange
@@ -157,4 +154,3 @@ public class RegisterPatientProfileUnitTests
 
 
 }
-*/
