@@ -8,8 +8,8 @@ namespace Hospital.Services
 
         // SMTP configuration details
             string smtpHost = "smtp-mail.outlook.com"; 
-            string smtpEmail = "1211252@isep.ipp.pt"; 
-            string smtpPassword = "F0813rmdv2003"; 
+            string smtpEmail = "-----"; 
+            string smtpPassword = "------"; 
             int smtpPort = 587; 
 
         public async Task SendRegistrationEmailAsync(string email, string setupLink)

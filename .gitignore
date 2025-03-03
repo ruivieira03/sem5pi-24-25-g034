@@ -1,3 +1,10 @@
 
 Documentation/Domain-model/.DS_Store
 *.dll
+*.dll
+*.dll
+*.pdb
+*.pdb
+*.cs
+*.txt
+*.cache
