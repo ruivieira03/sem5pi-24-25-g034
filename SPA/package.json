@@ -7,7 +7,7 @@
     "@react-three/drei": "^9.117.3",
     "@react-three/fiber": "^8.17.10",
     "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.7.7",
+    "axios": "^1.8.3",
     "dotenv": "^16.4.5",
     "gsap": "^3.12.5",
     "jsonwebtoken": "^9.0.2",
